@@ -1,30 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import styled, { ThemeProvider } from 'styled-components/native';
+
 import Button from './src/components/CustomButton/index';
+import { colors, fonts } from './src/theme/index';
+
+const Container = styled.SafeAreaView`
+  flex: 1;
+  background-color: #fff;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 10px 5px;
+`;
+const Text = styled.Text`
+  font-family: ${fonts.primary};
+  font-size: 16px;
+  text-align: center;
+  color: #fff;
+`;
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-      <Button
-        title="버튼"
-        buttonColor="#006FAD"
-        titleColor="#fff"
-        buttonStyle={{ width: '100%', alignSelf: 'center' }}
-        titleStyle={{ fontSize: 20 }}
-        onPress={() => console.log('good')}
-      />
-    </View>
+    <ThemeProvider theme={colors}>
+      <Container>
+        <StatusBar style="auto" />
+        <Button
+          onPress={() => console.log('good')}
+          bgColor={colors.lightGray}
+          bgWidth="100%"
+          bgBorder={`1px solid ${colors.blue}`}>
+          <Text>버튼</Text>
+        </Button>
+      </Container>
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
