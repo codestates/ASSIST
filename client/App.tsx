@@ -6,7 +6,7 @@ import Button from './src/components/CustomButton/index';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app</Text>
+      <Text>배포테스트.</Text>
       <StatusBar style="auto" />
       <Button
         title="버튼"
