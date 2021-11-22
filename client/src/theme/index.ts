@@ -8,3 +8,7 @@ export const colors = {
   red: '#AD0000',
   yellow: '#FEE500',
 };
+
+export const fonts = {
+  primary: 'Spoqa Han Sans Neo',
+};
