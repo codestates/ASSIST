@@ -1,42 +1,26 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import styled from 'styled-components/native';
 
-type ButtonProps = {
-  title: string;
-  onPress: () => void;
-  buttonColor: string;
-  titleColor: string;
-  buttonStyle: object;
-  titleStyle: object;
-};
+const ButtonContainer = styled.TouchableOpacity`
+  background-color: ${(props: ButtonProps) => props.bgColor};
+  border: ${(props: ButtonProps) => (props.bgBorder ? props.bgBorder : 'none')};
+  width: ${(props: ButtonProps) => props.bgWidth};
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+`;
 
-const Button = ({
-  title,
-  onPress,
-  buttonColor,
-  titleColor,
-  buttonStyle,
-  titleStyle,
-}: ButtonProps) => {
+interface ButtonProps {
+  onPress(): void;
+  bgColor: string;
+  bgBorder?: string;
+  bgWidth: string;
+  children: React.ReactNode;
+}
+export default function Button({ bgColor, bgBorder, bgWidth, onPress, children }: ButtonProps) {
   return (
-    <TouchableOpacity
-      style={{ ...styles.container, ...buttonStyle, backgroundColor: buttonColor || '#006FAD' }}
-      onPress={onPress}>
-      <Text style={{ ...styles.title, ...titleStyle, color: titleColor || '#fff' }}>{title}</Text>
-    </TouchableOpacity>
+    <ButtonContainer onPress={onPress} bgColor={bgColor} bgBorder={bgBorder} bgWidth={bgWidth}>
+      {children}
+    </ButtonContainer>
   );
-};
-export default Button;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#006FAD',
-    height: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    color: '#fff',
-    fontSize: 12,
-  },
-});
+}
