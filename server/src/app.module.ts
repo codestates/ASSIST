@@ -5,8 +5,17 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { TeamModule } from './team/team.module';
 import { MatchModule } from './match/match.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmConfig } from 'src/configs/typeorm.config';
+
 @Module({
-  imports: [ConfigModule.forRoot({isGlobal: true}), UserModule, TeamModule, MatchModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot(typeOrmConfig),
+    UserModule,
+    TeamModule,
+    MatchModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
