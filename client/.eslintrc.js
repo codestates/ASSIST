@@ -19,7 +19,7 @@ module.exports = {
     },
     ecmaVersion: 13,
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: './client/tsconfig.json',
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
   rules: {
