@@ -135,6 +135,10 @@ function LineInput({
         onChangeText={(text) => onChangeText(text)}
         value={field.value}
         secureTextEntry={secureTextEntry}
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoCompleteType="off"
+        spellCheck={false}
       />
       {getSubtitle(errored, conditions)}
     </Container>
