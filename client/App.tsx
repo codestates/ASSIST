@@ -1,7 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import styled, { ThemeProvider } from 'styled-components/native';
+
 import Button from './src/components/CustomButton/index';
+<<<<<<< HEAD
 import LineInput from './src/components/CustomInput/LineInput';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,6 +23,23 @@ const schema = yup.object({
     .matches(/\d/, '숫자를 포함해야 합니다.')
     .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/, '특수문자를 포함해야 합니다.'),
 });
+=======
+import { colors, fonts } from './src/theme/index';
+
+const Container = styled.SafeAreaView`
+  flex: 1;
+  background-color: #fff;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 10px 5px;
+`;
+const Text = styled.Text`
+  font-family: ${fonts.primary};
+  font-size: 16px;
+  text-align: center;
+  color: #fff;
+`;
+>>>>>>> fc473ec27f99386f9dab4a7f95ecc302bdf1d35c
 
 export default function App() {
   const {
@@ -38,6 +57,7 @@ export default function App() {
   };
 
   return (
+<<<<<<< HEAD
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="auto" />
@@ -75,14 +95,19 @@ export default function App() {
         errorMessage={errors.password?.message}
       />
     </View>
+=======
+    <ThemeProvider theme={colors}>
+      <Container>
+        <StatusBar style="auto" />
+        <Button
+          onPress={() => console.log('good')}
+          bgColor={colors.lightGray}
+          bgWidth="100%"
+          bgBorder={`1px solid ${colors.blue}`}>
+          <Text>버튼</Text>
+        </Button>
+      </Container>
+    </ThemeProvider>
+>>>>>>> fc473ec27f99386f9dab4a7f95ecc302bdf1d35c
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
