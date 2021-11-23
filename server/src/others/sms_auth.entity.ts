@@ -12,7 +12,7 @@ export class Sms_auth {
   id: number;
 
   @Column()
-  phone: Date;
+  phone: string;
 
   @Column()
   number: string;
