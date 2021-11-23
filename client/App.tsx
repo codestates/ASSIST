@@ -3,7 +3,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+
 import Button from './src/components/CustomButton/index';
+
 import LineInput from './src/components/CustomInput/LineInput';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -28,6 +30,22 @@ const schema = yup.object({
     .matches(/\d/, '숫자를 포함해야 합니다.')
     .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/, '특수문자를 포함해야 합니다.'),
 });
+
+import { colors, fonts } from './src/theme/index';
+
+const Container = styled.SafeAreaView`
+  flex: 1;
+  background-color: #fff;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 10px 5px;
+`;
+const Text = styled.Text`
+  font-family: ${fonts.primary};
+  font-size: 16px;
+  text-align: center;
+  color: #fff;
+`;
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -124,12 +142,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

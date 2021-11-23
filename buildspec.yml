@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - cd client
+      - npm install
+<<<<<<< HEAD
+=======
+      - npm install expo-cli
+>>>>>>> fc473ec27f99386f9dab4a7f95ecc302bdf1d35c
+  build:
+    commands:
+      - npx expo build:web
+
+artifacts:
+  files:
+    - "**/*"
+  base-directory: client/web-build
