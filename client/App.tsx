@@ -2,9 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-
-import Button from './src/components/CustomButton/index';
+import { View } from 'react-native';
 
 import LineInput from './src/components/CustomInput/LineInput';
 import { useForm } from 'react-hook-form';
@@ -102,18 +100,10 @@ export default function App() {
   `;
 
   return (
-    <View style={styles.container}>
+    <View>
       <BlueText>Open up App.tsx to start working on your app!</BlueText>
       <BigText>Big Text</BigText>
       <StatusBar style="auto" />
-      <Button
-        title="버튼"
-        buttonColor="#006FAD"
-        titleColor="#fff"
-        buttonStyle={{ width: '100%', alignSelf: 'center' }}
-        titleStyle={{ fontSize: '20px' }}
-        onPress={handleSubmit(onSubmit)}
-      />
       <LineInput
         control={control}
         name="id"
