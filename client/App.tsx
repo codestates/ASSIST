@@ -1,13 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import styled, { ThemeProvider } from 'styled-components/native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import Button from './src/components/CustomButton/index';
-<<<<<<< HEAD
+
 import LineInput from './src/components/CustomInput/LineInput';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import * as Font from 'expo-font';
+import { Asset } from 'expo-asset';
+import AppLoading from 'expo-app-loading';
+import { Bold } from './src/theme/fonts';
+import styled from 'styled-components/native';
 
 const schema = yup.object({
   id: yup
@@ -23,7 +30,7 @@ const schema = yup.object({
     .matches(/\d/, '숫자를 포함해야 합니다.')
     .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/, '특수문자를 포함해야 합니다.'),
 });
-=======
+
 import { colors, fonts } from './src/theme/index';
 
 const Container = styled.SafeAreaView`
@@ -39,9 +46,35 @@ const Text = styled.Text`
   text-align: center;
   color: #fff;
 `;
->>>>>>> fc473ec27f99386f9dab4a7f95ecc302bdf1d35c
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+  const onFinish = () => setLoading(false);
+
+  const preloadAssets = async () => {
+    const fontToLoad = [
+      { 'SpoqaHanSansNeo-Bold': require('./src/assets/fonts/SpoqaHanSansNeo-Bold.otf') },
+      { 'SpoqaHanSansNeo-Light': require('./src/assets/fonts/SpoqaHanSansNeo-Light.otf') },
+      { 'SpoqaHanSansNeo-Medium': require('./src/assets/fonts/SpoqaHanSansNeo-Medium.otf') },
+      { 'SpoqaHanSansNeo-Regular': require('./src/assets/fonts/SpoqaHanSansNeo-Regular.otf') },
+      { 'SpoqaHanSansNeo-Thin': require('./src/assets/fonts/SpoqaHanSansNeo-Thin.otf') },
+    ];
+    const fontPromises = fontToLoad.map((font) => Font.loadAsync(font));
+    const imagesToLoad = [
+      require('./src/assets/images/big-logo.png'),
+      require('./src/assets/images/small-logo.png'),
+      require('./src/assets/images/font-logo.png'),
+    ];
+    const imagePromises = imagesToLoad.map((image: string | number | string[] | number[]) =>
+      Asset.loadAsync(image),
+    );
+    await Promise.all<Promise<void> | Promise<Asset[]>>([...fontPromises, ...imagePromises]);
+  };
+
+  const preload = async () => {
+    return preloadAssets();
+  };
+
   const {
     control,
     handleSubmit,
@@ -56,17 +89,29 @@ export default function App() {
     console.log(data);
   };
 
+  if (loading) {
+    return <AppLoading startAsync={preload} onError={console.warn} onFinish={onFinish} />;
+  }
+
+  const BlueText = styled(Bold)`
+    color: red;
+  `;
+
+  const BigText = styled(BlueText)`
+    font-size: 20px;
+  `;
+
   return (
-<<<<<<< HEAD
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <BlueText>Open up App.tsx to start working on your app!</BlueText>
+      <BigText>Big Text</BigText>
       <StatusBar style="auto" />
       <Button
         title="버튼"
         buttonColor="#006FAD"
         titleColor="#fff"
         buttonStyle={{ width: '100%', alignSelf: 'center' }}
-        titleStyle={{ fontSize: 20 }}
+        titleStyle={{ fontSize: '20px' }}
         onPress={handleSubmit(onSubmit)}
       />
       <LineInput
@@ -95,19 +140,5 @@ export default function App() {
         errorMessage={errors.password?.message}
       />
     </View>
-=======
-    <ThemeProvider theme={colors}>
-      <Container>
-        <StatusBar style="auto" />
-        <Button
-          onPress={() => console.log('good')}
-          bgColor={colors.lightGray}
-          bgWidth="100%"
-          bgBorder={`1px solid ${colors.blue}`}>
-          <Text>버튼</Text>
-        </Button>
-      </Container>
-    </ThemeProvider>
->>>>>>> fc473ec27f99386f9dab4a7f95ecc302bdf1d35c
   );
 }
