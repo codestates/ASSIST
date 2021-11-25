@@ -5,5 +5,9 @@
     "port": 3306,
     "host": "localhost",
     "dbName": "assist"
+  },
+
+  "jwt": {
+    "ACCESS_SECRET": "test"
   }
 }

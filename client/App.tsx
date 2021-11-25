@@ -2,51 +2,77 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import React, { useState } from 'react';
-import { View, ScrollView } from 'react-native';
-import { useForm } from 'react-hook-form';
-
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-
-import { StatusBar } from 'expo-status-bar';
+//import { NavigationContainer } from '@react-navigation/native';
+import styled from 'styled-components/native';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
 
-import styled from 'styled-components/native';
-
-import LineInput from './src/components/input/CommonInput';
+import { colors } from './src/theme/colors';
+import { Bold, Regular } from './src/theme/fonts';
+import { fontsToLoad } from './src/assets/assets';
+import { imagesToLoad } from './src/assets/assets';
+import LoggedInNav from './src/navigation/LoggedInNav';
+import LoggedOutNav from './src/navigation/LoggedOutNav';
 import CommonModal from './src/components/modal/CommonModal';
-import { Bold } from './src/theme/fonts';
+import Triangle from './src/components/modal/TriangleContainer';
+import Square from './src/components/modal/SquareContainer';
+import CommonButton from './src/components/button/CommonButton';
 
-const StyledScrollView = styled.ScrollView.attrs(() => ({
-  contentContainerStyle: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 10,
-    marginHorizontal: 5,
-  },
-}))``;
+const Container = styled.View`
+  flex: 1;
+`;
+
+const SquareContents = styled.View`
+  width: 240px;
+  height: 68px;
+  margin-bottom: 16px;
+`;
+
+const Title = styled(Bold)`
+  font-size: 14px;
+  color: ${colors.white};
+  padding-bottom: 8px;
+`;
+
+const Contents = styled(Regular)`
+  font-size: 12px;
+  color: ${colors.white};
+`;
+
+const BoldContent = styled(Bold)`
+  font-size: 12px;
+  color: ${colors.white};
+`;
+
+const SquareButton = styled.View`
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
+const ButtonPrevText = styled(Regular)`
+  font-size: 12px;
+  color: ${colors.white};
+`;
+
+const ButtonNextText = styled(Regular)`
+  font-size: 12px;
+  color: ${colors.darkGray};
+`;
+
+const Space = styled.View`
+  width: 16px;
+  height: 32px;
+`;
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [isLoggedin] = useState(true);
 
+  const onFinish = () => setLoading(false);
   const preloadAssets = async () => {
-    const fontToLoad = [
-      { 'SpoqaHanSansNeo-Bold': require('./src/assets/fonts/SpoqaHanSansNeo-Bold.otf') },
-      { 'SpoqaHanSansNeo-Light': require('./src/assets/fonts/SpoqaHanSansNeo-Light.otf') },
-      { 'SpoqaHanSansNeo-Medium': require('./src/assets/fonts/SpoqaHanSansNeo-Medium.otf') },
-      { 'SpoqaHanSansNeo-Regular': require('./src/assets/fonts/SpoqaHanSansNeo-Regular.otf') },
-      { 'SpoqaHanSansNeo-Thin': require('./src/assets/fonts/SpoqaHanSansNeo-Thin.otf') },
-    ];
-    const fontPromises = fontToLoad.map((font) => Font.loadAsync(font));
-    const imagesToLoad = [
-      require('./src/assets/images/big-logo.png'),
-      require('./src/assets/images/small-logo.png'),
-      require('./src/assets/images/font-logo.png'),
-    ];
+    const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
     const imagePromises = imagesToLoad.map((image: string | number | string[] | number[]) =>
       Asset.loadAsync(image),
     );
@@ -57,71 +83,51 @@ function App() {
     return preloadAssets();
   };
 
-  const onFinish = () => setLoading(false);
-
-  const onSubmit = (data: string) => {
-    console.log(data);
+  const handleClick = () => {
+    console.log('hello world');
   };
-
-  const schema = yup.object({
-    id: yup
-      .string()
-      .required('아이디는 필수입니다.')
-      .typeError('영문을 포함해야 합니다.')
-      .matches(/^.{4,14}$/s, '8 ~ 14자 사이여야 합니다.'),
-    password: yup
-      .string()
-      .required('비밀번호는 필수입니다.')
-      .matches(/^.{8,12}$/s, '8 ~ 13자 사이여야 합니다.')
-      .matches(/^.*[a-zA-Z].*$/, '영문을 포함해야 합니다.')
-      .matches(/\d/, '숫자를 포함해야 합니다.')
-      .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/, '특수문자를 포함해야 합니다.'),
-  });
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
-  });
 
   if (loading) {
     return <AppLoading startAsync={preload} onError={console.warn} onFinish={onFinish} />;
   }
 
   return (
-    <StyledScrollView>
-      <StatusBar style="auto" />
-      <LineInput
-        control={control}
-        name="id"
-        title="아이디"
-        placeholder="아이디를 입력해주세요"
-        errorMessage={errors.id?.message}
-        conditions={[
-          { name: '4~14자', regex: /^.{4,14}$/s },
-          { name: '영문', regex: /^.*[a-zA-Z].*$/ },
-        ]}
-      />
-      <LineInput
-        control={control}
-        name="password"
-        title="비밀번호"
-        placeholder="비밀번호를 입력해주세요"
-        conditions={[
-          { name: '8~13자', regex: /^.{8,13}$/s },
-          { name: '영문', regex: /^.*[a-zA-Z].*$/ },
-          { name: '숫자', regex: /\d/ },
-          { name: '특수문자', regex: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/ },
-        ]}
-        secureTextEntry={true}
-        errorMessage={errors.password?.message}
-      />
-      <CommonModal />
-    </StyledScrollView>
+    // <NavigationContainer>{isLoggedin ? <LoggedInNav /> : <LoggedOutNav />}</NavigationContainer>
+    <Container>
+      <CommonModal animationType="fade">
+        <Triangle direction="top" top="30%" left="40%" bgColor={colors.darkGray} />
+        <Square top="33%" left="14.5%" bgColor={colors.darkGray}>
+          <SquareContents>
+            <Title>1. 팀등록하기</Title>
+            <Contents>
+              팀의 주장이라면 <BoldContent>[팀 등록하기]</BoldContent>를 눌러 어시스트에 팀을 등록
+              해 주세요!
+            </Contents>
+          </SquareContents>
+          <SquareButton>
+            <CommonButton
+              width="64px"
+              height="32px"
+              onPress={handleClick}
+              buttonBorder={colors.white}
+              buttonRadius="8px"
+              buttonBgColor={colors.darkGray}>
+              <ButtonPrevText>이전</ButtonPrevText>
+            </CommonButton>
+            <Space />
+            <CommonButton
+              width="64px"
+              height="32px"
+              onPress={handleClick}
+              buttonBorder={colors.blue}
+              buttonRadius="8px"
+              buttonBgColor={colors.white}>
+              <ButtonNextText>다음</ButtonNextText>
+            </CommonButton>
+          </SquareButton>
+        </Square>
+      </CommonModal>
+    </Container>
   );
 }
 
