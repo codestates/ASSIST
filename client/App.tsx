@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import React, { useState } from 'react';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
@@ -9,6 +10,7 @@ import { imagesToLoad } from './src/assets/assets';
 import { NavigationContainer } from '@react-navigation/native';
 import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
+import CommonModal from './src/components/modal/CommonModal';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -35,3 +37,5 @@ export default function App() {
     <NavigationContainer>{isLoggedin ? <LoggedInNav /> : <LoggedOutNav />}</NavigationContainer>
   );
 }
+
+export default App;
