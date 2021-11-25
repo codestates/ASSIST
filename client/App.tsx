@@ -1,53 +1,37 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { View } from 'react-native';
 
-import LineInput from './src/components/CustomInput/LineInput';
+import React, { useState } from 'react';
+import { View, ScrollView } from 'react-native';
 import { useForm } from 'react-hook-form';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+
+import { StatusBar } from 'expo-status-bar';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
-import { Bold } from './src/theme/fonts';
+
 import styled from 'styled-components/native';
 
-const schema = yup.object({
-  id: yup
-    .string()
-    .required('아이디는 필수입니다.')
-    .typeError('영문을 포함해야 합니다.')
-    .matches(/^.{4,14}$/s, '8 ~ 14자 사이여야 합니다.'),
-  password: yup
-    .string()
-    .required('비밀번호는 필수입니다.')
-    .matches(/^.{8,12}$/s, '8 ~ 13자 사이여야 합니다.')
-    .matches(/^.*[a-zA-Z].*$/, '영문을 포함해야 합니다.')
-    .matches(/\d/, '숫자를 포함해야 합니다.')
-    .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/, '특수문자를 포함해야 합니다.'),
-});
+import LineInput from './src/components/input/CommonInput';
+import CommonModal from './src/components/modal/CommonModal';
+import { Bold } from './src/theme/fonts';
 
-import { colors, fonts } from './src/theme/index';
+const StyledScrollView = styled.ScrollView.attrs(() => ({
+  contentContainerStyle: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    marginHorizontal: 5,
+  },
+}))``;
 
-const Container = styled.SafeAreaView`
-  flex: 1;
-  background-color: #fff;
-  align-items: center;
-  justify-content: flex-end;
-  margin: 10px 5px;
-`;
-const Text = styled.Text`
-  font-family: ${fonts.primary};
-  font-size: 16px;
-  text-align: center;
-  color: #fff;
-`;
-
-export default function App() {
+function App() {
   const [loading, setLoading] = useState(true);
-  const onFinish = () => setLoading(false);
 
   const preloadAssets = async () => {
     const fontToLoad = [
@@ -73,6 +57,27 @@ export default function App() {
     return preloadAssets();
   };
 
+  const onFinish = () => setLoading(false);
+
+  const onSubmit = (data: string) => {
+    console.log(data);
+  };
+
+  const schema = yup.object({
+    id: yup
+      .string()
+      .required('아이디는 필수입니다.')
+      .typeError('영문을 포함해야 합니다.')
+      .matches(/^.{4,14}$/s, '8 ~ 14자 사이여야 합니다.'),
+    password: yup
+      .string()
+      .required('비밀번호는 필수입니다.')
+      .matches(/^.{8,12}$/s, '8 ~ 13자 사이여야 합니다.')
+      .matches(/^.*[a-zA-Z].*$/, '영문을 포함해야 합니다.')
+      .matches(/\d/, '숫자를 포함해야 합니다.')
+      .matches(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/, '특수문자를 포함해야 합니다.'),
+  });
+
   const {
     control,
     handleSubmit,
@@ -83,26 +88,12 @@ export default function App() {
     reValidateMode: 'onSubmit',
   });
 
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
-
   if (loading) {
     return <AppLoading startAsync={preload} onError={console.warn} onFinish={onFinish} />;
   }
 
-  const BlueText = styled(Bold)`
-    color: red;
-  `;
-
-  const BigText = styled(BlueText)`
-    font-size: 20px;
-  `;
-
   return (
-    <View>
-      <BlueText>Open up App.tsx to start working on your app!</BlueText>
-      <BigText>Big Text</BigText>
+    <StyledScrollView>
       <StatusBar style="auto" />
       <LineInput
         control={control}
@@ -129,6 +120,9 @@ export default function App() {
         secureTextEntry={true}
         errorMessage={errors.password?.message}
       />
-    </View>
+      <CommonModal />
+    </StyledScrollView>
   );
 }
+
+export default App;
