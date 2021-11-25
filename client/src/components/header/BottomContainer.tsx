@@ -31,8 +31,8 @@ export default function BottomContainer({ name }: BottomContainerProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Container>
-      <TeamSelector>
-        <TeamName onPress={() => navigation.navigate('Selector')}>{name || '+ 팀 추가'}</TeamName>
+      <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
+        <TeamName>{name || '+ 팀 추가'}</TeamName>
         <MaterialIcons name="keyboard-arrow-down" size={26} color={colors.blue} />
       </TeamSelector>
       <TeamSelector>

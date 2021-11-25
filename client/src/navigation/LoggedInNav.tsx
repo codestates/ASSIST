@@ -3,7 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screens/Home';
 import LoggedInHeader from '../components/header/LoggedInHeader';
 import MyPage from '../screens/MyPage';
-import BottomDrawer from '../components/drawer/BottomDrawer';
+import TeamSelect from '../screens/TeamSelect';
+import CreateTeamNav from './CreateTeamNav';
 
 const HomeStack = createStackNavigator();
 
@@ -24,9 +25,14 @@ export default function LoggedInNav() {
       />
       <HomeStack.Screen name="MyPage" component={MyPage} />
       <HomeStack.Screen
-        name="Selector"
-        component={BottomDrawer}
+        name="TeamSelect"
+        component={TeamSelect}
         options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="CreateTeam"
+        component={CreateTeamNav}
+        options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
   );
