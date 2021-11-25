@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screens/Home';
+import Home from '../screens/main/Home';
 import LoggedInHeader from '../components/header/LoggedInHeader';
-import MyPage from '../screens/MyPage';
-import TeamSelect from '../screens/TeamSelect';
+import MyPage from '../screens/main/MyPage';
+import TeamSelect from '../screens/drawer-select/TeamSelect';
 import CreateTeamNav from './CreateTeamNav';
 
 const HomeStack = createStackNavigator();
