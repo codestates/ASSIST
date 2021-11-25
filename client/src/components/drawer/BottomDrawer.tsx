@@ -1,7 +1,7 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useCardAnimation } from '@react-navigation/stack';
 import React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { colors } from '../../theme/colors';
@@ -28,7 +28,7 @@ const BackgroundView = styled.Pressable({
 });
 
 const Wrapper = styled.View`
-  padding: 12px 7px;
+  padding: 22px 7px 0px 7px;
 `;
 
 type BottomDrawerProps = {
