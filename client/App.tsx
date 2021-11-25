@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import React, { useState } from 'react';
-//import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
@@ -18,6 +18,7 @@ import CommonModal from './src/components/modal/CommonModal';
 import Triangle from './src/components/modal/TriangleContainer';
 import Square from './src/components/modal/SquareContainer';
 import CommonButton from './src/components/button/CommonButton';
+import Card from './src/components/card/Card';
 
 const Container = styled.View`
   flex: 1;
@@ -66,6 +67,35 @@ const Space = styled.View`
   height: 32px;
 `;
 
+const CardContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CardTitleContainer = styled.View`
+  width: 224px;
+  flex: 1;
+`;
+
+const CardTitle = styled(Bold)`
+  font-size: 16px;
+`;
+
+const CardSpace = styled.View`
+  width: 224px;
+  flex: 1;
+`;
+
+const CardContentContainer = styled.View`
+  width: 224px;
+  flex: 4;
+`;
+
+const CardContentsDate = styled(Regular)`
+  font-size: 14px;
+`;
+
 function App() {
   const [loading, setLoading] = useState(true);
   const [isLoggedin] = useState(true);
@@ -94,7 +124,7 @@ function App() {
   return (
     // <NavigationContainer>{isLoggedin ? <LoggedInNav /> : <LoggedOutNav />}</NavigationContainer>
     <Container>
-      <CommonModal animationType="fade">
+      {/* <CommonModal animationType="fade">
         <Triangle direction="top" top="30%" left="40%" bgColor={colors.darkGray} />
         <Square top="33%" left="14.5%" bgColor={colors.darkGray}>
           <SquareContents>
@@ -126,7 +156,19 @@ function App() {
             </CommonButton>
           </SquareButton>
         </Square>
-      </CommonModal>
+      </CommonModal> */}
+
+      <CardContainer>
+        <Card>
+          <CardTitleContainer>
+            <CardTitle>다음 경기</CardTitle>
+          </CardTitleContainer>
+          <CardSpace />
+          <CardContentContainer>
+            <CardContentsDate>2021-08-18(수)</CardContentsDate>
+          </CardContentContainer>
+        </Card>
+      </CardContainer>
     </Container>
   );
 }
