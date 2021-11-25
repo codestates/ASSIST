@@ -2,30 +2,68 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import React, { useState } from 'react';
+//import { NavigationContainer } from '@react-navigation/native';
+import styled from 'styled-components/native';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
-import { fontsToLoad } from './src/assets/assets';
-import { imagesToLoad } from './src/assets/assets';
-import { NavigationContainer } from '@react-navigation/native';
-import styled from 'styled-components/native';
 
 import { colors } from './src/theme/colors';
-import { Regular } from './src/theme/fonts';
+import { Bold, Regular } from './src/theme/fonts';
+import { fontsToLoad } from './src/assets/assets';
+import { imagesToLoad } from './src/assets/assets';
 import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
 import CommonModal from './src/components/modal/CommonModal';
+import Triangle from './src/components/modal/TriangleContainer';
+import Square from './src/components/modal/SquareContainer';
 import CommonButton from './src/components/button/CommonButton';
 
 const Container = styled.View`
   flex: 1;
-  align-items: center;
-  justify-content: center;
 `;
 
-const ButtonText = styled(Regular)`
+const SquareContents = styled.View`
+  width: 240px;
+  height: 68px;
+  margin-bottom: 16px;
+`;
+
+const Title = styled(Bold)`
+  font-size: 14px;
+  color: ${colors.white};
+  padding-bottom: 8px;
+`;
+
+const Contents = styled(Regular)`
   font-size: 12px;
-  color: ${colors.blue};
+  color: ${colors.white};
+`;
+
+const BoldContent = styled(Bold)`
+  font-size: 12px;
+  color: ${colors.white};
+`;
+
+const SquareButton = styled.View`
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
+const ButtonPrevText = styled(Regular)`
+  font-size: 12px;
+  color: ${colors.white};
+`;
+
+const ButtonNextText = styled(Regular)`
+  font-size: 12px;
+  color: ${colors.darkGray};
+`;
+
+const Space = styled.View`
+  width: 16px;
+  height: 32px;
 `;
 
 function App() {
@@ -56,13 +94,39 @@ function App() {
   return (
     // <NavigationContainer>{isLoggedin ? <LoggedInNav /> : <LoggedOutNav />}</NavigationContainer>
     <Container>
-      <CommonButton
-        onPress={handleClick}
-        type="medium"
-        buttonBorder={colors.blue}
-        buttonBgColor={colors.white}>
-        <ButtonText>버튼</ButtonText>
-      </CommonButton>
+      <CommonModal animationType="fade">
+        <Triangle direction="top" top="30%" left="40%" bgColor={colors.darkGray} />
+        <Square top="33%" left="14.5%" bgColor={colors.darkGray}>
+          <SquareContents>
+            <Title>1. 팀등록하기</Title>
+            <Contents>
+              팀의 주장이라면 <BoldContent>[팀 등록하기]</BoldContent>를 눌러 어시스트에 팀을 등록
+              해 주세요!
+            </Contents>
+          </SquareContents>
+          <SquareButton>
+            <CommonButton
+              width="64px"
+              height="32px"
+              onPress={handleClick}
+              buttonBorder={colors.white}
+              buttonRadius="8px"
+              buttonBgColor={colors.darkGray}>
+              <ButtonPrevText>이전</ButtonPrevText>
+            </CommonButton>
+            <Space />
+            <CommonButton
+              width="64px"
+              height="32px"
+              onPress={handleClick}
+              buttonBorder={colors.blue}
+              buttonRadius="8px"
+              buttonBgColor={colors.white}>
+              <ButtonNextText>다음</ButtonNextText>
+            </CommonButton>
+          </SquareButton>
+        </Square>
+      </CommonModal>
     </Container>
   );
 }

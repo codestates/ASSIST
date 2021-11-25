@@ -1,24 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-const buttonSize = (type: string) => {
-  switch (type) {
-    case 'small':
-      return 'width: 30%; height: 24px;';
-    case 'medium':
-      return 'width: 70%; height: 48px;';
-    case 'large':
-      return 'width: 100%; height: 64px;';
-    default:
-      return;
-  }
-};
-
 const ButtonContainer = styled.Pressable`
-  ${(props: ButtonProps) => buttonSize(props.type)}
+  width: ${(props: ButtonProps) => props.width}
+  height: ${(props: ButtonProps) => props.height}
   border: ${(props: ButtonProps) =>
     props.buttonBorder ? `1px solid ${props.buttonBorder}` : 'none'}
-  border-radius: ${(props: ButtonProps) => (props.buttonBorder ? '16px' : 'none')}
+  border-radius: ${(props: ButtonProps) => (props.buttonRadius ? props.buttonRadius : 'none')}
   background-color: ${(props: ButtonProps) =>
     props.buttonBgColor ? props.buttonBgColor : 'none'}};
   align-items: center;
@@ -27,18 +15,22 @@ const ButtonContainer = styled.Pressable`
 
 type ButtonProps = {
   onPress(): void;
-  type: string;
+  width: string;
+  height: string;
   buttonBorder: string;
+  buttonRadius: string;
   buttonBgColor: string;
   children: React.ReactNode;
 };
 const CommonButton = (props: ButtonProps) => {
-  const { onPress, type, children, buttonBorder, buttonBgColor } = props;
+  const { onPress, buttonRadius, children, buttonBorder, buttonBgColor, width, height } = props;
   return (
     <ButtonContainer
       onPress={onPress}
-      type={type}
+      width={width}
+      height={height}
       buttonBorder={buttonBorder}
+      buttonRadius={buttonRadius}
       buttonBgColor={buttonBgColor}>
       {children}
     </ButtonContainer>
