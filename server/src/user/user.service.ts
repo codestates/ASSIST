@@ -2,21 +2,26 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateSMSAuth, CreateUserDto } from './dto/create-dto';
+import { SignInDto } from './dto/signin-dto';
 import { UserRepository } from './user.repository';
-
+import { SmsRepository } from './sms.repository';
 import axios from 'axios';
 import * as CryptoJS from 'crypto-js';
-import { SmsRepository } from './sms.repository';
-
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { UpdateDto } from './dto/update-dto';
+import { User } from './user.entity';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     @InjectRepository(SmsRepository) private smsRepository: SmsRepository,
+    private jwtService: JwtService,
   ) {}
 
   private makeSignature(): string {
@@ -77,12 +82,9 @@ export class UserService {
   }
   async sendAuthNum(phone: string) {
     const number = String(Math.floor(Math.random() * 1000000));
-    try {
-      await this.sendSMS(phone, number);
-    } catch {
-      return;
-    }
-    await this.smsRepository.createSms({ phone, number });
+    await this.sendSMS(phone, number);
+
+    return await this.smsRepository.createSms({ phone, number });
   }
 
   async verifyAuthNum(createSMSAuth: CreateSMSAuth) {
@@ -91,11 +93,61 @@ export class UserService {
     if (!found) {
       throw new NotFoundException('입력하신 인증번호가 올바르지 않습니다.');
     }
-    return found;
+    return { message: '인증에 성공하였습니다.' };
   }
-  // signOut() {}
-  // signIn() {}
-  // async signUp(createUserDto: CreateUserDto): Promise<void> {
-  //   return this.userRepository.createUser(createUserDto);
-  // }
+
+  async signUp(createUserDto: CreateUserDto): Promise<object> {
+    return this.userRepository.createUser(createUserDto);
+  }
+
+  async signIn(signInDto: SignInDto): Promise<{ accessToken: string }> {
+    const { email, password, provider } = signInDto;
+    const user = await this.userRepository.findOne({ email, provider });
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // 유저 토큰 생성 ( Secret + Payload )
+      const payload = { ...user };
+      delete payload.password;
+      const accessToken = await this.jwtService.sign(payload);
+
+      return { accessToken };
+    } else {
+      throw new UnauthorizedException('login failed');
+    }
+  }
+
+  async patchUser(updateInfo: UpdateDto, userInfo: User): Promise<object> {
+    let { password } = updateInfo;
+    const { id } = userInfo;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      password = await bcrypt.hash(password, salt);
+      updateInfo.password = password;
+    }
+    let user = await this.userRepository.findOne({ id });
+    Object.keys(updateInfo).forEach((el) => {
+      user[el] = updateInfo[el];
+    });
+    await this.userRepository.save(user);
+    const payload = { ...user };
+    delete payload.password;
+    const accessToken = await this.jwtService.sign(payload);
+    return { accessToken };
+  }
+
+  async checkPw(userInfo: User, password: string): Promise<object> {
+    const { id } = userInfo;
+    let user = await this.userRepository.findOne({ id });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return { message: 'ok' };
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
+  async deleteUser(userInfo: User) {
+    const { id } = userInfo;
+    await this.userRepository.delete({ id });
+    return { message: 'ok' };
+  }
 }

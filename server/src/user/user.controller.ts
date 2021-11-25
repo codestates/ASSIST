@@ -1,27 +1,80 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  ValidationPipe,
+  UsePipes,
+  UseGuards,
+  Req,
+  Patch,
+  Delete,
+} from '@nestjs/common';
+import { Request } from 'express';
 import { CreateSMSAuth, CreateUserDto } from './dto/create-dto';
+import { SignInDto } from './dto/signin-dto';
+import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
+import { User } from './user.entity';
+import { UpdateDto } from './dto/update-dto';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  // @Post('/signup')
-  // signUp(@Body() createUserDto: CreateUserDto): Promise<void> {
-  //   console.log(createUserDto);
-  //   return this.userService.signUp(createUserDto);
-  // }
+  @Post('/signup')
+  signUp(@Body() createUserDto: CreateUserDto): Promise<object> {
+    console.log(createUserDto);
+    return this.userService.signUp(createUserDto);
+  }
+
+  @Post('/signin')
+  signIn(@Body() signInDto: SignInDto): Promise<{ accessToken: string }> {
+    return this.userService.signIn(signInDto);
+  }
 
   @Post('/smsauth')
   async getAuthNum(@Body('phone') phone: string): Promise<object> {
-    console.log(phone);
-    await this.userService.sendAuthNum(phone);
-    return { message: 'ok' };
+    return this.userService.sendAuthNum(phone);
   }
 
   @Post('/smsauth/verify')
   async verifyAuthNum(@Body() createSMSAuth: CreateSMSAuth): Promise<object> {
-    const sms = await this.userService.verifyAuthNum(createSMSAuth);
-    return { message: '인증에 성공하였습니다.' };
+    return await this.userService.verifyAuthNum(createSMSAuth);
+  }
+
+  @Patch('/')
+  @UseGuards(AuthGuard())
+  async patchUser(
+    @Req() req: Request,
+    @Body() updateInfo: UpdateDto,
+  ): Promise<object> {
+    const userInfo: User = req.user;
+    return this.userService.patchUser(updateInfo, userInfo);
+  }
+
+  @Get('')
+  @UseGuards(AuthGuard())
+  async getUser(@Req() req: Request): Promise<User> {
+    const userInfo = req.user;
+    delete userInfo.password;
+    return userInfo;
+  }
+
+  @Post('')
+  @UseGuards(AuthGuard())
+  async checkPw(
+    @Req() req: Request,
+    @Body('password') password: string,
+  ): Promise<object> {
+    const userInfo = req.user;
+    return this.userService.checkPw(userInfo, password);
+  }
+
+  @Delete('')
+  @UseGuards(AuthGuard())
+  async deleteUser(@Req() req: Request) {
+    const userInfo = req.user;
+    return this.userService.deleteUser(userInfo);
   }
 }
