@@ -12,7 +12,7 @@ import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
 import CommonModal from './src/components/modal/CommonModal';
 
-export default function App() {
+function App() {
   const [loading, setLoading] = useState(true);
   const [isLoggedin] = useState(true);
 
