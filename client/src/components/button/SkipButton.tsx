@@ -15,7 +15,7 @@ type NextButtonProps = {
 
 export default function SkipButton({ onPress, text }: NextButtonProps) {
   return (
-    <Button bgColor={colors.white} bgWidth={'100%'} onPress={onPress}>
+    <Button buttonBgColor={colors.white} width={'100%'} height={'70px'} onPress={onPress}>
       <ButtonText>{text || '다음에 입력할게요  >'}</ButtonText>
     </Button>
   );
