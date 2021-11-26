@@ -1,29 +1,43 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-const ButtonContainer = styled.TouchableOpacity`
-  background-color: ${(props: ButtonProps) => props.bgColor};
-  border: ${(props: ButtonProps) => (props.bgBorder ? props.bgBorder : 'none')};
-  width: ${(props: ButtonProps) => props.bgWidth};
-  height: 64px;
+const ButtonContainer = styled.Pressable`
+  width: ${(props: ButtonProps) => props.width}
+  height: ${(props: ButtonProps) => props.height}
+  border: ${(props: ButtonProps) =>
+    props.buttonBorder ? `1px solid ${props.buttonBorder}` : 'none'}
+  border-radius: ${(props: ButtonProps) => (props.buttonRadius ? props.buttonRadius : 'none')}
+  background-color: ${(props: ButtonProps) =>
+    props.buttonBgColor ? props.buttonBgColor : 'none'}};
   align-items: center;
   justify-content: center;
   flex-direction: row;
 `;
 
-interface ButtonProps {
-  onPress?: () => void;
-  bgColor?: string;
-  bgBorder?: string;
-  bgWidth?: string;
-  children?: React.ReactNode;
-}
-function Button({ bgColor, bgBorder, bgWidth, onPress, children }: ButtonProps) {
+
+type ButtonProps = {
+  onPress(): void;
+  width: string;
+  height: string;
+  buttonBorder: string;
+  buttonRadius: string;
+  buttonBgColor: string;
+  children: React.ReactNode;
+};
+const CommonButton = (props: ButtonProps) => {
+  const { onPress, buttonRadius, children, buttonBorder, buttonBgColor, width, height } = props;
+
   return (
-    <ButtonContainer onPress={onPress} bgColor={bgColor} bgBorder={bgBorder} bgWidth={bgWidth}>
+    <ButtonContainer
+      onPress={onPress}
+      width={width}
+      height={height}
+      buttonBorder={buttonBorder}
+      buttonRadius={buttonRadius}
+      buttonBgColor={buttonBgColor}>
       {children}
     </ButtonContainer>
   );
-}
+};
 
-export default Button;
+export default CommonButton;
