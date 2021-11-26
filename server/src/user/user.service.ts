@@ -24,30 +24,6 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  private makeSignature(): string {
-    const date = Date.now().toString();
-    const secretKey = process.env.NCP_SECRET;
-    const accessKey = process.env.NCP_ACCESS;
-    const serviceId = process.env.SMS_SERVICEID;
-    const method = 'POST';
-    const space = ' ';
-    const newLine = '\n';
-    const url2 = `/sms/v2/services/${serviceId}/messages`;
-    const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
-
-    hmac.update(method);
-    hmac.update(space);
-    hmac.update(url2);
-    hmac.update(newLine);
-    hmac.update(date);
-    hmac.update(newLine);
-    hmac.update(accessKey);
-    const hash = hmac.finalize();
-    const signature = hash.toString(CryptoJS.enc.Base64);
-
-    return signature;
-  }
-
   async sendSMS(phone: string, content: string): Promise<void> {
     const url = `https://sens.apigw.ntruss.com/sms/v2/services/${process.env.SMS_SERVICEID}/messages`;
     const body = {
@@ -116,6 +92,16 @@ export class UserService {
     }
   }
 
+  async getUser(user: User) {
+    let found = await this.userRepository.findOne(
+      { id: user.id },
+      { relations: ['teams'] },
+    );
+    delete found.password;
+
+    return found;
+  }
+
   async patchUser(updateInfo: UpdateDto, userInfo: User): Promise<object> {
     let { password } = updateInfo;
     const { id } = userInfo;
@@ -149,5 +135,41 @@ export class UserService {
     const { id } = userInfo;
     await this.userRepository.delete({ id });
     return { message: 'ok' };
+  }
+  async quitTeam(id: number, userInfo: User): Promise<object> {
+    let user = await this.userRepository.findOne(
+      { id: userInfo.id },
+      { relations: ['teams'] },
+    );
+    if (user.teams) {
+      user.teams = user.teams.filter((el) => el.id !== id);
+    }
+    await this.userRepository.save(user);
+
+    return { message: '완료 되었습니다.' };
+  }
+
+  private makeSignature(): string {
+    const date = Date.now().toString();
+    const secretKey = process.env.NCP_SECRET;
+    const accessKey = process.env.NCP_ACCESS;
+    const serviceId = process.env.SMS_SERVICEID;
+    const method = 'POST';
+    const space = ' ';
+    const newLine = '\n';
+    const url2 = `/sms/v2/services/${serviceId}/messages`;
+    const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
+
+    hmac.update(method);
+    hmac.update(space);
+    hmac.update(url2);
+    hmac.update(newLine);
+    hmac.update(date);
+    hmac.update(newLine);
+    hmac.update(accessKey);
+    const hash = hmac.finalize();
+    const signature = hash.toString(CryptoJS.enc.Base64);
+
+    return signature;
   }
 }
