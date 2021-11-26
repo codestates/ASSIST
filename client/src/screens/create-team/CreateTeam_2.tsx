@@ -8,7 +8,7 @@ import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { BoldText, LightText, SubText } from '../../components/text/SharedText';
+import { Bold, Light } from '../../theme/fonts';
 
 export default function CreateTeam_2() {
   const {
@@ -29,13 +29,13 @@ export default function CreateTeam_2() {
       <NextPageView>
         <MainTitle>
           <>
-            <BoldText>팀 회비 납부일</BoldText>
-            <LightText>을</LightText>
+            <Bold size={22}>팀 회비 납부일</Bold>
+            <Light size={22}>을</Light>
           </>
-          <LightText>알려주세요 📅</LightText>
+          <Light size={22}>알려주세요 📅</Light>
         </MainTitle>
         <SubTitle>
-          <SubText>회비 납부 전날에 납부 알림을 보내드릴게요.</SubText>
+          <Light>회비 납부 전날에 납부 알림을 보내드릴게요.</Light>
         </SubTitle>
         <LineInput
           control={control}

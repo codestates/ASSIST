@@ -3,11 +3,10 @@ import React from 'react';
 import MainTitle from '../../components/text/MainTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { BoldText, LightText } from '../../components/text/SharedText';
 import SkipButton from '../../components/button/SkipButton';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
-import { Regular } from '../../theme/fonts';
+import { Bold, Light, Regular } from '../../theme/fonts';
 import { MaterialIcons } from '@expo/vector-icons';
 import KakaoButton from '../../components/button/KakaoButton';
 
@@ -41,13 +40,13 @@ export default function CreateTeam_5() {
     <>
       <NextPageView>
         <MainTitle>
-          <LightText>팀원을</LightText>
-          <BoldText>초대 할 차례에요 📩</BoldText>
+          <Light size={22}>팀원을</Light>
+          <Bold size={22}>초대 할 차례에요 📩</Bold>
         </MainTitle>
         <CodeContainer>
           <CodeTitle>팀 초대 코드</CodeTitle>
           <FlexBox>
-            <BoldText>AX95Q2</BoldText>
+            <Bold size={22}>AX95Q2</Bold>
             <MaterialIcons name="content-copy" size={24} color={colors.lightGray} />
           </FlexBox>
         </CodeContainer>

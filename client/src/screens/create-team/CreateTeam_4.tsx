@@ -1,20 +1,13 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import styled from 'styled-components/native';
 import LineInput from '../../components/input/LineInput';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { colors } from '../../theme/colors';
 import { Bold, Light } from '../../theme/fonts';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
-import { BoldText, LightText } from '../../components/text/SharedText';
-
-const SubText = styled(Light)`
-  color: ${colors.darkGray};
-`;
 
 export default function CreateTeam_4() {
   const {
@@ -36,13 +29,13 @@ export default function CreateTeam_4() {
       <NextPageView>
         <MainTitle>
           <>
-            <BoldText>팀의 월 회비</BoldText>
-            <LightText>는</LightText>
+            <Bold size={22}>팀의 월 회비</Bold>
+            <Light size={22}>는</Light>
           </>
-          <LightText>얼마인가요? 💰</LightText>
+          <Light size={22}>얼마인가요? 💰</Light>
         </MainTitle>
         <SubTitle>
-          <SubText>회비 납부 전날에 납부 정보를 팀원들에게 보내드려요</SubText>
+          <Light>회비 납부 전날에 납부 정보를 팀원들에게 보내드려요</Light>
         </SubTitle>
         <LineInput
           control={control}
