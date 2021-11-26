@@ -7,7 +7,7 @@ import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
-import { BoldText, LightText, SubText } from '../../components/text/SharedText';
+import { Bold, Light } from '../../theme/fonts';
 
 export default function CreateTeam_1() {
   const {
@@ -30,13 +30,13 @@ export default function CreateTeam_1() {
       <NextPageView>
         <MainTitle>
           <>
-            <BoldText>팀 이름</BoldText>
-            <LightText>을</LightText>
+            <Bold size={22}>팀 이름</Bold>
+            <Light size={22}>을</Light>
           </>
-          <LightText>알려주세요 ⚽️</LightText>
+          <Light size={22}>알려주세요 ⚽️</Light>
         </MainTitle>
         <SubTitle>
-          <SubText>팀 이름은 언제든 수정이 가능합니다.</SubText>
+          <Light>팀 이름은 언제든 수정이 가능합니다.</Light>
         </SubTitle>
         <LineInput
           control={control}

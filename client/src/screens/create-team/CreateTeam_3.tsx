@@ -10,7 +10,7 @@ import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { BoldText, LightText, SubText } from '../../components/text/SharedText';
+import { Bold, Light } from '../../theme/fonts';
 
 type CreateTeamThreeProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
 
@@ -34,13 +34,13 @@ export default function CreateTeam_3({ route }: CreateTeamThreeProps) {
       <NextPageView>
         <MainTitle>
           <>
-            <BoldText>팀 회비 납부계좌</BoldText>
-            <LightText>를</LightText>
+            <Bold size={22}>팀 회비 납부계좌</Bold>
+            <Light size={22}>를</Light>
           </>
-          <LightText>알려주세요 💳</LightText>
+          <Light size={22}>알려주세요 💳</Light>
         </MainTitle>
         <SubTitle>
-          <SubText>회비 납부 전날에 납부 정보를 팀원들에게 보내드려요</SubText>
+          <Light>회비 납부 전날에 납부 정보를 팀원들에게 보내드려요</Light>
         </SubTitle>
         <LineSelect
           title="은행"
