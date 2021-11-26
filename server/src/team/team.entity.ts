@@ -19,9 +19,6 @@ export class Team {
   name: string;
 
   @Column()
-  member: string;
-
-  @Column()
   paymentDay: number;
 
   @Column()
@@ -30,17 +27,14 @@ export class Team {
   @Column()
   accountBank: string;
 
-  @Column()
+  @Column({ unique: true })
   inviteCode: string;
 
   @ManyToMany((type) => User, (users) => users.teams)
   @JoinTable({ name: 'user_team' })
   users: User[];
 
-  @ManyToOne((type) => User)
+  @ManyToOne((type) => User, (user) => user.team)
   @JoinColumn({ name: 'leaderId' })
-  user: User;
-  //leaderId - > user.id
-  //   @OneToMany(type => Photo, photo => photo.user)
-  //   photos: Photo[];
+  leaderId: User;
 }
