@@ -11,26 +11,32 @@ import CaptainMark from '../../components/mark/CaptainMark';
 const TitleContainer = styled.View`
   margin: 15px 0px;
 `;
+
 const Title = styled(Bold)`
   font-size: 20px;
 `;
+
 const TeamContainer = styled.TouchableOpacity`
   margin: 15px 0px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 `;
+
 const Team = styled(Light)`
   font-size: 15px;
 `;
+
 const NewTeam = styled(Bold)`
   font-size: 15px;
   color: ${colors.blue};
 `;
+
 const IconContainer = styled.View`
   flex-direction: row;
   align-items: center;
 `;
+
 const Check = styled.View`
   margin-left: 20px;
 `;

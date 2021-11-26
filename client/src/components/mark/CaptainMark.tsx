@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 import { Bold } from '../../theme/fonts';
 
-export const Container = styled.View`
+const Container = styled.View`
   width: 28px;
   height: 20px;
   justify-content: center;

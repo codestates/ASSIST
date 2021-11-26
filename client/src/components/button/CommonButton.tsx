@@ -8,14 +8,15 @@ const ButtonContainer = styled.TouchableOpacity`
   height: 64px;
   align-items: center;
   justify-content: center;
+  flex-direction: row;
 `;
 
 interface ButtonProps {
-  onPress(): void;
-  bgColor: string;
+  onPress?: () => void;
+  bgColor?: string;
   bgBorder?: string;
-  bgWidth: string;
-  children: React.ReactNode;
+  bgWidth?: string;
+  children?: React.ReactNode;
 }
 function Button({ bgColor, bgBorder, bgWidth, onPress, children }: ButtonProps) {
   return (

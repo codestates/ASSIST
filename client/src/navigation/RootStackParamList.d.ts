@@ -4,9 +4,11 @@ export type RootStackParamList = {
   Lobby: undefined;
   TeamSelect: undefined;
   CreateTeam: undefined;
-  CreateTeamOne: undefined;
-  CreateTeamTwo: undefined;
-  CreateTeamThree: undefined;
-  CreateTeamFour: undefined;
-  CreateTeamEnd: undefined;
+  CreateTeam_1: undefined;
+  CreateTeam_2: undefined;
+  CreateTeam_3: undefined | { bank: string };
+  CreateTeam_4: undefined;
+  CreateTeam_5: undefined;
+  CreateTeam_6: undefined;
+  BankSelect: undefined;
 };
