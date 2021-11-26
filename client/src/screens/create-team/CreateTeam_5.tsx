@@ -54,12 +54,12 @@ export default function CreateTeam_5() {
         <ButtonContainer>
           <KakaoButton
             text="카카오톡으로 초대하기  >"
-            color={colors.yellow}
+            isKakao
             onPress={() => console.log('clicked')}
           />
           <KakaoButton
             text="문자메시지로 초대하기  >"
-            color={colors.whiteSmoke}
+            isKakao={false}
             onPress={() => console.log('clicked')}
           />
         </ButtonContainer>
