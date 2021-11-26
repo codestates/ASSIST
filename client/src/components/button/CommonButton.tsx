@@ -11,7 +11,9 @@ const ButtonContainer = styled.Pressable`
     props.buttonBgColor ? props.buttonBgColor : 'none'}};
   align-items: center;
   justify-content: center;
+  flex-direction: row;
 `;
+
 
 type ButtonProps = {
   onPress(): void;
@@ -24,6 +26,7 @@ type ButtonProps = {
 };
 const CommonButton = (props: ButtonProps) => {
   const { onPress, buttonRadius, children, buttonBorder, buttonBgColor, width, height } = props;
+
   return (
     <ButtonContainer
       onPress={onPress}

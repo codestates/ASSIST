@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 export const Bold = styled.Text`
   font-family: 'SpoqaHanSansNeo-Bold';
 `;
+
 export const Medium = styled.Text`
   font-family: 'SpoqaHanSansNeo-Medium';
 `;

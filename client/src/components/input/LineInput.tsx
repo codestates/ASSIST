@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 import React, { useEffect, useState } from 'react';
 import { Control, FieldValues, useController } from 'react-hook-form';
+import { Regular } from '../../theme/fonts';
 
 const getConditionColor = (condition: boolean, focused?: boolean) => {
   if (condition) {
@@ -10,7 +11,7 @@ const getConditionColor = (condition: boolean, focused?: boolean) => {
     }
     return colors.darkGray;
   } else {
-    return colors.lightGray;
+    return colors.gray;
   }
 };
 
@@ -18,18 +19,19 @@ const Container = styled.View`
   width: 100%;
   margin-top: 30px;
 `;
-const Title = styled.Text`
-  font-size: 18px;
+const Title = styled(Regular)`
+  font-size: 15px;
   margin-left: 10px;
   color: ${(props: { color: string }) => props.color};
 `;
 const TextInput = styled.TextInput`
   width: 100%;
-  padding: 10px;
+  padding: 5px 10px;
   border-bottom-color: ${(props: { color: string }) => props.color};
-  border-bottom-width: 2.5px;
-  font-size: 22px;
-  margin-top: 13px;
+  border-bottom-width: 2px;
+  font-size: 18px;
+  margin-top: 10px;
+  color: ${colors.darkGray};
 `;
 const Message = styled.Text`
   margin-top: 13px;
@@ -47,6 +49,7 @@ const ConditionsContainer = styled.View`
 const Condition = styled(Message)`
   color: ${(props: { condition: boolean; focused?: boolean }) =>
     getConditionColor(props.condition, props.focused)};
+  margin-top: 12px;
 `;
 
 type LineInputProps = {
@@ -59,7 +62,7 @@ type LineInputProps = {
   secureTextEntry?: boolean;
 };
 
-function LineInput({
+export default function LineInput({
   control,
   title,
   errorMessage,
@@ -92,11 +95,14 @@ function LineInput({
     } else {
       if (line) {
         if (field.value !== '') {
-          return colors.darkGray;
+          return colors.gray;
         }
         return colors.lightGray;
       } else {
-        return colors.darkGray;
+        if (field.value !== '') {
+          return colors.darkGray;
+        }
+        return colors.gray;
       }
     }
   };
@@ -128,6 +134,7 @@ function LineInput({
     <Container>
       {title && <Title color={getInputColor(focused, errored)}>{title}</Title>}
       <TextInput
+        placeholderTextColor={colors.lightGray}
         onFocus={getFocus}
         onBlur={loseFocus}
         color={getInputColor(focused, errored, true)}
@@ -139,10 +146,9 @@ function LineInput({
         autoCorrect={false}
         autoCompleteType="off"
         spellCheck={false}
+        clearButtonMode="always"
       />
       {getSubtitle(errored, conditions)}
     </Container>
   );
 }
-
-export default LineInput;

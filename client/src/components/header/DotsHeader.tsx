@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
@@ -56,7 +55,7 @@ export default function DotsHeader({ current, total }: DotsHeaderProps) {
           <ReturnText>이전</ReturnText>
         </ReturnButton>
         <DotIndicator>
-          {[...Array(total)].map((_, i) =>
+          {Array.from(Array(total), (_, i) =>
             current - 1 === i ? <BlueDot key={i} /> : <GrayDot key={i} />,
           )}
         </DotIndicator>
