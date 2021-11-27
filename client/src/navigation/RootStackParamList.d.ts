@@ -11,4 +11,8 @@ export type RootStackParamList = {
   CreateTeam_5: undefined;
   CreateTeam_6: undefined;
   BankSelect: undefined;
+  JoinTeam: undefined;
+  JoinTeam_1: undefined | { reset: boolean };
+  JoinTeam_2: undefined;
+  JoinTeam_3: undefined;
 };

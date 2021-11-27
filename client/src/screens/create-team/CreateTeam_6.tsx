@@ -4,7 +4,7 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import FinishPageView from '../../components/view/FinishPageView';
 import { Bold, Light } from '../../theme/fonts';
 
-export default function CreateTeamSix() {
+export default function CreateTeam_6() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <FinishPageView onPress={() => navigation.navigate('Home')}>

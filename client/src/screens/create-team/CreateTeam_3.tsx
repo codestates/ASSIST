@@ -12,9 +12,9 @@ import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
 
-type CreateTeamThreeProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
+type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
 
-export default function CreateTeam_3({ route }: CreateTeamThreeProps) {
+export default function CreateTeam_3({ route }: CreateTeamProps) {
   const {
     control,
     handleSubmit,
