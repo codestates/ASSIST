@@ -12,7 +12,7 @@ export class UserRepository extends Repository<User> {
   async createUser(createUserDto: CreateUserDto): Promise<object> {
     const userInfo = { ...createUserDto };
 
-    const { email, provider, password } = userInfo;
+    const { email, provider, password, phone } = userInfo;
 
     const found: User = await this.findOne({
       email,
@@ -20,14 +20,23 @@ export class UserRepository extends Repository<User> {
     });
 
     if (found) {
-      throw new ConflictException('Existing email');
+      throw new ConflictException('이미 존재하는 이메일입니다.');
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       userInfo.password = hashedPassword;
       const user = this.create(userInfo);
+      await this.deleteConflictPhone(phone);
       await this.save(user);
       return { message: 'ok' };
     }
+  }
+
+  async deleteConflictPhone(phone: string) {
+    await this.createQueryBuilder('user')
+      .update(User)
+      .set({ phone: null })
+      .where('phone = :phone', { phone })
+      .execute();
   }
 }

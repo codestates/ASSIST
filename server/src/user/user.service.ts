@@ -78,73 +78,69 @@ export class UserService {
 
   async signIn(signInDto: SignInDto): Promise<{ accessToken: string }> {
     const { email, password, provider } = signInDto;
-    const user = await this.userRepository.findOne({ email, provider });
+    const user = await this.userRepository.findOne({
+      email,
+      provider,
+    });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      // 유저 토큰 생성 ( Secret + Payload )
+      // 비밀번호 체크 후 유저 토큰 생성
       const payload = { ...user };
       delete payload.password;
       const accessToken = await this.jwtService.sign(payload);
-
       return { accessToken };
+    } else if (user) {
+      throw new UnauthorizedException('비밀번호가 잘못되었습니다.');
     } else {
-      throw new UnauthorizedException('login failed');
+      throw new NotFoundException('비밀번호가 잘못되었습니다.');
     }
   }
 
   async getUser(user: User) {
-    let found = await this.userRepository.findOne(
-      { id: user.id },
-      { relations: ['teams'] },
-    );
-    delete found.password;
-
-    return found;
+    delete user.password;
+    return user;
   }
 
-  async patchUser(updateInfo: UpdateDto, userInfo: User): Promise<object> {
-    let { password } = updateInfo;
-    const { id } = userInfo;
+  async patchUser(
+    updateInfo: UpdateDto,
+    userInfo: User,
+  ): Promise<{ accessToken: string }> {
+    let { password, phone } = updateInfo;
     if (password) {
       const salt = await bcrypt.genSalt(10);
       password = await bcrypt.hash(password, salt);
       updateInfo.password = password;
     }
-    let user = await this.userRepository.findOne({ id });
     Object.keys(updateInfo).forEach((el) => {
-      user[el] = updateInfo[el];
+      userInfo[el] = updateInfo[el];
     });
-    await this.userRepository.save(user);
-    const payload = { ...user };
+    if (phone) await this.userRepository.deleteConflictPhone(phone);
+    await this.userRepository.save(userInfo);
+    const payload = { ...userInfo };
     delete payload.password;
     const accessToken = await this.jwtService.sign(payload);
     return { accessToken };
   }
 
   async checkPw(userInfo: User, password: string): Promise<object> {
-    const { id } = userInfo;
-    let user = await this.userRepository.findOne({ id });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return { message: 'ok' };
-    } else {
-      throw new UnauthorizedException();
+    const check: boolean = await bcrypt.compare(password, userInfo.password);
+
+    if (!check) {
+      throw new UnauthorizedException('잘못된 비밀번호 입니다.');
     }
+    return { message: 'ok' };
   }
 
-  async deleteUser(userInfo: User) {
+  async deleteUser(userInfo: User): Promise<Object> {
     const { id } = userInfo;
     await this.userRepository.delete({ id });
     return { message: 'ok' };
   }
   async quitTeam(id: number, userInfo: User): Promise<object> {
-    let user = await this.userRepository.findOne(
-      { id: userInfo.id },
-      { relations: ['teams'] },
-    );
-    if (user.teams) {
-      user.teams = user.teams.filter((el) => el.id !== id);
+    if (userInfo.teams) {
+      userInfo.teams = userInfo.teams.filter((el) => el.id !== id);
     }
-    await this.userRepository.save(user);
+    await this.userRepository.save(userInfo);
 
     return { message: '완료 되었습니다.' };
   }
