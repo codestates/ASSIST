@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { Ipost } from './interface/post.interface';
 import { UpdateTeamDto } from './dto/update-dto';
-import { any } from 'sequelize/types/lib/operators';
 
 @EntityRepository(Team)
 export class TeamRepository extends Repository<Team> {
@@ -43,7 +42,7 @@ export class TeamRepository extends Repository<Team> {
       { relations: ['users'] },
     );
     if (!team) {
-      throw new NotFoundException();
+      throw new NotFoundException('초대코드가 잘못되었습니다.');
     }
 
     const found = team.users.find((users) => users.id === user.id);
