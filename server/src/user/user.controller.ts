@@ -57,7 +57,6 @@ export class UserController {
   @Get('')
   @UseGuards(AuthGuard())
   async getUser(@Req() req: Request): Promise<any> {
-    console.log(req.user);
     return this.userService.getUser(req.user);
   }
 
