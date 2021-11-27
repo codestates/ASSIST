@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import LineInput from '../../components/input/LineInput';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -8,18 +8,28 @@ import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
 import { Bold, Light } from '../../theme/fonts';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const schema = yup.object({
+  teamName: yup
+    .string()
+    .matches(/^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{1,14}$/)
+    .required(),
+});
 
 export default function CreateTeam_1() {
   const {
     control,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { isValid },
   } = useForm({
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
+    mode: 'onChange',
+    resolver: yupResolver(schema),
   });
-
+  const [errorMessage, setErrorMessage] = useState('');
+  const clearErrorMessage = () => setErrorMessage('');
   const onSubmit = (data: string) => {
     console.log(data);
   };
@@ -43,7 +53,8 @@ export default function CreateTeam_1() {
           title="팀 이름"
           name="teamName"
           placeholder="팀 이름을 입력해주세요"
-          errorMessage={errors.id?.message}
+          errorMessage={errorMessage}
+          clearErrorMessage={clearErrorMessage}
           conditions={[
             {
               name: `글자수 ${String(watch('teamName') || '').length}/14`,
@@ -52,7 +63,10 @@ export default function CreateTeam_1() {
           ]}
         />
       </NextPageView>
-      <NextButton onPress={() => navigation.navigate('CreateTeam_2')} />
+      <NextButton
+        disabled={!isValid || Boolean(errorMessage)}
+        onPress={() => navigation.navigate('CreateTeam_2')}
+      />
     </>
   );
 }

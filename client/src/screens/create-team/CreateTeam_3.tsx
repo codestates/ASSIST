@@ -1,6 +1,6 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
 import SkipButton from '../../components/button/SkipButton';
@@ -11,6 +11,15 @@ import SubTitle from '../../components/text/SubTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const schema = yup.object({
+  bankAccount: yup
+    .string()
+    .matches(/^^[0-9]+(-[0-9]+)+$$/)
+    .required(),
+});
 
 type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
 
@@ -18,16 +27,17 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
   const {
     control,
     handleSubmit,
-    watch,
-    formState: { errors },
+    formState: { isValid },
   } = useForm({
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
+    mode: 'onChange',
+    resolver: yupResolver(schema),
   });
-
+  const [errorMessage, setErrorMessage] = useState('');
+  const clearErrorMessage = () => setErrorMessage('');
   const onSubmit = (data: string) => {
     console.log(data);
   };
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <>
@@ -50,9 +60,10 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
         <LineInput
           control={control}
           title="계좌번호"
-          name="id"
+          name="bankAccount"
           placeholder="계좌번호를 입력해주세요"
-          errorMessage={errors.id?.message}
+          errorMessage={errorMessage}
+          clearErrorMessage={clearErrorMessage}
           conditions={[
             {
               name: '숫자, 하이픈(-)만 사용',
@@ -62,7 +73,10 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
         />
       </NextPageView>
       <SkipButton onPress={() => navigation.navigate('CreateTeam_4')} />
-      <NextButton onPress={() => navigation.navigate('CreateTeam_4')} />
+      <NextButton
+        disabled={!isValid || route.params?.bank === undefined || Boolean(errorMessage)}
+        onPress={() => navigation.navigate('CreateTeam_4')}
+      />
     </>
   );
 }
