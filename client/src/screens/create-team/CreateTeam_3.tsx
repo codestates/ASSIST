@@ -1,6 +1,6 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
 import SkipButton from '../../components/button/SkipButton';
@@ -24,6 +24,7 @@ const schema = yup.object({
 type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
 
 export default function CreateTeam_3({ route }: CreateTeamProps) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const {
     control,
     handleSubmit,
@@ -32,13 +33,29 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
+
+  const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (isPressed) {
+        setIsPressed(false);
+      }
+    });
+    return unsubscribe;
+  }, [navigation, isPressed]);
+
   const clearErrorMessage = () => setErrorMessage('');
   const onSubmit = (data: string) => {
     console.log(data);
   };
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const goToNext = () => {
+    setIsPressed(true);
+    navigation.navigate('BankSelect');
+  };
+
   return (
     <>
       <NextPageView>
@@ -54,8 +71,9 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
         </SubTitle>
         <LineSelect
           title="은행"
+          isPressed={isPressed}
           selected={route.params?.bank}
-          onPress={() => navigation.navigate('BankSelect')}
+          onPress={() => goToNext()}
         />
         <LineInput
           control={control}
