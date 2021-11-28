@@ -20,13 +20,16 @@ type ButtonProps = {
   buttonBorder?: string;
   buttonRadius?: string;
   buttonBgColor: string;
+  disabled?: boolean;
   children: React.ReactNode;
 };
 const CommonButton = (props: ButtonProps) => {
-  const { onPress, buttonRadius, children, buttonBorder, buttonBgColor, width, height } = props;
+  const { onPress, buttonRadius, children, buttonBorder, buttonBgColor, width, height, disabled } =
+    props;
 
   return (
     <ButtonContainer
+      disabled={disabled}
       onPress={onPress}
       width={width}
       height={height}

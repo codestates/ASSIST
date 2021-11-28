@@ -9,6 +9,15 @@ import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
 import { Bold, Light } from '../../theme/fonts';
 import { StackScreenProps } from '@react-navigation/stack';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const schema = yup.object({
+  invitationCode: yup
+    .string()
+    .matches(/^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{1,6}$/)
+    .required(),
+});
 
 type JoinTeamProps = StackScreenProps<RootStackParamList, 'JoinTeam_1'>;
 
@@ -18,10 +27,10 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
     handleSubmit,
     watch,
     reset,
-    formState: { errors },
+    formState: { isValid },
   } = useForm({
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
+    mode: 'onChange',
+    resolver: yupResolver(schema),
   });
 
   const onSubmit = (data: string) => {
@@ -62,7 +71,7 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
           title="초대 코드"
           name="invitationCode"
           placeholder="초대 코드를 입력해주세요"
-          errorMessage={errors.id?.message}
+          errorMessage={''}
           conditions={[
             {
               name: `글자수 ${String(watch('invitationCode') || '').length}/6`,
@@ -71,7 +80,7 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
           ]}
         />
       </NextPageView>
-      <NextButton onPress={() => goToNext()} />
+      <NextButton disabled={!isValid} onPress={() => goToNext()} />
     </>
   );
 }
