@@ -69,4 +69,11 @@ export class TeamRepository extends Repository<Team> {
     }
     return { message: '수정이 완료되었습니다.' };
   }
+
+  async checkleader(teamId: number, userId: number) {
+    const team = await this.findOne({
+      where: { id: teamId, leaderId: userId },
+    });
+    return team ? true : false;
+  }
 }

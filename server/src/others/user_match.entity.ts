@@ -20,10 +20,10 @@ export class User_match {
   reason: string;
 
   @ManyToOne(() => User, (user) => user.user_matchs)
-  user!: User;
+  user: User;
 
   @ManyToOne(() => Match, (match) => match.user_matchs)
-  match!: Match;
+  match: Match;
   // @OneToMany((type) => Photo, (photo) => photo.user)
   // photos: Photo[];
 }
