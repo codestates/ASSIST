@@ -9,6 +9,7 @@ import {
   Req,
   Patch,
   Delete,
+  Param,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateSMSAuth, CreateUserDto } from './dto/create-dto';
@@ -55,10 +56,9 @@ export class UserController {
 
   @Get('')
   @UseGuards(AuthGuard())
-  async getUser(@Req() req: Request): Promise<User> {
-    const userInfo = req.user;
-    delete userInfo.password;
-    return userInfo;
+  async getUser(@Req() req: Request): Promise<any> {
+    console.log(req.user);
+    return this.userService.getUser(req.user);
   }
 
   @Post('')
@@ -76,5 +76,15 @@ export class UserController {
   async deleteUser(@Req() req: Request) {
     const userInfo = req.user;
     return this.userService.deleteUser(userInfo);
+  }
+
+  @Delete('/team/:id')
+  @UseGuards(AuthGuard())
+  async quitTeam(
+    @Param('id') id: number,
+    @Req() req: Request,
+  ): Promise<object> {
+    const userInfo = req.user;
+    return this.userService.quitTeam(id, userInfo);
   }
 }

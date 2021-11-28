@@ -1,10 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screens/Home';
+import Home from '../screens/main/Home';
 import LoggedInHeader from '../components/header/LoggedInHeader';
-import MyPage from '../screens/MyPage';
-import TeamSelect from '../screens/TeamSelect';
+import MyPage from '../screens/main/MyPage';
+import TeamSelect from '../screens/drawer-select/TeamSelect';
 import CreateTeamNav from './CreateTeamNav';
+import LendingPageNav from './LendingPageNav';
 
 const HomeStack = createStackNavigator();
 
@@ -32,6 +33,11 @@ export default function LoggedInNav() {
       <HomeStack.Screen
         name="CreateTeam"
         component={CreateTeamNav}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="LendingPage"
+        component={LendingPageNav}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>

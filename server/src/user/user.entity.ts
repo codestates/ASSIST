@@ -7,6 +7,8 @@ import {
   OneToMany,
   ManyToMany,
   BaseEntity,
+  JoinTable,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity()
@@ -36,10 +38,11 @@ export class User extends BaseEntity {
   role: string;
 
   @ManyToMany((type) => Team, (teams) => teams.users)
+  // @JoinTable({ name: 'user_team' })
   teams: Team[];
 
+  @OneToMany(() => Team, (teams) => teams.leaderId)
+  team: Team;
   @OneToMany(() => User_match, (user_match) => user_match.user)
   user_matchs!: User_match[];
-  //   @OneToMany(type => Photo, photo => photo.user)
-  //   photos: Photo[];
 }

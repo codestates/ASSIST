@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoggedOutHeader from '../components/header/LoggedOutHeader';
-import Lobby from '../screens/Lobby';
+import Lobby from '../screens/main/Lobby';
 
 const LobbyStack = createStackNavigator();
 
