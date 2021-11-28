@@ -92,7 +92,7 @@ export class UserService {
     } else if (user) {
       throw new UnauthorizedException('비밀번호가 잘못되었습니다.');
     } else {
-      throw new NotFoundException('비밀번호가 잘못되었습니다.');
+      throw new NotFoundException('존재하지 않는 이메일입니다.');
     }
   }
 
