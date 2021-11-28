@@ -26,6 +26,9 @@ export default function Home() {
       <TouchableOpacity>
         <Text>팀 가입하기</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('LendingPage')}>
+        <Text>랜딩 페이지</Text>
+      </TouchableOpacity>
     </Container>
   );
 }

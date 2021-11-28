@@ -11,4 +11,13 @@ export type RootStackParamList = {
   CreateTeam_5: undefined;
   CreateTeam_6: undefined;
   BankSelect: undefined;
+  LendingPage: undefined;
+  LendingPage_1: undefined;
+  LendingPage_2: undefined;
+  LendingPage_3: undefined;
+  LendingPage_4: undefined;
+  LendingPage_5: undefined;
+  LendingPage_6: undefined;
+  LendingPage_7: undefined;
+  LendingPage_8: undefined;
 };
