@@ -60,7 +60,7 @@ type LineInputProps = {
   errorMessage: string;
   placeholder: string;
   secureTextEntry?: boolean;
-  clearErrorMessage?: () => void;
+  clearErrorMessage: () => void;
 };
 
 export default function LineInput({
