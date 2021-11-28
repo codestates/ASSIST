@@ -9,7 +9,7 @@ type ButtonProps = {
   onPress: () => void;
 };
 
-export default function CommonModalButton({ color, text, onPress, disabled }: ButtonProps) {
+export default function CommonModalButton({ color, text, onPress }: ButtonProps) {
   const backgroundColor = color === 'blue' ? colors.blue : colors.whiteSmoke;
   return (
     <CommonButton
