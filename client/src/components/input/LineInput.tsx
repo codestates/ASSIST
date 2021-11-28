@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Control, FieldValues, useController } from 'react-hook-form';
 import { Regular } from '../../theme/fonts';
 
