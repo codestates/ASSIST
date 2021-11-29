@@ -1,6 +1,6 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
 import SkipButton from '../../components/button/SkipButton';
@@ -11,24 +11,51 @@ import SubTitle from '../../components/text/SubTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
-type CreateTeamThreeProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
+const schema = yup.object({
+  bankAccount: yup
+    .string()
+    .matches(/^^[0-9]+(-[0-9]+)+$$/)
+    .required(),
+});
 
-export default function CreateTeam_3({ route }: CreateTeamThreeProps) {
+type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
+
+export default function CreateTeam_3({ route }: CreateTeamProps) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const {
     control,
     handleSubmit,
-    watch,
-    formState: { errors },
+    formState: { isValid },
   } = useForm({
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
+    mode: 'onChange',
+    resolver: yupResolver(schema),
   });
 
+  const [isPressed, setIsPressed] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (isPressed) {
+        setIsPressed(false);
+      }
+    });
+    return unsubscribe;
+  }, [navigation, isPressed]);
+
+  const clearErrorMessage = () => setErrorMessage('');
   const onSubmit = (data: string) => {
     console.log(data);
   };
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const goToNext = () => {
+    setIsPressed(true);
+    navigation.navigate('BankSelect');
+  };
+
   return (
     <>
       <NextPageView>
@@ -44,15 +71,17 @@ export default function CreateTeam_3({ route }: CreateTeamThreeProps) {
         </SubTitle>
         <LineSelect
           title="은행"
+          isPressed={isPressed}
           selected={route.params?.bank}
-          onPress={() => navigation.navigate('BankSelect')}
+          onPress={() => goToNext()}
         />
         <LineInput
           control={control}
           title="계좌번호"
-          name="id"
+          name="bankAccount"
           placeholder="계좌번호를 입력해주세요"
-          errorMessage={errors.id?.message}
+          errorMessage={errorMessage}
+          clearErrorMessage={clearErrorMessage}
           conditions={[
             {
               name: '숫자, 하이픈(-)만 사용',
@@ -62,7 +91,10 @@ export default function CreateTeam_3({ route }: CreateTeamThreeProps) {
         />
       </NextPageView>
       <SkipButton onPress={() => navigation.navigate('CreateTeam_4')} />
-      <NextButton onPress={() => navigation.navigate('CreateTeam_4')} />
+      <NextButton
+        disabled={!isValid || route.params?.bank === undefined || Boolean(errorMessage)}
+        onPress={() => navigation.navigate('CreateTeam_4')}
+      />
     </>
   );
 }

@@ -20,4 +20,8 @@ export type RootStackParamList = {
   LendingPage_6: undefined;
   LendingPage_7: undefined;
   LendingPage_8: undefined;
+  JoinTeam: undefined;
+  JoinTeam_1: undefined | { reset: boolean };
+  JoinTeam_2: undefined;
+  JoinTeam_3: undefined;
 };

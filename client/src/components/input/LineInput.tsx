@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Control, FieldValues, useController } from 'react-hook-form';
 import { Regular } from '../../theme/fonts';
 
@@ -57,9 +57,10 @@ type LineInputProps = {
   name: string;
   title?: string;
   conditions?: { name: string; regex: RegExp }[];
-  errorMessage?: string;
+  errorMessage: string;
   placeholder: string;
   secureTextEntry?: boolean;
+  clearErrorMessage: () => void;
 };
 
 export default function LineInput({
@@ -70,22 +71,14 @@ export default function LineInput({
   name,
   conditions,
   secureTextEntry,
+  clearErrorMessage,
 }: LineInputProps) {
-  useEffect(() => {
-    if (errorMessage) {
-      showError();
-    }
-  }, [errorMessage]);
-
   const { field } = useController({ control, defaultValue: '', name });
-
   const [focused, setFocused] = useState<boolean>(false);
-  const [errored, setErrored] = useState<boolean>(false);
+  const isError = errorMessage.length > 0;
 
   const getFocus = () => setFocused(true);
   const loseFocus = () => setFocused(false);
-  const showError = () => setErrored(true);
-  const hideError = () => setErrored(false);
 
   const getInputColor = (focused: boolean, errored?: boolean, line?: boolean) => {
     if (errored) {
@@ -109,8 +102,8 @@ export default function LineInput({
 
   const onChangeText = (text: string) => {
     field.onChange(text);
-    if (errored === true) {
-      hideError();
+    if (isError) {
+      clearErrorMessage();
     }
   };
 
@@ -121,7 +114,10 @@ export default function LineInput({
       return (
         <ConditionsContainer>
           {conditions.map((el) => (
-            <Condition key={el.name} focused={focused} condition={el.regex.test(field.value)}>
+            <Condition
+              key={el.name}
+              focused={focused}
+              condition={el.regex.test(String(field.value))}>
               ✓{el.name}
             </Condition>
           ))}
@@ -132,15 +128,15 @@ export default function LineInput({
 
   return (
     <Container>
-      {title && <Title color={getInputColor(focused, errored)}>{title}</Title>}
+      {title && <Title color={getInputColor(focused, isError)}>{title}</Title>}
       <TextInput
         placeholderTextColor={colors.lightGray}
         onFocus={getFocus}
         onBlur={loseFocus}
-        color={getInputColor(focused, errored, true)}
+        color={getInputColor(focused, isError, true)}
         placeholder={placeholder}
         onChangeText={(text) => onChangeText(text)}
-        value={field.value}
+        value={String(field.value)}
         secureTextEntry={secureTextEntry}
         autoCapitalize="none"
         autoCorrect={false}
@@ -148,7 +144,7 @@ export default function LineInput({
         spellCheck={false}
         clearButtonMode="always"
       />
-      {getSubtitle(errored, conditions)}
+      {getSubtitle(isError, conditions)}
     </Container>
   );
 }

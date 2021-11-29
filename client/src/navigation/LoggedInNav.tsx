@@ -5,7 +5,11 @@ import LoggedInHeader from '../components/header/LoggedInHeader';
 import MyPage from '../screens/main/MyPage';
 import TeamSelect from '../screens/drawer-select/TeamSelect';
 import CreateTeamNav from './CreateTeamNav';
+
 import LendingPageNav from './LendingPageNav';
+
+import JoinTeamNav from './JoinTeamNav';
+
 
 const HomeStack = createStackNavigator();
 
@@ -40,6 +44,7 @@ export default function LoggedInNav() {
         component={LendingPageNav}
         options={{ headerShown: false }}
       />
+      <HomeStack.Screen name="JoinTeam" component={JoinTeamNav} options={{ headerShown: false }} />
     </HomeStack.Navigator>
   );
 }
