@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoggedOutHeader from '../components/header/LoggedOutHeader';
 import Lobby from '../screens/main/Lobby';
+import GetStartedNav from './GetStartedNav';
 
 const LobbyStack = createStackNavigator();
 
@@ -14,6 +15,13 @@ export default function LoggedOutNav() {
           header: () => <LoggedOutHeader />,
         }}
         component={Lobby}
+      />
+      <LobbyStack.Screen
+        name="GetStarted"
+        options={{
+          headerShown: false,
+        }}
+        component={GetStartedNav}
       />
     </LobbyStack.Navigator>
   );

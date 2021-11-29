@@ -15,4 +15,8 @@ export type RootStackParamList = {
   JoinTeam_1: undefined | { reset: boolean };
   JoinTeam_2: undefined;
   JoinTeam_3: undefined;
+  GetStarted: undefined;
+  GetStarted_1: undefined;
+  GetStarted_2: undefined;
+  GetStarted_3: undefined | { phone: string };
 };

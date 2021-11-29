@@ -61,6 +61,7 @@ type LineInputProps = {
   placeholder: string;
   secureTextEntry?: boolean;
   clearErrorMessage: () => void;
+  isPhone?: boolean;
 };
 
 export default function LineInput({
@@ -72,6 +73,7 @@ export default function LineInput({
   conditions,
   secureTextEntry,
   clearErrorMessage,
+  isPhone,
 }: LineInputProps) {
   const { field } = useController({ control, defaultValue: '', name });
   const [focused, setFocused] = useState<boolean>(false);
@@ -97,6 +99,26 @@ export default function LineInput({
         }
         return colors.gray;
       }
+    }
+  };
+
+  const autoHyphen = (number: string) => {
+    number = number.replace(/[^0-9]/g, '');
+    let temp = '';
+    if (number.length < 4) {
+      return number;
+    } else if (number.length < 8) {
+      temp += number.substr(0, 3);
+      temp += '-';
+      temp += number.substr(3);
+      return temp;
+    } else {
+      temp += number.substr(0, 3);
+      temp += '-';
+      temp += number.substr(3, 4);
+      temp += '-';
+      temp += number.substr(7);
+      return temp;
     }
   };
 
@@ -135,14 +157,15 @@ export default function LineInput({
         onBlur={loseFocus}
         color={getInputColor(focused, isError, true)}
         placeholder={placeholder}
-        onChangeText={(text) => onChangeText(text)}
-        value={String(field.value)}
         secureTextEntry={secureTextEntry}
         autoCapitalize="none"
         autoCorrect={false}
         autoCompleteType="off"
         spellCheck={false}
         clearButtonMode="always"
+        value={isPhone ? autoHyphen(String(field.value)) : String(field.value)}
+        onChangeText={(text) => onChangeText(text)}
+        maxLength={isPhone ? 13 : undefined}
       />
       {getSubtitle(isError, conditions)}
     </Container>
