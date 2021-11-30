@@ -36,7 +36,7 @@ export class TeamRepository extends Repository<Team> {
     return { inviteCode, id: team.id };
   }
 
-  async joinTeam(code: string, user: User) {
+  async joinTeam(code: string, user: User): Promise<{ id: number }> {
     const team = await this.findOne(
       { inviteCode: code },
       { relations: ['users'] },
@@ -55,7 +55,10 @@ export class TeamRepository extends Repository<Team> {
     return { id: team.id };
   }
 
-  async patchTeam(found: Team | any, updateTeamDto: UpdateTeamDto) {
+  async patchTeam(
+    found: Team | any,
+    updateTeamDto: UpdateTeamDto,
+  ): Promise<Object> {
     const { leaderId } = updateTeamDto;
     found = { ...found, ...updateTeamDto };
     if (leaderId) {
@@ -70,7 +73,7 @@ export class TeamRepository extends Repository<Team> {
     return { message: '수정이 완료되었습니다.' };
   }
 
-  async checkleader(teamId: number, userId: number) {
+  async checkleader(teamId: number, userId: number): Promise<boolean> {
     const team = await this.findOne({
       where: { id: teamId, leaderId: userId },
     });

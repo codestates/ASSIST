@@ -15,7 +15,7 @@ export class Alarm_schedule {
   @Column()
   time: Date;
 
-  @Column()
+  @Column({ default: false })
   isDeleted: boolean;
 
   @OneToOne(() => Match, (match) => match.alarm) // specify inverse side as a second parameter

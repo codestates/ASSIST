@@ -13,7 +13,7 @@ import {
 export class User_match {
   @PrimaryGeneratedColumn()
   id!: number;
-  @Column()
+  @Column({ default: '미응답' })
   condition: string;
 
   @Column({ default: null })
