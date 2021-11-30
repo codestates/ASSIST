@@ -13,18 +13,26 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object({
-  date: yup
+  password_1: yup
     .string()
-    .matches(/^(0?[1-9]|[12][0-9])$/)
+    .min(8)
+    .matches(/[a-zA-Z]/)
+    .matches(/[0-9]/)
+    .matches(/[~!@#$%^&*()_+|<>?:{}]/)
+    .required(),
+  password_2: yup
+    .string()
+    .oneOf([yup.ref('password_1'), null])
     .required(),
 });
-1;
 
-export default function CreateTeam_2() {
+export default function GetStarted_4() {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { isValid },
+    watch,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
@@ -41,30 +49,55 @@ export default function CreateTeam_2() {
       <NextPageView>
         <MainTitle>
           <>
-            <Bold size={22}>팀 회비 납부일</Bold>
-            <Light size={22}>을</Light>
+            <Bold size={22}>비밀번호</Bold>
+            <Light size={22}>를</Light>
           </>
-          <Light size={22}>알려주세요 📅</Light>
+          <Light size={22}>설정해주세요 🔐</Light>
         </MainTitle>
         <SubTitle>
           <Light>회비 납부 전날에 납부 알림을 보내드릴게요.</Light>
         </SubTitle>
         <LineInput
-          type="date"
+          type="password"
           control={control}
-          title="매월"
-          name="date"
-          placeholder="일자를 입력해주세요"
+          title="비밀번호"
+          name="password_1"
+          placeholder="비밀번호를 입력해주세요"
           errorMessage={errorMessage}
           clearErrorMessage={clearErrorMessage}
           conditions={[
             {
-              name: '숫자',
-              regex: /^\d+$/,
+              name: '8자리 이상',
+              regex: /^.{8,}$/,
             },
             {
-              name: '1~29 사이',
-              regex: /^(0?[1-9]|[12][0-9])$/,
+              name: '영문',
+              regex: /[a-zA-Z]/,
+            },
+            {
+              name: '숫자',
+              regex: /[0-9]/,
+            },
+            {
+              name: '특수문자',
+              regex: /[~!@#$%^&*()_+|<>?:{}]/,
+            },
+          ]}
+        />
+        <LineInput
+          type="password"
+          control={control}
+          title="비밀번호 재입력"
+          name="password_2"
+          placeholder="비밀번호를 재입력해주세요"
+          errorMessage={errorMessage}
+          clearErrorMessage={clearErrorMessage}
+          conditions={[
+            {
+              name: '일치',
+              regex:
+                String(watch('password_1')).length > 0 &&
+                String(watch('password_1')) === String(watch('password_2')),
             },
           ]}
         />

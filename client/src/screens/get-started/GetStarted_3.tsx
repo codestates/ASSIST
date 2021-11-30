@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MainTitle from '../../components/text/MainTitle';
 import NextPageView from '../../components/view/NextPageView';
-import { Bold, Light } from '../../theme/fonts';
+import { Bold, Light, Medium, Regular, Thin } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -11,12 +11,17 @@ import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import LineSelect from '../../components/input/LineSelect';
+import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
+import CommonModalButton from '../../components/button/CommonModalButton';
+import styled from 'styled-components/native';
+
+const Line = styled.View`
+  margin-top: 13px;
+  margin-bottom: 35px;
+`;
 
 const schema = yup.object({
-  phone: yup
-    .string()
-    .matches(/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/)
-    .required(),
+  validation: yup.string().min(6).max(6).required(),
 });
 
 type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_3'>;
@@ -32,15 +37,40 @@ export default function GetStarted_3({ route }: GetStartedProps) {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
-  const clearErrorMessage = () => setErrorMessage('');
+  const [modalVisible, setModalVisible] = useState(false);
+
   const onSubmit = (data: string) => {
     console.log(data);
   };
 
+  const showErrorModal = () => {
+    setError();
+    setModalVisible(true);
+  };
+
+  const setError = () => setErrorMessage(' ');
+  const clearError = () => setErrorMessage('');
+
+  const hideErrorModal = () => {
+    setModalVisible(false);
+  };
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <>
       <NextPageView>
+        <CommonModal visible={modalVisible} setVisible={hideErrorModal}>
+          <CommonModalTitle>
+            <Bold size={17}>인증번호가 일치하지 않습니다.</Bold>
+            <Line>
+              <Regular gray size={13}>
+                오타는 없는지 다시 한 번 확인해주세요.
+              </Regular>
+            </Line>
+          </CommonModalTitle>
+          <CommonModalButton text="돌아가기  >" onPress={hideErrorModal} />
+        </CommonModal>
         <MainTitle>
           <>
             <Bold size={22}>보내드린 문자 인증번호</Bold>
@@ -50,17 +80,18 @@ export default function GetStarted_3({ route }: GetStartedProps) {
         </MainTitle>
         <LineSelect title="휴대폰 번호" selected={route.params?.phone} isFixed />
         <LineInput
+          type="timer"
           control={control}
           title="인증번호"
           name="validation"
           placeholder="인증번호를 입력해주세요"
           errorMessage={errorMessage}
-          clearErrorMessage={clearErrorMessage}
+          clearErrorMessage={clearError}
         />
       </NextPageView>
       <NextButton
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => console.log('clicked!')}
+        onPress={() => navigation.navigate('GetStarted_4')}
       />
     </>
   );

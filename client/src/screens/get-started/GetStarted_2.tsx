@@ -48,7 +48,7 @@ export default function GetStarted_2() {
           </>
         </MainTitle>
         <LineInput
-          isPhone
+          type="phone"
           control={control}
           title="휴대폰 번호"
           name="phone"

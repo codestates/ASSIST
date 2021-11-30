@@ -28,6 +28,7 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-web": "0.17.1",
+    "react-timer-hook": "^3.0.5",
     "styled-components": "^5.3.3",
     "yup": "^0.32.11"
   },
