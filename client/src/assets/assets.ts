@@ -1,4 +1,13 @@
-export const fontsToLoad = [
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { FontSource } from 'expo-font';
+
+export const fontsToLoad: [
+  { 'SpoqaHanSansNeo-Bold': FontSource },
+  { 'SpoqaHanSansNeo-Light': FontSource },
+  { 'SpoqaHanSansNeo-Medium': FontSource },
+  { 'SpoqaHanSansNeo-Regular': FontSource },
+  { 'SpoqaHanSansNeo-Thin': FontSource },
+] = [
   { 'SpoqaHanSansNeo-Bold': require('./fonts/SpoqaHanSansNeo-Bold.otf') },
   { 'SpoqaHanSansNeo-Light': require('./fonts/SpoqaHanSansNeo-Light.otf') },
   { 'SpoqaHanSansNeo-Medium': require('./fonts/SpoqaHanSansNeo-Medium.otf') },
