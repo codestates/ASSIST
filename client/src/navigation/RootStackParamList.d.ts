@@ -24,4 +24,7 @@ export type RootStackParamList = {
   GetStarted_6: undefined;
   GenderSelect: undefined;
   GetStarted_Login: undefined | { email: string };
+  FindPassword: undefined;
+  FindPassword_1: undefined;
+  FindPassword_2: undefined;
 };
