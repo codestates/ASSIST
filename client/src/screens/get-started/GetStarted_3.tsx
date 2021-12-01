@@ -64,7 +64,7 @@ export default function GetStarted_3({ route }: GetStartedProps) {
           <Bold size={17}>인증번호가 일치하지 않습니다.</Bold>
           <Line>
             <Regular gray size={13}>
-              오타는 없는지 다시 한 번 확인해주세요.
+              오타는 없는지 다시 한 번 확인해 주세요.
             </Regular>
           </Line>
         </CommonModalTitle>
@@ -76,7 +76,7 @@ export default function GetStarted_3({ route }: GetStartedProps) {
             <Bold size={22}>보내드린 문자 인증번호</Bold>
             <Light size={22}>를</Light>
           </>
-          <Light size={22}>입력해주세요</Light>
+          <Light size={22}>입력해 주세요</Light>
         </MainTitle>
         <LineSelect title="휴대폰 번호" selected={route.params?.phone} isFixed />
         <LineInput

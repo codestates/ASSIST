@@ -43,7 +43,7 @@ export default function CreateTeam_4() {
           <Light size={22}>얼마인가요? 💰</Light>
         </MainTitle>
         <SubTitle>
-          <Light>회비 납부 전날에 납부 정보를 팀원들에게 보내드려요</Light>
+          <Light>회비 납부 1일전, 팀원들에게 납부 정보를 보내드려요.</Light>
         </SubTitle>
         <LineInput
           type="money"

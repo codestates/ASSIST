@@ -44,7 +44,7 @@ export default function GetStarted_2() {
           <Light size={22}>처음 뵙네요👋</Light>
           <>
             <Bold size={22}>휴대폰 번호</Bold>
-            <Light size={22}>를 입력해주세요</Light>
+            <Light size={22}>를 입력해 주세요</Light>
           </>
         </MainTitle>
         <LineInput

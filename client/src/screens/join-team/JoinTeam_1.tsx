@@ -81,7 +81,7 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
           <Bold size={17}>초대 코드가 일치하지 않습니다.</Bold>
           <Line>
             <Regular gray size={13}>
-              오타는 없는지 다시 한 번 확인해주세요.
+              오타는 없는지 다시 한 번 확인 해주세요.
             </Regular>
           </Line>
         </CommonModalTitle>
@@ -93,7 +93,7 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
             <Bold size={22}>팀 초대 코드</Bold>
             <Light size={22}>를</Light>
           </>
-          <Light size={22}>알려주세요 🎁</Light>
+          <Light size={22}>입력해 주세요 🎁</Light>
         </MainTitle>
         <SubTitle>
           <Light>초대 코드는 팀의 주장님이 알고 있을 거에요!</Light>

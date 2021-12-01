@@ -64,10 +64,10 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
             <Bold size={22}>팀 회비 납부계좌</Bold>
             <Light size={22}>를</Light>
           </>
-          <Light size={22}>알려주세요 💳</Light>
+          <Light size={22}>알려 주세요 💳</Light>
         </MainTitle>
         <SubTitle>
-          <Light>회비 납부 전날에 납부 정보를 팀원들에게 보내드려요</Light>
+          <Light>회비 납부 1일전, 팀원들에게 납부 정보를 보내드려요.</Light>
         </SubTitle>
         <LineSelect
           title="은행"
