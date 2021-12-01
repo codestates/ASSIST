@@ -2,15 +2,18 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
-import SkipButton from '../../components/button/SkipButton';
 import LineInput from '../../components/input/LineInput';
 import MainTitle from '../../components/text/MainTitle';
-import SubTitle from '../../components/text/SubTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import styled from 'styled-components/native';
+
+const Seperator = styled.View`
+  height: 15px;
+`;
 
 const schema = yup.object({
   password_1: yup
@@ -30,7 +33,6 @@ export default function GetStarted_4() {
   const {
     control,
     handleSubmit,
-    getValues,
     formState: { isValid },
     watch,
   } = useForm({
@@ -54,9 +56,6 @@ export default function GetStarted_4() {
           </>
           <Light size={22}>설정해주세요 🔐</Light>
         </MainTitle>
-        <SubTitle>
-          <Light>회비 납부 전날에 납부 알림을 보내드릴게요.</Light>
-        </SubTitle>
         <LineInput
           type="password"
           control={control}
@@ -84,6 +83,7 @@ export default function GetStarted_4() {
             },
           ]}
         />
+        <Seperator />
         <LineInput
           type="password"
           control={control}
@@ -96,16 +96,15 @@ export default function GetStarted_4() {
             {
               name: '일치',
               regex:
-                String(watch('password_1')).length > 0 &&
+                Boolean(watch('password_1')) &&
                 String(watch('password_1')) === String(watch('password_2')),
             },
           ]}
         />
       </NextPageView>
-      <SkipButton onPress={() => navigation.navigate('CreateTeam_3')} />
       <NextButton
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('CreateTeam_3')}
+        onPress={() => navigation.navigate('GetStarted_5')}
       />
     </>
   );

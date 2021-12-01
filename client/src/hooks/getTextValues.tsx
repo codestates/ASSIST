@@ -55,7 +55,7 @@ export default function getTextValues({ text, type }: getTextValuesProps) {
       return temp + '원';
     }
   } else if (type === 'password') {
-    // text = text.replace(/\s/, '');
+    text = text.replace(/\s/, '');
     return text;
   } else {
     return text;

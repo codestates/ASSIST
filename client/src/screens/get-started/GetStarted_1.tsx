@@ -44,6 +44,7 @@ export default function GetStarted_1() {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { isValid },
   } = useForm({
     mode: 'onChange',
@@ -56,7 +57,9 @@ export default function GetStarted_1() {
   const onSubmit = (data: string) => {
     console.log(data);
   };
-
+  // 기존 유저인지 확인
+  const [existingUser] = useState(false);
+;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <>
@@ -110,7 +113,13 @@ export default function GetStarted_1() {
       <NextContainer show={show}>
         <NextButton
           disabled={!isValid || Boolean(errorMessage)}
-          onPress={() => navigation.navigate('GetStarted_2')}
+          onPress={() => {
+            if (existingUser) {
+              navigation.navigate('GetStarted_Login', { email: String(getValues('email')) });
+            } else {
+              navigation.navigate('GetStarted_2');
+            }
+          }}
         />
       </NextContainer>
     </>

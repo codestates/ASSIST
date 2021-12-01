@@ -20,4 +20,8 @@ export type RootStackParamList = {
   GetStarted_2: undefined;
   GetStarted_3: undefined | { phone: string };
   GetStarted_4: undefined;
+  GetStarted_5: undefined | { gender: string };
+  GetStarted_6: undefined;
+  GenderSelect: undefined;
+  GetStarted_Login: undefined | { email: string };
 };

@@ -5,12 +5,16 @@ import DotsHeader from '../components/header/DotsHeader';
 import GetStarted_2 from '../screens/get-started/GetStarted_2';
 import GetStarted_3 from '../screens/get-started/GetStarted_3';
 import GetStarted_4 from '../screens/get-started/GetStarted_4';
+import GetStarted_5 from '../screens/get-started/GetStarted_5';
+import GenderSelect from '../screens/drawer-select/GenderSelect';
+import GetStarted_6 from '../screens/get-started/GetStarted_6';
+import GetStarted_Login from '../screens/get-started/GetStarted_Login';
 
 const GetStartedStack = createStackNavigator();
 
 export default function GetStartedNav() {
   return (
-    <GetStartedStack.Navigator initialRouteName="GetStarted_4">
+    <GetStartedStack.Navigator>
       <GetStartedStack.Screen
         name="GetStarted_1"
         options={{
@@ -38,6 +42,32 @@ export default function GetStartedNav() {
           header: () => <DotsHeader current={3} total={4} />,
         }}
         component={GetStarted_4}
+      />
+      <GetStartedStack.Screen
+        name="GetStarted_5"
+        options={{
+          header: () => <DotsHeader current={4} total={4} />,
+        }}
+        component={GetStarted_5}
+      />
+      <GetStartedStack.Screen
+        name="GetStarted_6"
+        options={{
+          headerShown: false,
+        }}
+        component={GetStarted_6}
+      />
+      <GetStartedStack.Screen
+        name="GenderSelect"
+        component={GenderSelect}
+        options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
+      />
+      <GetStartedStack.Screen
+        name="GetStarted_Login"
+        options={{
+          header: () => <DotsHeader current={0} total={0} />,
+        }}
+        component={GetStarted_Login}
       />
     </GetStartedStack.Navigator>
   );
