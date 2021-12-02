@@ -44,10 +44,10 @@ export default function CreateTeam_2() {
             <Bold size={22}>팀 회비 납부일</Bold>
             <Light size={22}>을</Light>
           </>
-          <Light size={22}>알려주세요 📅</Light>
+          <Light size={22}>알려 주세요 📅</Light>
         </MainTitle>
         <SubTitle>
-          <Light>회비 납부 전날에 납부 알림을 보내드릴게요.</Light>
+          <Light>회비 납부 1일 전, 팀원들에게 납부 알림을 보내드려요.</Light>
         </SubTitle>
         <LineInput
           type="date"

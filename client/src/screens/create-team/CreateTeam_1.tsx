@@ -43,7 +43,7 @@ export default function CreateTeam_1() {
             <Bold size={22}>팀 이름</Bold>
             <Light size={22}>을</Light>
           </>
-          <Light size={22}>알려주세요 ⚽️</Light>
+          <Light size={22}>알려 주세요 ⚽️</Light>
         </MainTitle>
         <SubTitle>
           <Light>팀 이름은 언제든 수정이 가능합니다.</Light>

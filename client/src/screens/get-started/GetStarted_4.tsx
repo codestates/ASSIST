@@ -54,7 +54,7 @@ export default function GetStarted_4() {
             <Bold size={22}>비밀번호</Bold>
             <Light size={22}>를</Light>
           </>
-          <Light size={22}>설정해주세요 🔐</Light>
+          <Light size={22}>설정해 주세요 🔐</Light>
         </MainTitle>
         <LineInput
           type="password"
