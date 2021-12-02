@@ -9,6 +9,7 @@ import GetStarted_5 from '../screens/get-started/GetStarted_5';
 import GenderSelect from '../screens/drawer-select/GenderSelect';
 import GetStarted_6 from '../screens/get-started/GetStarted_6';
 import GetStarted_Login from '../screens/get-started/GetStarted_Login';
+import FindPasswordNav from './FindPasswordNav';
 
 const GetStartedStack = createStackNavigator();
 
@@ -68,6 +69,11 @@ export default function GetStartedNav() {
           header: () => <DotsHeader current={0} total={0} />,
         }}
         component={GetStarted_Login}
+      />
+      <GetStartedStack.Screen
+        name="FindPassword"
+        options={{ headerShown: false }}
+        component={FindPasswordNav}
       />
     </GetStartedStack.Navigator>
   );
