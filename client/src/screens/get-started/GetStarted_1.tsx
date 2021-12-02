@@ -59,7 +59,7 @@ export default function GetStarted_1() {
   };
   // 기존 유저인지 확인
   const [existingUser] = useState(true);
-;
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <>
