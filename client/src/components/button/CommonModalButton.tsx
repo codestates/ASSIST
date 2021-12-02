@@ -4,13 +4,14 @@ import { Regular } from '../../theme/fonts';
 import CommonButton from './CommonButton';
 
 type ButtonProps = {
-  color?: 'blue' | 'whiteSmoke';
+  color?: 'blue' | 'transparent' | 'whiteSmoke';
   text: string;
   onPress: () => void;
 };
 
 export default function CommonModalButton({ color, text, onPress }: ButtonProps) {
-  const backgroundColor = color === 'blue' ? colors.blue : colors.whiteSmoke;
+  const backgroundColor =
+    color === 'blue' ? colors.blue : color === 'transparent' ? 'transparent' : colors.whiteSmoke;
   return (
     <CommonButton
       onPress={onPress}

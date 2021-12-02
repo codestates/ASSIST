@@ -4,15 +4,26 @@ import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 
 const Container = styled.SafeAreaView`
-  width: ${(props: { width: number }) => props.width}px;
+  width: ${(props: HeaderProps) => props.width}px;
+  height: ${(props: HeaderProps) => (props.height ? String(props.height) + 'px' : 'auto')};
   background-color: ${colors.white};
 `;
 
-type HeaderContainerProps = {
-  children: React.ReactNode;
+type HeaderProps = {
+  width: number;
+  height?: number;
 };
 
-export default function HeaderContainer({ children }: HeaderContainerProps) {
-  const screenWidth = useWindowDimensions().width;
-  return <Container width={screenWidth}>{children}</Container>;
+type HeaderContainerProps = {
+  children: React.ReactNode;
+  height?: number;
+};
+
+export default function HeaderContainer({ children, height }: HeaderContainerProps) {
+  const { width } = useWindowDimensions();
+  return (
+    <Container width={width} height={height}>
+      {children}
+    </Container>
+  );
 }

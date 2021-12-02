@@ -50,6 +50,7 @@ export default function CreateTeam_2() {
           <Light>회비 납부 전날에 납부 알림을 보내드릴게요.</Light>
         </SubTitle>
         <LineInput
+          type="date"
           control={control}
           title="매월"
           name="date"

@@ -33,11 +33,18 @@ const Selected = styled(Regular)`
 type LineSelectProps = {
   title: string;
   selected?: string;
-  onPress: () => void;
-  isPressed: boolean;
+  onPress?: () => void;
+  isPressed?: boolean;
+  isFixed?: boolean;
 };
 
-export default function LineSelect({ title, selected, onPress, isPressed }: LineSelectProps) {
+export default function LineSelect({
+  title,
+  selected,
+  onPress,
+  isPressed,
+  isFixed,
+}: LineSelectProps) {
   const getInputColor = (title?: string) => {
     if (isPressed) {
       return colors.blue;
@@ -53,11 +60,11 @@ export default function LineSelect({ title, selected, onPress, isPressed }: Line
   return (
     <Container>
       {<Title color={getInputColor(title)}>{title}</Title>}
-      <SelectInput onPress={onPress} color={getInputColor()}>
+      <SelectInput disabled={isFixed} onPress={onPress} color={getInputColor()}>
         <Selected color={selected ? colors.darkGray : colors.lightGray}>
           {selected || `${title}을 선택해주세요`}
         </Selected>
-        <MaterialIcons name="keyboard-arrow-down" size={23} color={getInputColor()} />
+        {isFixed || <MaterialIcons name="keyboard-arrow-down" size={23} color={getInputColor()} />}
       </SelectInput>
     </Container>
   );

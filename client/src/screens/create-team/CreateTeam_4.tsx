@@ -13,7 +13,7 @@ import * as yup from 'yup';
 import SkipButton from '../../components/button/SkipButton';
 
 const schema = yup.object({
-  fee: yup.number().required(),
+  fee: yup.string().required(),
 });
 
 export default function CreateTeam_4() {
@@ -46,18 +46,13 @@ export default function CreateTeam_4() {
           <Light>회비 납부 전날에 납부 정보를 팀원들에게 보내드려요</Light>
         </SubTitle>
         <LineInput
+          type="money"
           control={control}
           title="월 회비 금액"
           name="fee"
           placeholder="회비 금액을 입력해주세요"
           errorMessage={errorMessage}
           clearErrorMessage={clearErrorMessage}
-          conditions={[
-            {
-              name: '숫자만 입력',
-              regex: /^\d+$/,
-            },
-          ]}
         />
       </NextPageView>
       <SkipButton onPress={() => navigation.navigate('CreateTeam_5')} />

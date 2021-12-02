@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-const ButtonContainer = styled.Pressable`
+const ButtonContainer = styled.TouchableOpacity`
   width: ${(props: ButtonProps) => props.width};
   height: ${(props: ButtonProps) => props.height};
   border: ${(props: ButtonProps) =>
