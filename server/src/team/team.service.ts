@@ -11,10 +11,8 @@ import { User } from 'src/user/user.entity';
 import { Ipost } from './interface/post.interface';
 import { UpdateTeamDto } from './dto/update-dto';
 import { UserRepository } from 'src/user/user.repository';
-import { Team } from './team.entity';
 import { IgetMember } from './interface/getMember.interface';
 import { MatchRepository } from 'src/match/match.repository';
-import { Raw } from 'typeorm';
 
 @Injectable()
 export class TeamService {
@@ -35,7 +33,7 @@ export class TeamService {
     return await this.teamRepository.joinTeam(code, user);
   }
 
-  async getDetail(id: number): Promise<any> {
+  async getDetail(id: number, user: User): Promise<any> {
     const found: any = await this.teamRepository.findOne(
       { id },
       { relations: ['leaderId'] },
@@ -44,37 +42,10 @@ export class TeamService {
     if (!found) {
       throw new NotFoundException('해당 팀이 존재하지 않습니다.');
     }
-
     delete found.leaderId.password;
 
-    const nextMatch = await this.matchRepository.findOne({
-      where: {
-        date: Raw((alias) => `${alias} >= :date`, {
-          date: new Date().toISOString().slice(0, 10),
-        }),
-        team: { id },
-        condition: Raw((alias) => `${alias} IN (:...condition)`, {
-          condition: ['경기 확정', '인원 모집 중'],
-        }),
-      },
-      // order: { date: 'DESC', endTime: 'DESC' },
-    });
-
-    const lastMatch = await this.matchRepository.findOne({
-      where: {
-        date: Raw((alias) => `${alias} < :date`, {
-          date: new Date().toISOString().slice(0, 10),
-        }),
-        team: { id },
-        condition: Raw((alias) => `${alias} IN (:...condition)`, {
-          condition: ['경기 완료', '경기 취소'],
-        }),
-      },
-      order: { date: 'DESC', endTime: 'DESC' },
-    });
-
-    found.nextMatch = nextMatch || null;
-    found.lastMatch = lastMatch || null;
+    const nextMatch = await this.matchRepository.getNextMatch(id, user);
+    found.nextMatch = nextMatch;
 
     return found;
   }

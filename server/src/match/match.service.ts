@@ -18,6 +18,7 @@ import {
 import { User_match } from 'src/others/user_match.entity';
 import { Match } from './match.entity';
 import { UpdateMatchDto } from './dto/update-dto';
+import { VoteMatchDto } from './dto/vote-dto';
 
 @Injectable()
 export class MatchService {
@@ -96,6 +97,8 @@ export class MatchService {
     } catch (err) {
       throw new InternalServerErrorException('database err');
     }
+
+    data.vote = true;
     data.attend = [];
     data.absent = [];
     data.hold = [];
@@ -104,6 +107,7 @@ export class MatchService {
     data.user_matchs.forEach((el) => {
       switch (el.condition) {
         case '미응답':
+          if (el.id === user.id) data.vote = false;
           data.nonRes.push(el);
           break;
         case '참석':
@@ -121,19 +125,32 @@ export class MatchService {
     return data;
   }
 
-  async getlastMatchs(teamId: number): Promise<Match[]> {
-    return await this.matchRepository.find({
+  async getlastMatchs(teamId: number, page: number = 1): Promise<any> {
+    const offset = page * 10 - 10;
+    const [lastMatchs, count] = await this.matchRepository.findAndCount({
       where: {
         date: Raw((alias) => `${alias} < :date`, {
           date: new Date().toISOString().slice(0, 10),
         }),
         team: { id: teamId },
-        condition: Raw((alias) => `${alias} IN (:...condition)`, {
-          condition: ['경기 완료', '경기 취소'],
-        }),
       },
-      order: { date: 'DESC', endTime: 'DESC' },
+      order: { date: 'DESC', endTime: 'DESC', id: 'DESC' },
+      skip: offset,
+      take: 10,
     });
+
+    const totalPage = Math.round(count / 10);
+
+    const payload = { lastMatchs, totalPage };
+    if (page === 1) {
+      lastMatchs.forEach(async (el) => {
+        if (el.condition === '경기 확정' || el.condition === '인원 모집 중') {
+          el.condition = '경기 완료';
+          await this.matchRepository.save(el);
+        }
+      });
+    }
+    return payload;
   }
 
   async changeCondition(
@@ -141,7 +158,6 @@ export class MatchService {
     user: User,
     updateMatchDto: UpdateMatchDto,
   ) {
-    console.log(matchId);
     const match = await this.matchRepository.findOne(
       { id: matchId },
       { relations: ['team'] },
@@ -154,5 +170,31 @@ export class MatchService {
     if (!check) {
       throw new BadRequestException('경기 상태 변경은 팀장만 가능합니다.');
     }
+
+    if (match.condition === '경기 완료' || match.condition === '경기 취소') {
+      throw new BadRequestException('해당 경기는 변경할 수 없습니다.');
+    }
+    match.condition = updateMatchDto.condition;
+    this.matchRepository.save(match);
+    return { message: 'ok' };
+  }
+
+  async voteMatch(matchId: number, user: User, voteMatchDto: VoteMatchDto) {
+    const { vote } = voteMatchDto;
+
+    const match = await this.matchRepository.findOne({ id: matchId });
+    console.log(match);
+
+    // 여기서 데드라인 체크하는거 필요함.
+
+    await this.userMatchRepository
+      .createQueryBuilder('user_match')
+      .update(User_match)
+      .set({ condition: vote })
+      .where('matchId = :matchId', { matchId })
+      .andWhere('userId = :userId', { userId: user.id })
+      .execute();
+
+    return { message: 'ok' };
   }
 }

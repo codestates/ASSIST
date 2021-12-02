@@ -37,8 +37,8 @@ export class TeamController {
   }
 
   @Get('/:id')
-  getDetail(@Param('id') id: number): Promise<Team> {
-    return this.teamService.getDetail(id);
+  getDetail(@Param('id') id: number, @Req() req: Request): Promise<Team> {
+    return this.teamService.getDetail(id, req.user);
   }
 
   @Patch('/:id')
