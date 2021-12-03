@@ -9,12 +9,12 @@ import * as bcrypt from 'bcryptjs';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async createUser(createUserDto: CreateUserDto): Promise<object> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     const userInfo = { ...createUserDto };
 
     const { email, provider, password, phone } = userInfo;
 
-    const found: User = await this.findOne({
+    const found = await this.findOne({
       email,
       provider: provider || 'normal',
     });
@@ -22,13 +22,13 @@ export class UserRepository extends Repository<User> {
     if (found) {
       throw new ConflictException('이미 존재하는 이메일입니다.');
     } else {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const salt: string = await bcrypt.genSalt(10);
+      const hashedPassword: string = await bcrypt.hash(password, salt);
       userInfo.password = hashedPassword;
       const user = this.create(userInfo);
       await this.deleteConflictPhone(phone);
       await this.save(user);
-      return { message: 'ok' };
+      return user;
     }
   }
 

@@ -15,6 +15,7 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateDto } from './dto/update-dto';
 import { User } from './user.entity';
+import { PatchUser } from './interface/res.patchUser';
 @Injectable()
 export class UserService {
   constructor(
@@ -73,7 +74,11 @@ export class UserService {
   }
 
   async signUp(createUserDto: CreateUserDto): Promise<object> {
-    return this.userRepository.createUser(createUserDto);
+    const user = await this.userRepository.createUser(createUserDto);
+    const payload = { ...user };
+    delete payload.password;
+    const accessToken = await this.jwtService.sign(payload);
+    return { accessToken };
   }
 
   async signIn(signInDto: SignInDto): Promise<{ accessToken: string }> {
@@ -101,10 +106,7 @@ export class UserService {
     return user;
   }
 
-  async patchUser(
-    updateInfo: UpdateDto,
-    userInfo: User,
-  ): Promise<{ accessToken: string }> {
+  async patchUser(updateInfo: UpdateDto, userInfo: User): Promise<PatchUser> {
     let { password, phone } = updateInfo;
     if (password) {
       const salt = await bcrypt.genSalt(10);
@@ -116,10 +118,12 @@ export class UserService {
     });
     if (phone) await this.userRepository.deleteConflictPhone(phone);
     await this.userRepository.save(userInfo);
+
+    delete userInfo.password;
     const payload = { ...userInfo };
-    delete payload.password;
+
     const accessToken = await this.jwtService.sign(payload);
-    return { accessToken };
+    return { accessToken, user: userInfo };
   }
 
   async checkPw(userInfo: User, password: string): Promise<object> {

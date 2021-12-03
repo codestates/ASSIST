@@ -13,17 +13,17 @@ import {
 export class User_match {
   @PrimaryGeneratedColumn()
   id!: number;
-  @Column()
+  @Column({ default: '미응답' })
   condition: string;
 
   @Column({ default: null })
   reason: string;
 
   @ManyToOne(() => User, (user) => user.user_matchs)
-  user!: User;
+  user: User;
 
   @ManyToOne(() => Match, (match) => match.user_matchs)
-  match!: Match;
+  match: Match;
   // @OneToMany((type) => Photo, (photo) => photo.user)
   // photos: Photo[];
 }
