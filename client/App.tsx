@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
@@ -13,7 +10,7 @@ import LoggedOutNav from './src/navigation/LoggedOutNav';
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [isLoggedin] = useState(true);
+  const [isLoggedin] = useState(false);
 
   const onFinish = () => setLoading(false);
   const preloadAssets = async () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-const ButtonContainer = styled.Pressable`
+const ButtonContainer = styled.TouchableOpacity`
   width: ${(props: ButtonProps) => props.width};
   height: ${(props: ButtonProps) => props.height};
   border: ${(props: ButtonProps) =>
@@ -20,13 +20,16 @@ type ButtonProps = {
   buttonBorder?: string;
   buttonRadius?: string;
   buttonBgColor: string;
+  disabled?: boolean;
   children: React.ReactNode;
 };
 const CommonButton = (props: ButtonProps) => {
-  const { onPress, buttonRadius, children, buttonBorder, buttonBgColor, width, height } = props;
+  const { onPress, buttonRadius, children, buttonBorder, buttonBgColor, width, height, disabled } =
+    props;
 
   return (
     <ButtonContainer
+      disabled={disabled}
       onPress={onPress}
       width={width}
       height={height}

@@ -6,6 +6,11 @@ import MyPage from '../screens/main/MyPage';
 import TeamSelect from '../screens/drawer-select/TeamSelect';
 import CreateTeamNav from './CreateTeamNav';
 
+import LendingPageNav from './LendingPageNav';
+
+import JoinTeamNav from './JoinTeamNav';
+
+
 const HomeStack = createStackNavigator();
 
 // 로그인 시, role에 따라 온보딩 페이지를 보여줄지 말지 결정
@@ -34,6 +39,12 @@ export default function LoggedInNav() {
         component={CreateTeamNav}
         options={{ headerShown: false }}
       />
+      <HomeStack.Screen
+        name="LendingPage"
+        component={LendingPageNav}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen name="JoinTeam" component={JoinTeamNav} options={{ headerShown: false }} />
     </HomeStack.Navigator>
   );
 }

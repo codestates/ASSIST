@@ -118,8 +118,10 @@ export class UserService {
     });
     if (phone) await this.userRepository.deleteConflictPhone(phone);
     await this.userRepository.save(userInfo);
+
     delete userInfo.password;
     const payload = { ...userInfo };
+
     const accessToken = await this.jwtService.sign(payload);
     return { accessToken, user: userInfo };
   }
