@@ -29,6 +29,9 @@ export default function Home() {
       <TouchableOpacity onPress={() => navigation.navigate('LendingPage')}>
         <Text>랜딩 페이지</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ScheduleManage')}>
+        <Text>일정 관리</Text>
+      </TouchableOpacity>
     </Container>
   );
 }
