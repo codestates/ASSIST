@@ -16,7 +16,7 @@ const BlueDot = styled.View`
   width: 10px;
   height: 10px;
   border-radius: 10px;
-  margin: 0px 2px;
+  margin: 0px 3px;
   background-color: ${colors.blue};
 `;
 

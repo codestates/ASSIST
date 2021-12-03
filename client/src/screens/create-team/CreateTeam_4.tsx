@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import LineInput from '../../components/input/LineInput';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -8,17 +8,25 @@ import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import SkipButton from '../../components/button/SkipButton';
+
+const schema = yup.object({
+  fee: yup.number().required(),
+});
 
 export default function CreateTeam_4() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { isValid },
   } = useForm({
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
+    mode: 'onChange',
+    resolver: yupResolver(schema),
   });
-
+  const [errorMessage, setErrorMessage] = useState('');
+  const clearErrorMessage = () => setErrorMessage('');
   const onSubmit = (data: string) => {
     console.log(data);
   };
@@ -40,9 +48,10 @@ export default function CreateTeam_4() {
         <LineInput
           control={control}
           title="월 회비 금액"
-          name="teamName"
+          name="fee"
           placeholder="회비 금액을 입력해주세요"
-          errorMessage={errors.id?.message}
+          errorMessage={errorMessage}
+          clearErrorMessage={clearErrorMessage}
           conditions={[
             {
               name: '숫자만 입력',
@@ -51,7 +60,11 @@ export default function CreateTeam_4() {
           ]}
         />
       </NextPageView>
-      <NextButton onPress={() => navigation.navigate('CreateTeam_5')} />
+      <SkipButton onPress={() => navigation.navigate('CreateTeam_5')} />
+      <NextButton
+        disabled={!isValid || Boolean(errorMessage)}
+        onPress={() => navigation.navigate('CreateTeam_5')}
+      />
     </>
   );
 }

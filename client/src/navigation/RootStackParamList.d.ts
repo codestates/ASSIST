@@ -1,3 +1,5 @@
+import { string } from 'yup/lib/locale';
+
 export type RootStackParamList = {
   Home: undefined;
   MyPage: undefined;
@@ -20,4 +22,18 @@ export type RootStackParamList = {
   LendingPage_6: undefined;
   LendingPage_7: undefined;
   LendingPage_8: undefined;
+  JoinTeam: undefined;
+  JoinTeam_1: undefined | { reset: boolean };
+  JoinTeam_2: undefined;
+  JoinTeam_3: undefined;
+  ScheduleManage: undefined;
+  ScheduleManage_1: undefined | { calendar: string; start: string; end: string };
+  ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
+  ScheduleManage_3: undefined;
+  ScheduleManage_4: undefined;
+  ScheduleManage_5: undefined;
+  CalendarSelect: undefined | { calendar: string };
+  StartTimeSelect: undefined | { start: string };
+  EndTimeSelect: undefined | { end: string };
+  StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
 };

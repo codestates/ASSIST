@@ -23,11 +23,14 @@ export default function Home() {
       <TouchableOpacity onPress={() => navigation.navigate('CreateTeam')}>
         <Text>팀 등록하기</Text>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('JoinTeam')}>
         <Text>팀 가입하기</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('LendingPage')}>
         <Text>랜딩 페이지</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ScheduleManage')}>
+        <Text>일정 관리</Text>
       </TouchableOpacity>
     </Container>
   );
