@@ -22,9 +22,15 @@ export type RootStackParamList = {
   GetStarted_4: undefined;
   GetStarted_5: undefined | { gender: string };
   GetStarted_6: undefined;
-  GenderSelect: undefined;
+  GenderSelect: undefined | { screenName: keyof RootStackParamList };
   GetStarted_Login: undefined | { email: string };
   FindPassword: undefined;
   FindPassword_1: undefined;
   FindPassword_2: undefined;
+  MyPage_Main: undefined;
+  NewPhone: undefined;
+  NewPhone_1: undefined;
+  NewPhone_2: undefined | { phone: string };
+  MyProfile: undefined;
+  MyProfile_1: undefined | { gender: string };
 };

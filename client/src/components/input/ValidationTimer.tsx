@@ -9,7 +9,7 @@ const Validation = styled.View`
   right: 0;
   bottom: 2px;
   top: 0;
-  width: 27%;
+  width: 29%;
   height: 60px;
   padding: 5px 8px;
   justify-content: space-between;
@@ -25,30 +25,53 @@ const ResendButton = styled.TouchableOpacity`
   border-radius: 5px;
 `;
 
-export default function ValidationTimer() {
+type ValidationTimerProps = {
+  setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
+  clearInput?: () => void;
+};
+
+export default function ValidationTimer({ setErrorMessage, clearInput }: ValidationTimerProps) {
   const expiryTimestamp = new Date();
-  expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 120);
+  expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 5);
 
   const { seconds, minutes, start, restart } = useTimer({
     expiryTimestamp,
     autoStart: false,
+    onExpire: () => {
+      if (setErrorMessage) {
+        setErrorMessage("'재전송'을 누르고, 새 번호를 입력해 주세요.");
+      }
+    },
   });
 
   useEffect(() => {
     start();
   }, []);
 
-  const getSeconds = (seconds: number) => {
-    if (seconds < 10) return `0${seconds}`;
-    return seconds;
+  const getTime = (minutes: number, seconds: number) => {
+    if (minutes === 0 && seconds === 0) {
+      return '입력 시간 초과';
+    } else if (seconds < 10) {
+      return `${minutes}:0${seconds} 남음`;
+    } else {
+      return `${minutes}:${seconds} 남음`;
+    }
+  };
+
+  const restartTimer = () => {
+    if (setErrorMessage && clearInput) {
+      setErrorMessage('');
+      clearInput();
+    }
+    restart(expiryTimestamp);
   };
 
   return (
     <Validation>
       <Regular size={14} red>
-        {`${minutes}:${getSeconds(seconds)} 남음`}
+        {getTime(minutes, seconds)}
       </Regular>
-      <ResendButton onPress={() => restart(expiryTimestamp)}>
+      <ResendButton onPress={() => restartTimer()}>
         <Regular size={13} white>
           재전송
         </Regular>

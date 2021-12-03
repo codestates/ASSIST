@@ -92,6 +92,7 @@ type LineInputProps = {
   secureTextEntry?: boolean;
   clearErrorMessage: () => void;
   type?: 'phone' | 'money' | 'timer' | 'password' | 'date';
+  setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function LineInput({
@@ -103,6 +104,7 @@ export default function LineInput({
   conditions,
   clearErrorMessage,
   type,
+  setErrorMessage,
 }: LineInputProps) {
   const timerWidth = useWindowDimensions().width * 0.27;
   const { field } = useController({ control, defaultValue: '', name });
@@ -132,6 +134,8 @@ export default function LineInput({
     }
   };
 
+  const TimerExpiredError = "'재전송'을 누르고, 새 번호를 입력해 주세요.";
+
   const getKeyboardType = () => {
     if (type === 'phone' || type === 'money' || type === 'date') return 'number-pad';
     return 'default';
@@ -139,14 +143,14 @@ export default function LineInput({
 
   const onChangeText = (text: string) => {
     field.onChange(text);
-    if (isError) {
+    if (isError && errorMessage !== TimerExpiredError) {
       clearErrorMessage();
     }
   };
 
   const clearInput = () => {
     field.onChange('');
-    if (isError) {
+    if (isError && errorMessage !== TimerExpiredError) {
       clearErrorMessage();
     }
   };
@@ -214,7 +218,9 @@ export default function LineInput({
         </ClearButton>
       </InputContainer>
       {getSubtitle(isError, conditions)}
-      {type === 'timer' && <ValidationTimer />}
+      {type === 'timer' && (
+        <ValidationTimer setErrorMessage={setErrorMessage} clearInput={() => field.onChange('')} />
+      )}
     </Container>
   );
 }

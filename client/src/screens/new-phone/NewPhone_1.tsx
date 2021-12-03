@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import MainTitle from '../../components/text/MainTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,6 +8,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
+import MainTitle from '../../components/text/MainTitle';
 
 const schema = yup.object({
   phone: yup
@@ -17,7 +17,7 @@ const schema = yup.object({
     .required(),
 });
 
-export default function GetStarted_2() {
+export default function NewPhone_1() {
   const {
     control,
     handleSubmit,
@@ -39,11 +39,11 @@ export default function GetStarted_2() {
     <>
       <NextPageView>
         <MainTitle>
-          <Light size={22}>처음 뵙네요👋</Light>
           <>
-            <Bold size={22}>휴대폰 번호</Bold>
-            <Light size={22}>를 입력해 주세요</Light>
+            <Bold size={22}>새로운 번호</Bold>
+            <Light size={22}>를</Light>
           </>
+          <Light size={22}>입력해 주세요</Light>
         </MainTitle>
         <LineInput
           type="phone"
@@ -63,7 +63,7 @@ export default function GetStarted_2() {
       </NextPageView>
       <NextButton
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('GetStarted_3', { phone: String(getValues('phone')) })}
+        onPress={() => navigation.navigate('NewPhone_2', { phone: String(getValues('phone')) })}
       />
     </>
   );

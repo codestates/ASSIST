@@ -24,9 +24,9 @@ const schema = yup.object({
   validation: yup.string().min(6).max(6).required(),
 });
 
-type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_3'>;
+type NewPhoneProps = StackScreenProps<RootStackParamList, 'NewPhone_2'>;
 
-export default function GetStarted_3({ route }: GetStartedProps) {
+export default function NewPhone_2({ route }: NewPhoneProps) {
   const {
     control,
     handleSubmit,
@@ -91,8 +91,9 @@ export default function GetStarted_3({ route }: GetStartedProps) {
         />
       </NextPageView>
       <NextButton
+        text="변경하기"
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('GetStarted_4')}
+        onPress={() => navigation.navigate('MyPage_Main')}
       />
     </>
   );

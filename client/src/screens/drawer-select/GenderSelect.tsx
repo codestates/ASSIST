@@ -4,6 +4,7 @@ import BottomDrawer from '../../components/drawer/BottomDrawer';
 import { Bold, Light } from '../../theme/fonts';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const TitleContainer = styled.View`
   margin: 20px 0px;
@@ -26,8 +27,16 @@ const Gender = styled(Light)`
 
 const GenderList = ['남성', '여성'];
 
-export default function GenderSelect() {
+type GenderSelectProps = StackScreenProps<RootStackParamList, 'GenderSelect'>;
+
+export default function GenderSelect({ route }: GenderSelectProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const getScreenToGo = (gender: string, screenName?: keyof RootStackParamList) => {
+    if (screenName) {
+      navigation.navigate(screenName, { gender });
+    }
+  };
+
   return (
     <BottomDrawer>
       <TitleContainer>
@@ -36,7 +45,7 @@ export default function GenderSelect() {
       {GenderList.map((gender) => (
         <GenderContainer
           key={gender}
-          onPress={() => navigation.navigate('GetStarted_5', { gender })}>
+          onPress={() => getScreenToGo(gender, route.params?.screenName)}>
           <Gender>{gender}</Gender>
         </GenderContainer>
       ))}
