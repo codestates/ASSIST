@@ -33,7 +33,7 @@ export type RootStackParamList = {
   GetStarted_4: undefined;
   GetStarted_5: undefined | { gender: string };
   GetStarted_6: undefined;
-  GenderSelect: undefined;
+  GenderSelect: undefined | { screenName: keyof RootStackParamList };
   GetStarted_Login: undefined | { email: string };
   FindPassword: undefined;
   FindPassword_1: undefined;
@@ -48,4 +48,10 @@ export type RootStackParamList = {
   StartTimeSelect: undefined | { start: string };
   EndTimeSelect: undefined | { end: string };
   StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
+  MyPage_Main: undefined;
+  NewPhone: undefined;
+  NewPhone_1: undefined;
+  NewPhone_2: undefined | { phone: string };
+  MyProfile: undefined;
+  MyProfile_1: undefined | { gender: string };
 };
