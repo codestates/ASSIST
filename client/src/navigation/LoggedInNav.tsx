@@ -3,13 +3,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screens/main/Home';
 import LoggedInHeader from '../components/header/LoggedInHeader';
 import TeamSelect from '../screens/drawer-select/TeamSelect';
+
 import CreateTeamNav from './CreateTeamNav';
-
 import LendingPageNav from './LendingPageNav';
-
 import JoinTeamNav from './JoinTeamNav';
+import ScheduleManageNav from './ScheduleManageNav';
 import MyPageNav from './MyPageNav';
-
 
 const HomeStack = createStackNavigator();
 
@@ -51,6 +50,11 @@ export default function LoggedInNav() {
         options={{ headerShown: false }}
       />
       <HomeStack.Screen name="JoinTeam" component={JoinTeamNav} options={{ headerShown: false }} />
+      <HomeStack.Screen
+        name="ScheduleManage"
+        component={ScheduleManageNav}
+        options={{ headerShown: false }}
+      />
     </HomeStack.Navigator>
   );
 }
