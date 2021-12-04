@@ -16,6 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UpdateDto } from './dto/update-dto';
 import { User } from './user.entity';
 import { PatchUser } from './interface/res.patchUser';
+
 @Injectable()
 export class UserService {
   constructor(
@@ -26,6 +27,7 @@ export class UserService {
   ) {}
 
   async sendSMS(phone: string, content: string): Promise<void> {
+    phone = phone.replace(/-/g, '');
     const url = `https://sens.apigw.ntruss.com/sms/v2/services/${process.env.SMS_SERVICEID}/messages`;
     const body = {
       type: 'SMS',
@@ -73,7 +75,7 @@ export class UserService {
     return { message: '인증에 성공하였습니다.' };
   }
 
-  async signUp(createUserDto: CreateUserDto): Promise<object> {
+  async signUp(createUserDto: CreateUserDto): Promise<{ accessToken: string }> {
     const user = await this.userRepository.createUser(createUserDto);
     const payload = { ...user };
     delete payload.password;
@@ -136,6 +138,11 @@ export class UserService {
   }
 
   async deleteUser(userInfo: User): Promise<Object> {
+    if (userInfo.provider === 'kakao') {
+      const kakaoId = userInfo.password;
+      await this.deleteKakaoLink(kakaoId);
+    }
+
     const { id } = userInfo;
     await this.userRepository.delete({ id });
     return { message: 'ok' };
@@ -171,5 +178,52 @@ export class UserService {
     const signature = hash.toString(CryptoJS.enc.Base64);
 
     return signature;
+  }
+
+  async kakaoAuthCallback(user): Promise<{ accessToken: string }> {
+    try {
+      const email = user.profile._json.kakao_account.email;
+      const provider = 'kakao';
+      const found = await this.userRepository.findOne({
+        email,
+        provider,
+      });
+      if (!found) {
+        const name = user.profile._json.kakao_account.profile.nickname;
+        const phone =
+          '0' + user.profile._json.kakao_account.phone_number.split(' ')[1];
+        const password = user.profile._json.id;
+        const gender = '남';
+        return await this.signUp({
+          email,
+          name,
+          phone,
+          password,
+          gender,
+          provider,
+        });
+      } else {
+        delete found.password;
+        const payload = { ...found };
+        const accessToken = await this.jwtService.sign(payload);
+        return { accessToken };
+      }
+    } catch (error) {
+      console.log(error.message);
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteKakaoLink(kakaoId: string): Promise<void> {
+    const url = 'https://kapi.kakao.com/v1/user/unlink';
+    const paramsString = `target_id_type=user_id&target_id=${kakaoId}`;
+    const data = new URLSearchParams(paramsString);
+    const options = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `KakaoAK ${process.env.KAKAO_ADMINKEY}`,
+      },
+    };
+    await axios.post(url, data, options);
   }
 }

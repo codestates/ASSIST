@@ -22,9 +22,10 @@ export class UserRepository extends Repository<User> {
     if (found) {
       throw new ConflictException('이미 존재하는 이메일입니다.');
     } else {
-      const salt: string = await bcrypt.genSalt(10);
-      const hashedPassword: string = await bcrypt.hash(password, salt);
-      userInfo.password = hashedPassword;
+      if (!provider || provider === 'normal') {
+        const salt: string = await bcrypt.genSalt(10);
+        userInfo.password = await bcrypt.hash(password, salt);
+      }
       const user = this.create(userInfo);
       await this.deleteConflictPhone(phone);
       await this.save(user);
