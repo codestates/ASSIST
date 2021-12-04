@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { colors } from '../../theme/colors';
-import { MaterialIcons } from '@expo/vector-icons';
+import smallLogo from '../../assets/images/small-logo.png';
+import fontLogo from '../../assets/images/font-logo.png';
 
 const Container = styled.View`
   flex-direction: row;
@@ -32,8 +32,8 @@ export default function TopContainer({ children }: TopContainerProps) {
   return (
     <Container>
       <LogoContainer>
-        <BoxLogo source={require('../../assets/images/small-logo.png')} />
-        <FontLogo source={require('../../assets/images/font-logo.png')} />
+        <BoxLogo source={smallLogo} />
+        <FontLogo source={fontLogo} />
       </LogoContainer>
       {children}
     </Container>

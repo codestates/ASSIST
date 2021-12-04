@@ -18,6 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { UpdateDto } from './dto/update-dto';
+import { PatchUser } from './interface/res.patchUser';
 
 @Controller('user')
 export class UserController {
@@ -49,7 +50,7 @@ export class UserController {
   async patchUser(
     @Req() req: Request,
     @Body() updateInfo: UpdateDto,
-  ): Promise<object> {
+  ): Promise<PatchUser> {
     const userInfo: User = req.user;
     return this.userService.patchUser(updateInfo, userInfo);
   }
@@ -57,7 +58,6 @@ export class UserController {
   @Get('')
   @UseGuards(AuthGuard())
   async getUser(@Req() req: Request): Promise<any> {
-    console.log(req.user);
     return this.userService.getUser(req.user);
   }
 

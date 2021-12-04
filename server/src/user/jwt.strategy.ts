@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import * as config from 'config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -20,7 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload) {
     const { email, provider } = payload;
-    const user: User = await this.userRepository.findOne({ email, provider });
+    const user = await this.userRepository.findOne(
+      { email, provider },
+      { relations: ['teams'] },
+    );
 
     if (!user) {
       throw new UnauthorizedException();

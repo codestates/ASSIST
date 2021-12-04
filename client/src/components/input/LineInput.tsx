@@ -3,6 +3,10 @@ import { colors } from '../../theme/colors';
 import React, { useState } from 'react';
 import { Control, FieldValues, useController } from 'react-hook-form';
 import { Regular } from '../../theme/fonts';
+import { Ionicons } from '@expo/vector-icons';
+import { useWindowDimensions } from 'react-native';
+import ValidationTimer from './ValidationTimer';
+import getTextValues from '../../hooks/getTextValues';
 
 const getConditionColor = (condition: boolean, focused?: boolean) => {
   if (condition) {
@@ -19,20 +23,27 @@ const Container = styled.View`
   width: 100%;
   margin-top: 30px;
 `;
+
+const InputContainer = styled.View`
+  position: relative;
+`;
+
 const Title = styled(Regular)`
   font-size: 15px;
   margin-left: 10px;
   color: ${(props: { color: string }) => props.color};
 `;
+
 const TextInput = styled.TextInput`
   width: 100%;
-  padding: 5px 10px;
+  padding: 5px 45px 5px 10px;
   border-bottom-color: ${(props: { color: string }) => props.color};
   border-bottom-width: 2px;
   font-size: 18px;
   margin-top: 10px;
   color: ${colors.darkGray};
 `;
+
 const Message = styled.Text`
   margin-top: 13px;
   margin-left: 10px;
@@ -52,15 +63,36 @@ const Condition = styled(Message)`
   margin-top: 12px;
 `;
 
+const getClearButton = ({ value, focused }: ClearButtonType) => {
+  if (value !== 'undefined' && value.length > 0 && focused) return 'flex';
+  return 'none';
+};
+
+type ClearButtonType = {
+  value: string;
+  focused: boolean;
+  isTimer?: boolean;
+  width: number;
+};
+
+const ClearButton = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 5px;
+  right: ${(props: ClearButtonType) => (props.isTimer ? props.width - 5 : 15)}px;
+  display: ${(props: ClearButtonType) => getClearButton(props)};
+`;
+
 type LineInputProps = {
   control: Control<FieldValues, object>;
   name: string;
   title?: string;
-  conditions?: { name: string; regex: RegExp }[];
+  conditions?: { name: string; regex: RegExp | boolean }[];
   errorMessage: string;
   placeholder: string;
   secureTextEntry?: boolean;
   clearErrorMessage: () => void;
+  type?: 'phone' | 'money' | 'timer' | 'password' | 'date';
+  setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function LineInput({
@@ -70,9 +102,11 @@ export default function LineInput({
   placeholder,
   name,
   conditions,
-  secureTextEntry,
   clearErrorMessage,
+  type,
+  setErrorMessage,
 }: LineInputProps) {
+  const timerWidth = useWindowDimensions().width * 0.27;
   const { field } = useController({ control, defaultValue: '', name });
   const [focused, setFocused] = useState<boolean>(false);
   const isError = errorMessage.length > 0;
@@ -100,14 +134,31 @@ export default function LineInput({
     }
   };
 
+  const TimerExpiredError = "'재전송'을 누르고, 새 번호를 입력해 주세요.";
+
+  const getKeyboardType = () => {
+    if (type === 'phone' || type === 'money' || type === 'date') return 'number-pad';
+    return 'default';
+  };
+
   const onChangeText = (text: string) => {
     field.onChange(text);
-    if (isError) {
+    if (isError && errorMessage !== TimerExpiredError) {
       clearErrorMessage();
     }
   };
 
-  const getSubtitle = (errored: boolean, conditions?: { name: string; regex: RegExp }[]) => {
+  const clearInput = () => {
+    field.onChange('');
+    if (isError && errorMessage !== TimerExpiredError) {
+      clearErrorMessage();
+    }
+  };
+
+  const getSubtitle = (
+    errored: boolean,
+    conditions?: { name: string; regex: RegExp | boolean }[],
+  ) => {
     if (errored) {
       return <ErrorMessage>{errorMessage}</ErrorMessage>;
     } else if (conditions) {
@@ -117,7 +168,9 @@ export default function LineInput({
             <Condition
               key={el.name}
               focused={focused}
-              condition={el.regex.test(String(field.value))}>
+              condition={
+                typeof el.regex === 'boolean' ? el.regex : el.regex.test(String(field.value))
+              }>
               ✓{el.name}
             </Condition>
           ))}
@@ -126,25 +179,48 @@ export default function LineInput({
     }
   };
 
+  const getMaxLength = () => {
+    if (type === 'phone') return 13;
+    if (type === 'timer') return 6;
+    if (type === 'password') return 15;
+    if (type === 'money') return 8;
+    if (type === 'date') return 2;
+    return undefined;
+  };
+
   return (
     <Container>
       {title && <Title color={getInputColor(focused, isError)}>{title}</Title>}
-      <TextInput
-        placeholderTextColor={colors.lightGray}
-        onFocus={getFocus}
-        onBlur={loseFocus}
-        color={getInputColor(focused, isError, true)}
-        placeholder={placeholder}
-        onChangeText={(text) => onChangeText(text)}
-        value={String(field.value)}
-        secureTextEntry={secureTextEntry}
-        autoCapitalize="none"
-        autoCorrect={false}
-        autoCompleteType="off"
-        spellCheck={false}
-        clearButtonMode="always"
-      />
+      <InputContainer>
+        <TextInput
+          keyboardType={getKeyboardType()}
+          placeholderTextColor={colors.lightGray}
+          onFocus={getFocus}
+          onBlur={loseFocus}
+          color={getInputColor(focused, isError, true)}
+          placeholder={placeholder}
+          secureTextEntry={type === 'password'}
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoCompleteType="off"
+          spellCheck={false}
+          value={getTextValues({ text: String(field.value), type })}
+          onChangeText={(text) => onChangeText(text)}
+          maxLength={getMaxLength()}
+        />
+        <ClearButton
+          width={timerWidth}
+          isTimer={type === 'timer'}
+          onPress={() => clearInput()}
+          focused={focused}
+          value={String(field.value)}>
+          <Ionicons name="close-circle" size={22} color={colors.lightGray} />
+        </ClearButton>
+      </InputContainer>
       {getSubtitle(isError, conditions)}
+      {type === 'timer' && (
+        <ValidationTimer setErrorMessage={setErrorMessage} clearInput={() => field.onChange('')} />
+      )}
     </Container>
   );
 }

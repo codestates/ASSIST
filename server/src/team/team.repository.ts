@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { Ipost } from './interface/post.interface';
 import { UpdateTeamDto } from './dto/update-dto';
-import { any } from 'sequelize/types/lib/operators';
 
 @EntityRepository(Team)
 export class TeamRepository extends Repository<Team> {
@@ -37,13 +36,13 @@ export class TeamRepository extends Repository<Team> {
     return { inviteCode, id: team.id };
   }
 
-  async joinTeam(code: string, user: User) {
+  async joinTeam(code: string, user: User): Promise<{ id: number }> {
     const team = await this.findOne(
       { inviteCode: code },
       { relations: ['users'] },
     );
     if (!team) {
-      throw new NotFoundException();
+      throw new NotFoundException('초대코드가 잘못되었습니다.');
     }
 
     const found = team.users.find((users) => users.id === user.id);
@@ -56,7 +55,10 @@ export class TeamRepository extends Repository<Team> {
     return { id: team.id };
   }
 
-  async patchTeam(found: Team | any, updateTeamDto: UpdateTeamDto) {
+  async patchTeam(
+    found: Team | any,
+    updateTeamDto: UpdateTeamDto,
+  ): Promise<Object> {
     const { leaderId } = updateTeamDto;
     found = { ...found, ...updateTeamDto };
     if (leaderId) {
@@ -69,5 +71,12 @@ export class TeamRepository extends Repository<Team> {
       throw new InternalServerErrorException();
     }
     return { message: '수정이 완료되었습니다.' };
+  }
+
+  async checkleader(teamId: number, userId: number): Promise<boolean> {
+    const team = await this.findOne({
+      where: { id: teamId, leaderId: userId },
+    });
+    return team ? true : false;
   }
 }

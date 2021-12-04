@@ -11,8 +11,8 @@ import { User } from 'src/user/user.entity';
 import { Ipost } from './interface/post.interface';
 import { UpdateTeamDto } from './dto/update-dto';
 import { UserRepository } from 'src/user/user.repository';
-import { Team } from './team.entity';
 import { IgetMember } from './interface/getMember.interface';
+import { MatchRepository } from 'src/match/match.repository';
 
 @Injectable()
 export class TeamService {
@@ -21,6 +21,8 @@ export class TeamService {
     private teamRepository: TeamRepository,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    @InjectRepository(MatchRepository)
+    private matchRepository: MatchRepository,
   ) {}
 
   async createTeam(createTeamDto: CreateTeamDto, user: User): Promise<Ipost> {
@@ -31,18 +33,21 @@ export class TeamService {
     return await this.teamRepository.joinTeam(code, user);
   }
 
-  async getDetail(id: number): Promise<Team> {
-    const found = await this.teamRepository.findOne(
+  async getDetail(id: number, user: User): Promise<any> {
+    const found: any = await this.teamRepository.findOne(
       { id },
       { relations: ['leaderId'] },
     );
 
-    if (found) {
-      delete found.leaderId.password;
-      return found;
-    } else {
+    if (!found) {
       throw new NotFoundException('해당 팀이 존재하지 않습니다.');
     }
+    delete found.leaderId.password;
+
+    const nextMatch = await this.matchRepository.getNextMatch(id, user);
+    found.nextMatch = nextMatch;
+
+    return found;
   }
 
   async patchTeam(id: number, updateTeamDto: UpdateTeamDto, user: User) {

@@ -1,3 +1,4 @@
+import { Match } from 'src/match/match.entity';
 import { User_match } from 'src/others/user_match.entity';
 import { User } from 'src/user/user.entity';
 import {
@@ -8,6 +9,7 @@ import {
   ManyToMany,
   JoinTable,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -37,4 +39,7 @@ export class Team {
   @ManyToOne((type) => User, (user) => user.team)
   @JoinColumn({ name: 'leaderId' })
   leaderId: User;
+
+  @OneToMany(() => Match, (match) => match.team)
+  match: Match;
 }
