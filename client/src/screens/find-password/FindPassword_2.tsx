@@ -10,6 +10,7 @@ import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components/native';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const Seperator = styled.View`
   height: 15px;
@@ -29,7 +30,9 @@ const schema = yup.object({
     .required(),
 });
 
-export default function FindPassword_2() {
+type FindPasswordProps = StackScreenProps<RootStackParamList, 'FindPassword_2'>;
+
+export default function FindPassword_2({ route }: FindPasswordProps) {
   const {
     control,
     handleSubmit,
@@ -45,6 +48,20 @@ export default function FindPassword_2() {
     console.log(data);
   };
 
+  const getButtonText = () => {
+    if (route.params?.screenName === 'GetStarted_Login') {
+      return '새 비밀번호로 로그인  >';
+    }
+    return '변경하기';
+  };
+
+  const getScreenToGo = () => {
+    if (route.params?.screenName === 'GetStarted_Login') {
+      // 로그인하기
+      console.log('log in');
+    }
+    return navigation.navigate('MyPage_Main');
+  };
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <>
@@ -103,9 +120,9 @@ export default function FindPassword_2() {
         />
       </NextPageView>
       <NextButton
-        text="새 비밀번호로 로그인  >"
+        text={getButtonText()}
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => console.log('log in!')}
+        onPress={() => getScreenToGo()}
       />
     </>
   );

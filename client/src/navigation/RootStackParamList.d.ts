@@ -45,9 +45,10 @@ export type RootStackParamList = {
   GetStarted_6: undefined;
   GenderSelect: undefined | { screenName: keyof RootStackParamList };
   GetStarted_Login: undefined | { email: string };
-  FindPassword: undefined;
-  FindPassword_1: undefined;
-  FindPassword_2: undefined;
+  ChangePassword: undefined | { screenName?: keyof RootStackParamList };
+  FindPassword: undefined | { screenName?: keyof RootStackParamList };
+  FindPassword_1: undefined | { screenName?: keyof RootStackParamList };
+  FindPassword_2: undefined | { screenName?: keyof RootStackParamList };
   MyPage_Main: undefined;
   NewPhone: undefined;
   NewPhone_1: undefined;

@@ -67,7 +67,6 @@ export default function ColoredScrollView({
   children,
   titleColor,
   isCard,
-  isMyPage,
 }: ColoredScrollViewProps) {
   const { width } = useWindowDimensions();
   return (

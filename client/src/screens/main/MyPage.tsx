@@ -63,7 +63,8 @@ export default function MyPage() {
           <Regular>내 프로필</Regular>
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuButton>
-        <MenuButton>
+        <MenuButton
+          onPress={() => navigation.navigate('ChangePassword', { screenName: 'MyPage_Main' })}>
           <Regular>비밀번호 재설정</Regular>
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuButton>
