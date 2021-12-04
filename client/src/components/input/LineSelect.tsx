@@ -32,10 +32,9 @@ const Selected = styled(Regular)`
 
 type LineSelectProps = {
   title: string;
-  selected?: string;
-  onPress?: () => void;
-  isPressed?: boolean;
-  isFixed?: boolean;
+  selected?: string | object;
+  onPress: () => void;
+  isPressed: boolean;
 };
 
 export default function LineSelect({

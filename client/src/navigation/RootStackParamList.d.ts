@@ -1,3 +1,5 @@
+import { string } from 'yup/lib/locale';
+
 export type RootStackParamList = {
   Home: undefined;
   MyPage: undefined;
@@ -36,4 +38,14 @@ export type RootStackParamList = {
   FindPassword: undefined;
   FindPassword_1: undefined;
   FindPassword_2: undefined;
+  ScheduleManage: undefined;
+  ScheduleManage_1: undefined | { calendar: string; start: string; end: string };
+  ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
+  ScheduleManage_3: undefined;
+  ScheduleManage_4: undefined;
+  ScheduleManage_5: undefined;
+  CalendarSelect: undefined | { calendar: string };
+  StartTimeSelect: undefined | { start: string };
+  EndTimeSelect: undefined | { end: string };
+  StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
 };
