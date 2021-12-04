@@ -58,7 +58,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
   };
   const goToFindPassword = () => {
     hideErrorModal();
-    navigation.navigate('FindPassword');
+    navigation.navigate('FindPassword', { screenName: 'GetStarted_Login' });
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -101,7 +101,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
       </NextPageView>
       <SkipButton
         text="비밀번호를 모르겠어요  >"
-        onPress={() => navigation.navigate('FindPassword')}
+        onPress={() => navigation.navigate('FindPassword', { screenName: 'GetStarted_Login' })}
       />
       <NextButton
         text="로그인  >"

@@ -4,6 +4,7 @@ import MyPage from '../screens/main/MyPage';
 import CloseHeader from '../components/header/CloseHeader';
 import NewPhoneNav from './NewPhoneNav';
 import MyProfileNav from './MyProfileNav';
+import FindPasswordNav from './FindPasswordNav';
 
 const MyPageStack = createStackNavigator();
 
@@ -30,6 +31,13 @@ export default function MyPageNav() {
           headerShown: false,
         }}
         component={MyProfileNav}
+      />
+      <MyPageStack.Screen
+        name="ChangePassword"
+        options={{
+          headerShown: false,
+        }}
+        component={FindPasswordNav}
       />
     </MyPageStack.Navigator>
   );
