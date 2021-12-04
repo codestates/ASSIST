@@ -69,7 +69,7 @@ export default function MyPage() {
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuButton>
         <Seperator />
-        <MenuButton>
+        <MenuButton onPress={() => navigation.navigate('CustomerService')}>
           <Regular gray>고객센터</Regular>
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuButton>

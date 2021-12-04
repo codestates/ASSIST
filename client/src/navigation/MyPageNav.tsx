@@ -5,6 +5,7 @@ import CloseHeader from '../components/header/CloseHeader';
 import NewPhoneNav from './NewPhoneNav';
 import MyProfileNav from './MyProfileNav';
 import FindPasswordNav from './FindPasswordNav';
+import CustomerServiceNav from './CustomerServiceNav';
 
 const MyPageStack = createStackNavigator();
 
@@ -38,6 +39,13 @@ export default function MyPageNav() {
           headerShown: false,
         }}
         component={FindPasswordNav}
+      />
+      <MyPageStack.Screen
+        name="CustomerService"
+        options={{
+          headerShown: false,
+        }}
+        component={CustomerServiceNav}
       />
     </MyPageStack.Navigator>
   );

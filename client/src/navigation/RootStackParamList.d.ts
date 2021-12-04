@@ -55,4 +55,6 @@ export type RootStackParamList = {
   NewPhone_2: undefined | { phone: string };
   MyProfile: undefined;
   MyProfile_1: undefined | { gender: string };
+  CustomerService: undefined;
+  CustomerSerice_1: undefined;
 };
