@@ -55,7 +55,7 @@ export default function GetStarted_5({ route }: GetStartedProps) {
 
   const goToNext = () => {
     setIsPressed(true);
-    navigation.navigate('GenderSelect');
+    navigation.navigate('GenderSelect', { screenName: 'GetStarted_5' });
   };
 
   return (

@@ -10,7 +10,7 @@ import LoggedOutNav from './src/navigation/LoggedOutNav';
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [isLoggedin] = useState(false);
+  const [isLoggedin] = useState(true);
 
   const onFinish = () => setLoading(false);
   const preloadAssets = async () => {
