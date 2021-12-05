@@ -7,16 +7,18 @@ type ButtonProps = {
   color?: 'blue' | 'transparent' | 'whiteSmoke';
   text: string;
   onPress: () => void;
+  disabled?: boolean;
 };
 
-export default function CommonModalButton({ color, text, onPress }: ButtonProps) {
+export default function CommonModalButton({ color, text, onPress, disabled }: ButtonProps) {
   const backgroundColor =
     color === 'blue' ? colors.blue : color === 'transparent' ? 'transparent' : colors.whiteSmoke;
   return (
     <CommonButton
+      disabled={disabled}
       onPress={onPress}
       buttonRadius="15px"
-      buttonBgColor={backgroundColor}
+      buttonBgColor={disabled ? colors.gray : backgroundColor}
       width="100%"
       height="50px">
       <Regular gray={color !== 'blue'} white={color === 'blue'} size={13}>
