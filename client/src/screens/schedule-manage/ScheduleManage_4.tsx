@@ -45,7 +45,7 @@ const MatchInfoContents = styled.View`
 
 type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_3'>;
 
-export default function ScheduleManage_3({ route }: ScheduleManageProps) {
+export default function ScheduleManage_4({ route }: ScheduleManageProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [isPressed, setIsPressed] = useState(false);

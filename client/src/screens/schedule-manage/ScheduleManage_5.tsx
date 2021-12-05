@@ -5,7 +5,7 @@ import FinishPageView from '../../components/view/FinishPageView';
 import NextButton from '../../components/button/NextButton';
 import { Bold, Light } from '../../theme/fonts';
 
-export default function CreateTeam_6() {
+export default function ScheduleManage_5() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <FinishPageView buttonText="투표 하러 가기" onPress={() => navigation.navigate('Home')}>
