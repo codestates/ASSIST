@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React, { useRef } from 'react';
+import React from 'react';
 import MainTitle from '../../components/text/MainTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -10,8 +10,7 @@ import { Bold, Light, Regular } from '../../theme/fonts';
 import { MaterialIcons } from '@expo/vector-icons';
 import KakaoButton from '../../components/button/KakaoButton';
 import * as Clipboard from 'expo-clipboard';
-import { useWindowDimensions } from 'react-native';
-import { showToastMessage, ToastMessage } from '../../components/toast/ToastMessage';
+import { useToast } from 'react-native-toast-notifications';
 
 const CodeContainer = styled.TouchableOpacity`
   width: 100%;
@@ -40,12 +39,11 @@ const ButtonContainer = styled.View`
 export default function CreateTeam_5() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const inviteCode = 'AX95Q2';
-  const toastRef = useRef(null);
-  const { width, height } = useWindowDimensions();
+  const toast = useToast();
 
   const copyToClipboard = () => {
     Clipboard.setString(inviteCode);
-    showToastMessage({ toastRef, width, text: '클립보드에 복사되었습니다.' });
+    toast.show('클립보드에 복사되었습니다.');
   };
 
   return (
@@ -76,7 +74,6 @@ export default function CreateTeam_5() {
         </ButtonContainer>
       </NextPageView>
       <SkipButton text="다음에 초대할게요" onPress={() => navigation.navigate('CreateTeam_6')} />
-      <ToastMessage toastRef={toastRef} height={height} />
     </>
   );
 }

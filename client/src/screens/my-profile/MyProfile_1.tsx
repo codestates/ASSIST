@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import LineInput from '../../components/input/LineInput';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useToast } from 'react-native-toast-notifications';
 
 const ContentContainer = styled.View`
   padding: 30px 15px;
@@ -45,6 +46,7 @@ export default function MyProfile_1({ route }: MyProfileProps) {
     defaultValues: { name: '홍길동' },
   });
 
+  const toast = useToast();
   const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -66,6 +68,11 @@ export default function MyProfile_1({ route }: MyProfileProps) {
   const goToNext = () => {
     setIsPressed(true);
     navigation.navigate('GenderSelect', { screenName: 'MyProfile_1' });
+  };
+
+  const finishEditing = () => {
+    navigation.navigate('MyPage_Main');
+    toast.show('프로필 수정이 완료되었습니다.');
   };
 
   return (
@@ -99,7 +106,7 @@ export default function MyProfile_1({ route }: MyProfileProps) {
           />
         </ContentContainer>
       </ColoredScrollView>
-      <NextButton text="수정하기  >" onPress={() => console.log('hello')} />
+      <NextButton text="수정하기  >" onPress={() => finishEditing()} />
     </>
   );
 }
