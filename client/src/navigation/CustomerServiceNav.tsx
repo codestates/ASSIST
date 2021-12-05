@@ -16,18 +16,6 @@ export default function CustomerServiceNav() {
         }}
         component={CustomerService_1}
       />
-      {/* <CustomerService.Screen
-        name="NewPhone"
-        options={{
-          headerShown: false,
-        }}
-        component={NewPhoneNav}
-      />
-      <CustomerService.Screen
-        name="GenderSelect"
-        component={GenderSelect}
-        options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
-      /> */}
     </CustomerService.Navigator>
   );
 }

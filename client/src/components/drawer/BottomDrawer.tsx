@@ -6,8 +6,9 @@ import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { colors } from '../../theme/colors';
 import { StyleSheet } from 'react-native';
+import DismissKeyboard from '../view/DismissKeyboard';
 
-const Container = styled.View`
+const Container = styled.KeyboardAvoidingView`
   flex: 1;
   justify-content: flex-end;
   align-items: center;
@@ -40,21 +41,23 @@ export default function BottomDrawer({ children }: BottomDrawerProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <Container>
+    <Container behavior="padding">
       <BackgroundView onPress={() => navigation.goBack()} />
-      <AnimatedView
-        style={{
-          transform: [
-            {
-              translateY: current.progress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [100, 0],
-              }),
-            },
-          ],
-        }}>
-        <Wrapper>{children}</Wrapper>
-      </AnimatedView>
+      <DismissKeyboard>
+        <AnimatedView
+          style={{
+            transform: [
+              {
+                translateY: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [100, 0],
+                }),
+              },
+            ],
+          }}>
+          <Wrapper>{children}</Wrapper>
+        </AnimatedView>
+      </DismissKeyboard>
     </Container>
   );
 }

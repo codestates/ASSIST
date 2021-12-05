@@ -58,4 +58,6 @@ export type RootStackParamList = {
   CustomerService: undefined;
   CustomerSerice_1: undefined;
   LogOutSelect: undefined;
+  DeleteAccount_1: undefined;
+  DeleteAccount_2: undefined;
 };

@@ -21,7 +21,7 @@ const getConditionColor = (condition: boolean, focused?: boolean) => {
 
 const Container = styled.View`
   width: 100%;
-  margin-top: 30px;
+  margin-top: ${(props: { marginTop?: string }) => props.marginTop || '30px'};
 `;
 
 const InputContainer = styled.View`
@@ -93,6 +93,7 @@ type LineInputProps = {
   clearErrorMessage: () => void;
   type?: 'phone' | 'money' | 'timer' | 'password' | 'date';
   setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
+  marginTop?: string;
 };
 
 export default function LineInput({
@@ -105,6 +106,7 @@ export default function LineInput({
   clearErrorMessage,
   type,
   setErrorMessage,
+  marginTop,
 }: LineInputProps) {
   const timerWidth = useWindowDimensions().width * 0.27;
   const { field } = useController({ control, defaultValue: '', name });
@@ -189,7 +191,7 @@ export default function LineInput({
   };
 
   return (
-    <Container>
+    <Container marginTop={marginTop}>
       {title && <Title color={getInputColor(focused, isError)}>{title}</Title>}
       <InputContainer>
         <TextInput
