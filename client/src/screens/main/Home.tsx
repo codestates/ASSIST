@@ -32,6 +32,12 @@ export default function Home() {
       <TouchableOpacity onPress={() => navigation.navigate('ScheduleManage')}>
         <Text>일정 관리</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('MatchVote')}>
+        <Text>인원 모집 중</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('MercenaryInvite')}>
+        <Text>용병 구하기</Text>
+      </TouchableOpacity>
     </Container>
   );
 }

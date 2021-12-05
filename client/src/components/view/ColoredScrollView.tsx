@@ -44,7 +44,7 @@ type CardContainerProps = {
 
 const CardContainer = styled.View`
   z-index: 2;
-  padding: ${(props: CardContainerProps) => (props.fake ? '0px' : '0px 35px 120px 35px')};
+  padding: ${(props: CardContainerProps) => (props.fake ? '0px' : '0px 35px 35px 35px')};
   width: ${(props: CardContainerProps) => props.width - 40}px;
   height: ${(props: CardContainerProps) => (props.fake ? '30px' : 'auto')};
   background-color: ${colors.white};

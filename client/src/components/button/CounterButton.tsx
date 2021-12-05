@@ -4,15 +4,15 @@ import styled from 'styled-components/native';
 import { Bold, Regular } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
 
-const Container = styled.View`
-  height: 7%;
-  flex-direction: row;
+const OperationButton = styled.TouchableOpacity`
+  flex: 1;
+  height: 100%;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
-const CounterLeftTitle = styled.View`
-  flex: 1;
+const Title = styled.View`
+  flex: 3;
   height: 100%;
   align-items: center;
   justify-content: center;
@@ -28,57 +28,54 @@ const CounterContainer = styled.View`
   border-bottom-color: ${colors.blue};
 `;
 
-const OperationButton = styled.TouchableOpacity`
-  flex: 1;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-`;
+type CounterButtonProps = {
+  text: string;
+  type: string;
+};
 
-const Title = styled.View`
-  flex: 3;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-`;
+export default function CounterButton(props: CounterButtonProps) {
+  const { text, type } = props;
 
-const CounterRightTitle = styled.View`
-  flex: 1;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-`;
-
-export default function CounterButton() {
+  const [person, setPerson] = useState(0);
   const [counter, setCounter] = useState(0);
+  const [money, setMoney] = useState(0);
 
   const handleDecrement = () => {
-    setCounter((prevNumber) => (prevNumber - 1 < 0 ? 0 : prevNumber - 1));
+    if (type === 'person') {
+      setPerson((prevNumber) => (prevNumber - 1 < 0 ? 0 : prevNumber - 1));
+    } else if (type === 'money') {
+      setMoney((prevNumber) => (prevNumber - 1000 < 0 ? 0 : prevNumber - 1000));
+    } else {
+      setCounter((prevNumber) => (prevNumber - 1 < 0 ? 0 : prevNumber - 1));
+    }
   };
 
   const handleIncrement = () => {
-    setCounter((prevNumber) => prevNumber + 1);
+    if (type === 'person') {
+      setPerson((prevNumber) => prevNumber + 1);
+    } else if (type === 'money') {
+      setMoney((prevNumber) => prevNumber + 1000);
+    } else {
+      setCounter((prevNumber) => prevNumber + 1);
+    }
   };
 
   return (
-    <Container>
-      <CounterLeftTitle>
-        <Regular>경기 시작</Regular>
-      </CounterLeftTitle>
+    <>
       <CounterContainer>
         <OperationButton onPress={handleDecrement}>
           <AntDesign name="minus" />
         </OperationButton>
         <Title>
-          <Bold size={17}>{counter}일전</Bold>
+          <Bold size={17}>
+            {type === 'person' ? person : type === 'money' ? money : counter}
+            {text}
+          </Bold>
         </Title>
         <OperationButton onPress={handleIncrement}>
           <AntDesign name="plus" />
         </OperationButton>
       </CounterContainer>
-      <CounterRightTitle>
-        <Regular>마감</Regular>
-      </CounterRightTitle>
-    </Container>
+    </>
   );
 }

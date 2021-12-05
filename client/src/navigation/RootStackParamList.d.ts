@@ -54,4 +54,16 @@ export type RootStackParamList = {
   NewPhone_2: undefined | { phone: string };
   MyProfile: undefined;
   MyProfile_1: undefined | { gender: string };
+  MatchVote: undefined;
+  MatchVote_1: undefined;
+  MatchVote_2: undefined;
+  MatchVote_3: undefined;
+  MatchVote_4: undefined;
+  MatchVote_5: undefined;
+  MercenaryInvite: undefined;
+  MercenaryInvite_1: undefined;
+  MercenaryInvite_2: undefined;
+  MercenaryInvite_3: undefined;
+  MercenaryInvite_4: undefined;
+  MercenaryInvite_5: undefined;
 };

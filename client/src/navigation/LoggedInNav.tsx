@@ -9,6 +9,8 @@ import LendingPageNav from './LendingPageNav';
 import JoinTeamNav from './JoinTeamNav';
 import ScheduleManageNav from './ScheduleManageNav';
 import MyPageNav from './MyPageNav';
+import MatchVoteNav from './MatchVoteNav';
+import MercenaryInvite from './MercenaryInviteNav';
 
 const HomeStack = createStackNavigator();
 
@@ -53,6 +55,16 @@ export default function LoggedInNav() {
       <HomeStack.Screen
         name="ScheduleManage"
         component={ScheduleManageNav}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="MatchVote"
+        component={MatchVoteNav}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="MercenaryInvite"
+        component={MercenaryInvite}
         options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
