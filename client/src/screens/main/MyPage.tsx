@@ -73,7 +73,7 @@ export default function MyPage() {
           <Regular gray>고객센터</Regular>
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuButton>
-        <MenuButton>
+        <MenuButton onPress={() => navigation.navigate('LogOutSelect')}>
           <Regular lightGray>로그아웃</Regular>
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuButton>

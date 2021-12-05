@@ -57,4 +57,5 @@ export type RootStackParamList = {
   MyProfile_1: undefined | { gender: string };
   CustomerService: undefined;
   CustomerSerice_1: undefined;
+  LogOutSelect: undefined;
 };

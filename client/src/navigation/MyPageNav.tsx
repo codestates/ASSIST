@@ -6,6 +6,7 @@ import NewPhoneNav from './NewPhoneNav';
 import MyProfileNav from './MyProfileNav';
 import FindPasswordNav from './FindPasswordNav';
 import CustomerServiceNav from './CustomerServiceNav';
+import LogOutSelect from '../screens/drawer-select/LogOutSelect';
 
 const MyPageStack = createStackNavigator();
 
@@ -46,6 +47,11 @@ export default function MyPageNav() {
           headerShown: false,
         }}
         component={CustomerServiceNav}
+      />
+      <MyPageStack.Screen
+        name="LogOutSelect"
+        options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
+        component={LogOutSelect}
       />
     </MyPageStack.Navigator>
   );
