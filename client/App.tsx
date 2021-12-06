@@ -7,6 +7,8 @@ import { fontsToLoad } from './src/assets/assets';
 import { imagesToLoad } from './src/assets/assets';
 import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
+import { ToastProvider } from 'react-native-toast-notifications';
+import { colors } from './src/theme/colors';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,9 @@ function App() {
   }
 
   return (
-    <NavigationContainer>{isLoggedin ? <LoggedInNav /> : <LoggedOutNav />}</NavigationContainer>
+    <ToastProvider duration={2500} normalColor={colors.darkGray}>
+      <NavigationContainer>{isLoggedin ? <LoggedInNav /> : <LoggedOutNav />}</NavigationContainer>
+    </ToastProvider>
   );
 }
 

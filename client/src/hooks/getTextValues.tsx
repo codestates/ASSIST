@@ -27,32 +27,32 @@ export default function getTextValues({ text, type }: getTextValuesProps) {
     let temp = '';
     if (text.length === 0) {
       return text;
-    } else if (text === '00') {
-      return '0원';
+    } else if (text[0] === '0' && text.length > 1) {
+      return '₩0';
     } else if (text.length < 4) {
-      return text + '원';
+      return '₩' + text;
     } else if (text.length < 5) {
       temp += text.substr(0, 1);
       temp += ',';
       temp += text.substr(1);
-      return temp + '원';
+      return '₩' + temp;
     } else if (text.length < 6) {
       temp += text.substr(0, 2);
       temp += ',';
       temp += text.substr(2);
-      return temp + '원';
+      return '₩' + temp;
     } else if (text.length < 7) {
       temp += text.substr(0, 3);
       temp += ',';
       temp += text.substr(3);
-      return temp + '원';
+      return '₩' + temp;
     } else {
       temp += text.substr(0, 3);
       temp += ',';
       temp += text.substr(3);
       temp += ',';
       temp += text.substr(3, 4);
-      return temp + '원';
+      return '₩' + temp;
     }
   } else if (type === 'password') {
     text = text.replace(/\s/, '');

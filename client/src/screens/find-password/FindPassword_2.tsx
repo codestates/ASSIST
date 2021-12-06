@@ -11,6 +11,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useToast } from 'react-native-toast-notifications';
+
 
 const Seperator = styled.View`
   height: 15px;
@@ -42,6 +44,8 @@ export default function FindPassword_2({ route }: FindPasswordProps) {
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
+
+  const toast = useToast();
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
   const onSubmit = (data: string) => {
@@ -59,8 +63,10 @@ export default function FindPassword_2({ route }: FindPasswordProps) {
     if (route.params?.screenName === 'GetStarted_Login') {
       // 로그인하기
       console.log('log in');
+    } else {
+      navigation.navigate('MyPage_Main');
+      toast.show('비밀번호 변경이 완료 되었습니다.');
     }
-    return navigation.navigate('MyPage_Main');
   };
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
