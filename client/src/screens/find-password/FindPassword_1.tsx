@@ -56,7 +56,6 @@ export default function FindPassword_1({ route }: FindPasswordProps) {
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   return (
     <>
       <CommonModal visible={modalVisible} setVisible={hideErrorModal}>
@@ -78,7 +77,7 @@ export default function FindPassword_1({ route }: FindPasswordProps) {
           </>
           <Light size={22}>입력해주세요</Light>
         </MainTitle>
-        <LineSelect title="휴대폰 번호" selected="010-76487-7641" isFixed />
+        <LineSelect title="휴대폰 번호" selected="010-1234-1234" isFixed />
         <LineInput
           type="timer"
           control={control}
@@ -87,6 +86,7 @@ export default function FindPassword_1({ route }: FindPasswordProps) {
           placeholder="인증번호를 입력해주세요"
           errorMessage={errorMessage}
           clearErrorMessage={clearError}
+          setErrorMessage={setErrorMessage}
         />
       </NextPageView>
       <NextButton

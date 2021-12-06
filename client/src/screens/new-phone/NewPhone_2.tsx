@@ -14,6 +14,7 @@ import LineSelect from '../../components/input/LineSelect';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import styled from 'styled-components/native';
+import { useToast } from 'react-native-toast-notifications';
 
 const Line = styled.View`
   margin-top: 13px;
@@ -36,6 +37,7 @@ export default function NewPhone_2({ route }: NewPhoneProps) {
     resolver: yupResolver(schema),
   });
 
+  const toast = useToast();
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -53,6 +55,11 @@ export default function NewPhone_2({ route }: NewPhoneProps) {
 
   const hideErrorModal = () => {
     setModalVisible(false);
+  };
+
+  const finishEditing = () => {
+    navigation.navigate('MyPage_Main');
+    toast.show('전화번호가 변경되었습니다.');
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -93,7 +100,7 @@ export default function NewPhone_2({ route }: NewPhoneProps) {
       <NextButton
         text="변경하기"
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('MyPage_Main')}
+        onPress={() => finishEditing()}
       />
     </>
   );

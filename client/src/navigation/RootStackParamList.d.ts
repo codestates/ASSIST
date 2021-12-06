@@ -48,6 +48,10 @@ export type RootStackParamList = {
   StartTimeSelect: undefined | { start: string };
   EndTimeSelect: undefined | { end: string };
   StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
+  ChangePassword: undefined | { screenName?: keyof RootStackParamList };
+  FindPassword: undefined | { screenName?: keyof RootStackParamList };
+  FindPassword_1: undefined | { screenName?: keyof RootStackParamList };
+  FindPassword_2: undefined | { screenName?: keyof RootStackParamList };
   MyPage_Main: undefined;
   NewPhone: undefined;
   NewPhone_1: undefined;
@@ -66,4 +70,9 @@ export type RootStackParamList = {
   MercenaryInvite_3: undefined;
   MercenaryInvite_4: undefined;
   MercenaryInvite_5: undefined;
+  CustomerService: undefined;
+  CustomerSerice_1: undefined;
+  LogOutSelect: undefined;
+  DeleteAccount_1: undefined;
+  DeleteAccount_2: undefined;
 };
