@@ -102,6 +102,6 @@ export class UserController {
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuthCallback(@Req() req, @Res() res) {
     const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
-    return { url: `http://localhost:3000/accessToken=${accessToken}` };
+    return { url: `${process.env.HOMEPAGE_URL}/accessToken=${accessToken}` };
   }
 }

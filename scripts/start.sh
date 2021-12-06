@@ -15,5 +15,6 @@ export HOST_PHONE=$(aws ssm get-parameters --region ap-northeast-2 --names HOST_
 export HOMEPAGE_URL=$(aws ssm get-parameters --region ap-northeast-2 --names HOMEPAGE_URL --query Parameters[0].Value | sed 's/"//g')
 export KAKAO_CLIENTID=$(aws ssm get-parameters --region ap-northeast-2 --names KAKAO_CLIENTID --query Parameters[0].Value | sed 's/"//g')
 export KAKAO_ADMINKEY=$(aws ssm get-parameters --region ap-northeast-2 --names KAKAO_ADMINKEY --query Parameters[0].Value | sed 's/"//g')
+export SERVER_URL=$(aws ssm get-parameters --region ap-northeast-2 --names SERVER_URL --query Parameters[0].Value | sed 's/"//g')
 
 authbind --deep pm2 start dist/main.js
