@@ -8,13 +8,18 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
-import { Bold, Light, Regular } from '../../theme/fonts';
+import { Bold, Light } from '../../theme/fonts';
 import SubTitle from '../../components/text/SubTitle';
 import CounterButton from '../../components/button/CounterButton';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
   height: 64px;
+`;
+
+const CounterSpace = styled.View`
+  width: 15px;
+  height: 100%;
 `;
 
 const CounterContainer = styled.View`
@@ -24,66 +29,32 @@ const CounterContainer = styled.View`
   justify-content: space-between;
 `;
 
-const CounterLeftTitle = styled.View`
-  flex: 1;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CounterRightTitle = styled.View`
-  flex: 1;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-`;
-
-type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_3'>;
-
-export default function ScheduleManage_3({ route }: ScheduleManageProps) {
+export default function MercenaryInvite_2() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  const [isPressed, setIsPressed] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isPressed]);
-
-  const clearErrorMessage = () => setErrorMessage('');
 
   return (
     <>
       <NextPageView>
         <MainTitle>
           <Bold size={22}>
-            투표 마감 시간<Light size={22}>을</Light>
+            필요한 용병 숫자<Light size={22}>를</Light>
           </Bold>
           <Light size={22}>선택해 주세요</Light>
         </MainTitle>
         <SubTitle>
-          <Light size={14}>마감 시간 후 참석 여부가 바뀌는 팀원이 생기면 알려드려요</Light>
+          <Light size={14}>해당 인원 만큼 대신 구해드려요</Light>
         </SubTitle>
         <TitleSpaceContents />
         <CounterContainer>
-          <CounterLeftTitle>
-            <Regular>경기 시작</Regular>
-          </CounterLeftTitle>
-          <CounterButton text=" 일전" type="day" />
-          <CounterRightTitle>
-            <Regular>마감</Regular>
-          </CounterRightTitle>
+          <CounterSpace />
+          <CounterButton text=" 명" type="person" />
+          <CounterSpace />
         </CounterContainer>
       </NextPageView>
       <NextButton
         disabled={false}
         onPress={() => {
-          navigation.navigate('ScheduleManage_4');
+          navigation.navigate('MercenaryInvite_3');
         }}
       />
     </>

@@ -11,6 +11,7 @@ import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light, Regular } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
+import SubTitle from '../../components/text/SubTitle';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -21,9 +22,14 @@ const ContentsSpaceContents = styled.View`
   flex: 2;
 `;
 
+const ContentSpaceButton = styled.View`
+  width: 100%;
+  height: 35px;
+`;
+
 const Container = styled.View`
   width: 100%;
-  height: 40%;
+  height: 50%;
 `;
 
 const MatchInfoContainer = styled.View`
@@ -43,39 +49,35 @@ const MatchInfoContents = styled.View`
   justify-content: space-between;
 `;
 
-type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_3'>;
+const MecenaryAttendContainer = styled.View`
+  width: 100%;
+  height: 50px;
+  background-color: ${colors.lightGray}
+  align-items: center;
+  justify-content: center;
 
-export default function ScheduleManage_4({ route }: ScheduleManageProps) {
+`;
+
+export default function MercenaryInvite_4() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  const [isPressed, setIsPressed] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isPressed]);
-
-  const clearErrorMessage = () => setErrorMessage('');
 
   return (
     <>
       <NextPageView>
         <MainTitle>
           <Bold size={22}>
-            경기 정보<Light size={22}>를</Light>
+            초대할 정보<Light size={22}>를</Light>
           </Bold>
-          <Light size={22}>최종 확인 해 주세요 ✅</Light>
+          <Light size={22}>최종 확인해 주세요 ✅</Light>
         </MainTitle>
+        <SubTitle>
+          <Light size={14}>1시간 내로 초대 결과를 알려 드릴게요.</Light>
+        </SubTitle>
         <TitleSpaceContents />
         <Container>
           <MatchInfoContainer>
             <MatchInfoTitle>
-              <Bold size={20}>경기 정보</Bold>
+              <Bold size={20}>FC 살쾡이</Bold>
             </MatchInfoTitle>
             <ContentsSpaceContents />
             <MatchInfoContents>
@@ -86,15 +88,18 @@ export default function ScheduleManage_4({ route }: ScheduleManageProps) {
               <Regular size={16}>서울 동대문구 천호대로 133</Regular>
               <Regular size={16}>홈플러스 동대문점 옥상층 HM풋살파크</Regular>
             </MatchInfoContents>
+            <ContentSpaceButton />
+            <MecenaryAttendContainer>
+              <Bold size={16}>참가비 : 15,000원</Bold>
+            </MecenaryAttendContainer>
           </MatchInfoContainer>
         </Container>
       </NextPageView>
       <NextButton
         disabled={false}
-        text="팀 전체에 공지하기"
+        text="구인 신청 >"
         onPress={() => {
-          // 알림톡 보내기
-          navigation.navigate('ScheduleManage_5');
+          navigation.navigate('MercenaryInvite_5');
         }}
       />
     </>
