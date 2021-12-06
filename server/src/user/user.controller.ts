@@ -10,6 +10,8 @@ import {
   Patch,
   Delete,
   Param,
+  Res,
+  Redirect,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateSMSAuth, CreateUserDto } from './dto/create-dto';
@@ -86,5 +88,20 @@ export class UserController {
   ): Promise<object> {
     const userInfo = req.user;
     return this.userService.quitTeam(id, userInfo);
+  }
+
+  @Get('/kakao')
+  @UseGuards(AuthGuard('kakao'))
+  async kakaoAuth(@Req() req) {
+    console.log(req);
+    return req;
+  }
+
+  @Get('/kakao/callback')
+  @Redirect('http://localhost:3000', 302)
+  @UseGuards(AuthGuard('kakao'))
+  async kakaoAuthCallback(@Req() req, @Res() res) {
+    const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
+    return { url: `http://localhost:3000/accessToken=${accessToken}` };
   }
 }

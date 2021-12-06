@@ -13,6 +13,7 @@ import styled from 'styled-components/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useToast } from 'react-native-toast-notifications';
 
+
 const Seperator = styled.View`
   height: 15px;
 `;

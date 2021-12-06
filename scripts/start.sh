@@ -12,5 +12,8 @@ export NCP_ACCESS=$(aws ssm get-parameters --region ap-northeast-2 --names NCP_A
 export SMS_URI=$(aws ssm get-parameters --region ap-northeast-2 --names SMS_URI --query Parameters[0].Value | sed 's/"//g')
 export SMS_SERVICEID=$(aws ssm get-parameters --region ap-northeast-2 --names SMS_SERVICEID --query Parameters[0].Value | sed 's/"//g')
 export HOST_PHONE=$(aws ssm get-parameters --region ap-northeast-2 --names HOST_PHONE --query Parameters[0].Value | sed 's/"//g')
+export HOMEPAGE_URL=$(aws ssm get-parameters --region ap-northeast-2 --names HOMEPAGE_URL --query Parameters[0].Value | sed 's/"//g')
+export KAKAO_CLIENTID=$(aws ssm get-parameters --region ap-northeast-2 --names KAKAO_CLIENTID --query Parameters[0].Value | sed 's/"//g')
+export KAKAO_ADMINKEY=$(aws ssm get-parameters --region ap-northeast-2 --names KAKAO_ADMINKEY --query Parameters[0].Value | sed 's/"//g')
 
 authbind --deep pm2 start dist/main.js

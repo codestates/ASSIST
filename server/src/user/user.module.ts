@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import * as config from 'config';
+import { KakaoStrategy } from './kakao.strategy';
 
 const jwtConfig = config.get('jwt');
 
@@ -23,7 +24,7 @@ const jwtConfig = config.get('jwt');
     }),
   ],
   controllers: [UserController],
-  providers: [UserService, JwtStrategy],
-  exports: [JwtStrategy, PassportModule],
+  providers: [UserService, JwtStrategy, KakaoStrategy],
+  exports: [JwtStrategy, PassportModule, KakaoStrategy],
 })
 export class UserModule {}
