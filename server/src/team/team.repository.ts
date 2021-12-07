@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { Ipost } from './interface/post.interface';
 import { UpdateTeamDto } from './dto/update-dto';
+import { MakeMessage } from 'src/user/makeMessage';
 
 @EntityRepository(Team)
 export class TeamRepository extends Repository<Team> {
@@ -36,10 +37,10 @@ export class TeamRepository extends Repository<Team> {
     return { inviteCode, id: team.id };
   }
 
-  async joinTeam(code: string, user: User): Promise<{ id: number }> {
+  async joinTeam(code: string, user: User): Promise<Team> {
     const team = await this.findOne(
       { inviteCode: code },
-      { relations: ['users'] },
+      { relations: ['users', 'leaderId'] },
     );
     if (!team) {
       throw new NotFoundException('초대코드가 잘못되었습니다.');
@@ -52,7 +53,8 @@ export class TeamRepository extends Repository<Team> {
     }
     team.users.push(user);
     await this.save(team);
-    return { id: team.id };
+
+    return team;
   }
 
   async patchTeam(

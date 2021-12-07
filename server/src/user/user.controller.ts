@@ -104,4 +104,9 @@ export class UserController {
     const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
     return { url: `${process.env.HOMEPAGE_URL}/accessToken=${accessToken}` };
   }
+
+  @Get('test')
+  async test() {
+    return this.userService.sendKakaoAlarm('01097784742');
+  }
 }
