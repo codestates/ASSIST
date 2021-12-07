@@ -10,27 +10,28 @@ import ColoredScrollView from '../../components/view/ColoredScrollView';
 import CloseHeader from '../../components/header/CloseHeader';
 import CommonModalButton from '../../components/button/CommonModalButton';
 
-const ContentsSpaceButton = styled.View`
-  width: 100%;
-  height: 35px;
-`;
-
 const MainTitleSpaceSubTitle = styled.View`
   width: 100%;
   height: 16px;
 `;
 
-const ContentContainer = styled.View`
-  flex: 1;
+const TitleSpaceButton = styled.View`
+  width: 100%;
+  height: 35px;
 `;
 
-const Title = styled(Bold)`
+const ButtonSpaceButton = styled.View`
+  width: 100%;
+  height: 8px;
+`;
+
+const ContentContainer = styled.View`
+  width: 100%;
+`;
+
+const MainTitleText = styled(Bold)`
   font-size: 22px;
   color: ${colors.white};
-`;
-
-const CardTitleContainer = styled.View`
-  flex: 1;
 `;
 
 const CardMainTitle = styled(Bold)`
@@ -41,10 +42,6 @@ const CardMainTitle = styled(Bold)`
 const CardSubTitle = styled(Regular)`
   font-size: 17px;
   color: ${colors.gray};
-`;
-
-const CardButtonContainer = styled.View`
-  flex: 1;
 `;
 
 export default function MercenaryInvite_1() {
@@ -58,28 +55,25 @@ export default function MercenaryInvite_1() {
     navigation.navigate('MercenaryInvite_2');
   };
 
+  const handleHomeGoBack = () => {
+    navigation.navigate('Home');
+  };
+
   return (
     <>
       <CloseHeader color={colors.darkGray} />
       <ColoredScrollView isCard={true} titleColor={colors.darkGray}>
         <MainTitle marginBottom="15px">
-          <Title size={22}>용병 초대 💪</Title>
+          <MainTitleText>용병 초대 💪</MainTitleText>
         </MainTitle>
         <ContentContainer>
-          <CardTitleContainer>
-            <CardMainTitle>경기 인원이 부족하세요?</CardMainTitle>
-            <MainTitleSpaceSubTitle />
-            <CardSubTitle>저희가 용병을 대신 구해드릴게요!</CardSubTitle>
-          </CardTitleContainer>
-          <ContentsSpaceButton />
-          <CardButtonContainer>
-            <CommonModalButton color="blue" text="용병 초대하기" onPress={onPress} />
-            <CommonModalButton
-              color="transparent"
-              text="돌아가기 >"
-              onPress={() => console.log('홈')}
-            />
-          </CardButtonContainer>
+          <CardMainTitle>경기 인원이 부족하세요?</CardMainTitle>
+          <MainTitleSpaceSubTitle />
+          <CardSubTitle>저희가 용병을 대신 구해드릴게요!</CardSubTitle>
+          <TitleSpaceButton />
+          <CommonModalButton color="blue" text="용병 초대하기" onPress={onPress} />
+          <ButtonSpaceButton />
+          <CommonModalButton color="transparent" text="돌아가기 >" onPress={handleHomeGoBack} />
         </ContentContainer>
       </ColoredScrollView>
     </>
