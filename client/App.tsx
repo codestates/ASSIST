@@ -9,10 +9,13 @@ import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { colors } from './src/theme/colors';
+import { persistor, store } from './src/store';
+import { PersistGate } from 'redux-persist/es/integration/react';
+import { Provider } from 'react-redux';
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [isLoggedin] = useState(true);
+  const [isLoggedin] = useState(false);
 
   const onFinish = () => setLoading(false);
   const preloadAssets = async () => {
@@ -32,9 +35,15 @@ function App() {
   }
 
   return (
-    <ToastProvider duration={2500} normalColor={colors.darkGray}>
-      <NavigationContainer>{isLoggedin ? <LoggedInNav /> : <LoggedOutNav />}</NavigationContainer>
-    </ToastProvider>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <ToastProvider duration={2500} normalColor={colors.darkGray}>
+          <NavigationContainer>
+            {isLoggedin ? <LoggedInNav /> : <LoggedOutNav />}
+          </NavigationContainer>
+        </ToastProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 

@@ -1,10 +1,12 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components/native';
 import CommonButton from '../../components/button/CommonButton';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { colors } from '../../theme/colors';
 import { Medium, Regular } from '../../theme/fonts';
+import { useDispatch } from 'react-redux';
+import { clearAll } from '../../store/actions/propsAction';
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -40,7 +42,16 @@ const ButtonContainer = styled.View`
 `;
 
 export default function Lobby() {
+  const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(clearAll());
+    });
+    return unsubscribe;
+  }, [navigation, dispatch]);
+
   return (
     <Container>
       <TopView>

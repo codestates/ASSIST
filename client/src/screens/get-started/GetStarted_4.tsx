@@ -10,6 +10,8 @@ import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components/native';
+import { useDispatch } from 'react-redux';
+import { addPassword } from '../../store/actions/propsAction';
 
 const Seperator = styled.View`
   height: 15px;
@@ -33,6 +35,7 @@ export default function GetStarted_4() {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { isValid },
     watch,
   } = useForm({
@@ -44,6 +47,7 @@ export default function GetStarted_4() {
   const onSubmit = (data: string) => {
     console.log(data);
   };
+  const dispatch = useDispatch();
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
@@ -104,7 +108,10 @@ export default function GetStarted_4() {
       </NextPageView>
       <NextButton
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('GetStarted_5')}
+        onPress={() => {
+          dispatch(addPassword(String(getValues('password_1'))));
+          navigation.navigate('GetStarted_5');
+        }}
       />
     </>
   );
