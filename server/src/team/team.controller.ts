@@ -8,8 +8,9 @@ import {
   Req,
   UseGuards,
   Delete,
+  Query,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { query, Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateTeamDto } from './dto/create-dto';
 import { TeamService } from './team.service';
@@ -34,6 +35,11 @@ export class TeamController {
   @Post('/join')
   joinTeam(@Body('code') code: string, @Req() req: Request): Promise<object> {
     return this.teamService.joinTeam(code, req.user);
+  }
+
+  @Get('/check')
+  checkTeam(@Query('code') code: string): Promise<Team> {
+    return this.teamService.checkCode(code);
   }
 
   @Get('/:id')

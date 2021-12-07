@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -106,6 +107,23 @@ export class UserService {
   async getUser(user: User) {
     delete user.password;
     return user;
+  }
+
+  async checkEmail(email: string): Promise<{ check: boolean }> {
+    const regExp =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+    if (!regExp.test(email)) {
+      throw new BadRequestException('올바른 형식의 이메일 주소가 아닙니다.');
+    }
+    let payload = { check: true };
+    const found = await this.userRepository.findOne({
+      email,
+      provider: 'normal',
+    });
+    console.log(found);
+    if (found) payload.check = false;
+    return payload;
   }
 
   async patchUser(updateInfo: UpdateDto, userInfo: User): Promise<PatchUser> {
