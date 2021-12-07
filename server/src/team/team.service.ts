@@ -13,6 +13,8 @@ import { UpdateTeamDto } from './dto/update-dto';
 import { UserRepository } from 'src/user/user.repository';
 import { IgetMember } from './interface/getMember.interface';
 import { MatchRepository } from 'src/match/match.repository';
+import { UserService } from 'src/user/user.service';
+import { MakeMessage } from 'src/user/makeMessage';
 
 @Injectable()
 export class TeamService {
@@ -23,6 +25,7 @@ export class TeamService {
     private userRepository: UserRepository,
     @InjectRepository(MatchRepository)
     private matchRepository: MatchRepository,
+    private userService: UserService,
   ) {}
 
   async createTeam(createTeamDto: CreateTeamDto, user: User): Promise<Ipost> {
@@ -30,7 +33,16 @@ export class TeamService {
   }
 
   async joinTeam(code: string, user: User): Promise<any> {
-    return await this.teamRepository.joinTeam(code, user);
+    const team = await this.teamRepository.joinTeam(code, user);
+    let info = {
+      team: team.name,
+      code: team.inviteCode,
+      name: user.name,
+      phone: user.phone,
+      leader: team.leaderId.name,
+    };
+    let message = MakeMessage('T001', info);
+    this.userService.sendKakaoAlarm(info);
   }
 
   async getDetail(id: number, user: User): Promise<any> {

@@ -25,6 +25,6 @@ const jwtConfig = config.get('jwt');
   ],
   controllers: [UserController],
   providers: [UserService, JwtStrategy, KakaoStrategy],
-  exports: [JwtStrategy, PassportModule, KakaoStrategy],
+  exports: [JwtStrategy, PassportModule, KakaoStrategy, UserService],
 })
 export class UserModule {}

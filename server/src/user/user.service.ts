@@ -156,20 +156,25 @@ export class UserService {
     return { message: '완료 되었습니다.' };
   }
 
-  private makeSignature(): string {
+  private makeSignature(type?: string): string {
     const date = Date.now().toString();
     const secretKey = process.env.NCP_SECRET;
     const accessKey = process.env.NCP_ACCESS;
-    const serviceId = process.env.SMS_SERVICEID;
     const method = 'POST';
     const space = ' ';
     const newLine = '\n';
-    const url2 = `/sms/v2/services/${serviceId}/messages`;
+
+    let serviceId = process.env.SMS_SERVICEID;
+    let url = `/sms/v2/services/${serviceId}/messages`;
+    if (type === 'biz') {
+      serviceId = process.env.KAKAOBIZ_SERVICEID;
+      url = `/alimtalk/v2/services/${serviceId}/messages`;
+    }
     const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
 
     hmac.update(method);
     hmac.update(space);
-    hmac.update(url2);
+    hmac.update(url);
     hmac.update(newLine);
     hmac.update(date);
     hmac.update(newLine);
@@ -225,5 +230,32 @@ export class UserService {
       },
     };
     await axios.post(url, data, options);
+  }
+
+  async sendKakaoAlarm(data): Promise<void> {
+    const url = `https://sens.apigw.ntruss.com/alimtalk/v2/services/${process.env.KAKAOBIZ_SERVICEID}/messages`;
+    const body = {
+      templateCode: 'T001',
+      plusFriendId: '@assist',
+      messages: data,
+    };
+
+    const options = {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-ncp-iam-access-key': process.env.NCP_ACCESS,
+        'x-ncp-apigw-timestamp': Date.now().toString(),
+        'x-ncp-apigw-signature-v2': this.makeSignature('biz'),
+      },
+    };
+    return axios
+      .post(url, body, options)
+      .then(async (res) => {
+        console.log(`알람톡 보내기 성공`);
+      })
+      .catch((err) => {
+        console.log(err.response);
+        throw new InternalServerErrorException('알람톡 보내기 실패');
+      });
   }
 }
