@@ -9,7 +9,7 @@ export type UserAction =
   | ReturnType<typeof getAccessToken>
   | ReturnType<typeof logOutUser>;
 
-export type UserInfoType = {
+export const getUserInfo = (data: {
   id: string;
   email: string;
   name: string;
@@ -17,9 +17,7 @@ export type UserInfoType = {
   gender: string;
   role: string;
   team: string[];
-};
-
-export const getUserInfo = (data: UserInfoType) => {
+}) => {
   return { type: GET_USER_INFO, payload: data };
 };
 

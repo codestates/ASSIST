@@ -1,5 +1,3 @@
-import { string } from 'yup/lib/locale';
-
 export type RootStackParamList = {
   Home: undefined;
   MyPage: undefined;
