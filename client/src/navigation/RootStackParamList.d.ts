@@ -35,9 +35,6 @@ export type RootStackParamList = {
   GetStarted_6: undefined;
   GenderSelect: undefined | { screenName: keyof RootStackParamList };
   GetStarted_Login: undefined | { email: string };
-  FindPassword: undefined;
-  FindPassword_1: undefined;
-  FindPassword_2: undefined;
   ScheduleManage: undefined;
   ScheduleManage_1: undefined | { calendar: string; start: string; end: string };
   ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
@@ -64,6 +61,7 @@ export type RootStackParamList = {
   MatchVote_3: undefined;
   MatchVote_4: undefined;
   MatchVote_5: undefined;
+  MatchVote_6: undefined;
   MercenaryInvite: undefined;
   MercenaryInvite_1: undefined;
   MercenaryInvite_2: undefined;
