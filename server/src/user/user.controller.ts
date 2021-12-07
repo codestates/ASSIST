@@ -12,6 +12,7 @@ import {
   Param,
   Res,
   Redirect,
+  Query,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateSMSAuth, CreateUserDto } from './dto/create-dto';
@@ -63,6 +64,10 @@ export class UserController {
     return this.userService.getUser(req.user);
   }
 
+  @Get('/check')
+  async checkEmail(@Query('email') email: string): Promise<{ check: boolean }> {
+    return this.userService.checkEmail(email);
+  }
   @Post('')
   @UseGuards(AuthGuard())
   async checkPw(
