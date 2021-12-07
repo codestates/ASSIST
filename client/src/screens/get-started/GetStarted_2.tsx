@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import MainTitle from '../../components/text/MainTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { Bold, Light } from '../../theme/fonts';
@@ -27,7 +27,6 @@ export default function GetStarted_2() {
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
-
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
   const onSubmit = (data: string) => {
@@ -63,7 +62,9 @@ export default function GetStarted_2() {
       </NextPageView>
       <NextButton
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('GetStarted_3', { phone: String(getValues('phone')) })}
+        onPress={() => {
+          navigation.navigate('GetStarted_3', { phone: String(getValues('phone')) });
+        }}
       />
     </>
   );

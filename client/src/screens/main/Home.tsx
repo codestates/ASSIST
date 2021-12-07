@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colors } from '../../theme/colors';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import styled from 'styled-components/native';
+import { useDispatch } from 'react-redux';
+import { clearAll } from '../../store/actions/propsAction';
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -16,7 +18,16 @@ const Container = styled.SafeAreaView`
 `;
 
 export default function Home() {
+  const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(clearAll());
+    });
+    return unsubscribe;
+  }, [navigation, dispatch]);
+
   return (
     <Container>
       <Text>Home</Text>

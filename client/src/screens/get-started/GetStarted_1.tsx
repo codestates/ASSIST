@@ -11,6 +11,8 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
+import { useDispatch } from 'react-redux';
+import { addEmail } from '../../store/actions/propsAction';
 
 type showType = {
   show: boolean;
@@ -58,7 +60,8 @@ export default function GetStarted_1() {
     console.log(data);
   };
   // 기존 유저인지 확인
-  const [existingUser] = useState(true);
+  const [existingUser] = useState(false);
+  const dispatch = useDispatch();
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
@@ -117,6 +120,7 @@ export default function GetStarted_1() {
             if (existingUser) {
               navigation.navigate('GetStarted_Login', { email: String(getValues('email')) });
             } else {
+              dispatch(addEmail(String(getValues('email'))));
               navigation.navigate('GetStarted_2');
             }
           }}

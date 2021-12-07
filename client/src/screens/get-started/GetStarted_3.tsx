@@ -14,6 +14,8 @@ import LineSelect from '../../components/input/LineSelect';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import styled from 'styled-components/native';
+import { useDispatch } from 'react-redux';
+import { addPhone } from '../../store/actions/propsAction';
 
 const Line = styled.View`
   margin-top: 13px;
@@ -55,6 +57,7 @@ export default function GetStarted_3({ route }: GetStartedProps) {
     setModalVisible(false);
   };
 
+  const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
@@ -92,7 +95,11 @@ export default function GetStarted_3({ route }: GetStartedProps) {
       </NextPageView>
       <NextButton
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('GetStarted_4')}
+        onPress={() => {
+          // 문자 인증이 성공했을 경우,
+          dispatch(addPhone(String(route.params?.phone)));
+          navigation.navigate('GetStarted_4');
+        }}
       />
     </>
   );
