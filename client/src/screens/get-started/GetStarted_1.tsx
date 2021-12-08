@@ -13,7 +13,7 @@ import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
 import { useDispatch } from 'react-redux';
 import { addEmail } from '../../store/actions/propsAction';
-import { getAccessToken } from '../../store/actions/UserAction';
+import { getAccessToken } from '../../store/actions/userAction';
 
 type showType = {
   show: boolean;

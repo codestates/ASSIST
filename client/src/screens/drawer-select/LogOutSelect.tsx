@@ -4,7 +4,7 @@ import BottomDrawer from '../../components/drawer/BottomDrawer';
 import { Bold, Regular } from '../../theme/fonts';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import { useDispatch } from 'react-redux';
-import { logOutUser } from '../../store/actions/UserAction';
+import { logOutUser } from '../../store/actions/userAction';
 
 const TitleContainer = styled.View`
   margin: 15px 0px;
