@@ -61,7 +61,7 @@ export default function GetStarted_1() {
     console.log(data);
   };
   // 기존 유저인지 확인
-  const [existingUser] = useState(true);
+  const [existingUser] = useState(false);
   const dispatch = useDispatch();
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

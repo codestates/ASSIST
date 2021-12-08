@@ -16,6 +16,7 @@ import CommonModalButton from '../../components/button/CommonModalButton';
 import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
 import { addPhone } from '../../store/actions/propsAction';
+import verifySmsAuth from '../../hooks/verifySmsAuth';
 
 const Line = styled.View`
   margin-top: 13px;
@@ -32,6 +33,7 @@ export default function GetStarted_3({ route }: GetStartedProps) {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { isValid },
   } = useForm({
     mode: 'onChange',
@@ -59,6 +61,18 @@ export default function GetStarted_3({ route }: GetStartedProps) {
 
   const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const goToNext = () => {
+    verifySmsAuth({ phone: String(route.params?.phone), number: String(getValues('validation')) })
+      .then(() => {
+        dispatch(addPhone(String(route.params?.phone)));
+        navigation.navigate('GetStarted_4');
+      })
+      .catch((error) => {
+        console.log(error);
+        showErrorModal();
+      });
+  };
 
   return (
     <>
@@ -91,16 +105,10 @@ export default function GetStarted_3({ route }: GetStartedProps) {
           errorMessage={errorMessage}
           clearErrorMessage={clearError}
           setErrorMessage={setErrorMessage}
+          phone={route.params?.phone}
         />
       </NextPageView>
-      <NextButton
-        disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => {
-          // 문자 인증이 성공했을 경우,
-          dispatch(addPhone(String(route.params?.phone)));
-          navigation.navigate('GetStarted_4');
-        }}
-      />
+      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
     </>
   );
 }
