@@ -1,4 +1,4 @@
-import { GET_ACCESS_TOKEN, GET_USER_INFO, LOG_OUT_USER, UserAction } from '../actions/UserAction';
+import { GET_ACCESS_TOKEN, GET_USER_INFO, LOG_OUT_USER, UserAction } from '../actions/userAction';
 import { userState } from '../initialState';
 
 export default function userReducer(state = userState, action: UserAction) {

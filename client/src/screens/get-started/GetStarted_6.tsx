@@ -6,7 +6,7 @@ import axios, { AxiosResponse } from 'axios';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ASSIST_SERVER_URL } from '@env';
 import { useDispatch } from 'react-redux';
-import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/UserAction';
+import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/userAction';
 
 type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_6'>;
 

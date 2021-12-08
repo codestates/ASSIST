@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
-import { getAccessToken, getUserInfo } from '../../store/actions/UserAction';
+import { getAccessToken, getUserInfo } from '../../store/actions/userAction';
 
 const schema = yup.object({
   name: yup.string().required(),
