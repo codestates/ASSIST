@@ -11,6 +11,10 @@ import ScheduleManageNav from './ScheduleManageNav';
 import MyPageNav from './MyPageNav';
 import MatchVoteNav from './MatchVoteNav';
 import MercenaryInvite from './MercenaryInviteNav';
+import AddOns_1 from '../screens/add-ons/AddOns_1';
+import AddOns_2 from '../screens/add-ons/AddOns_2';
+import AddOns_3 from '../screens/add-ons/AddOns_3';
+import BankSelect from '../screens/drawer-select/BankSelect';
 
 const HomeStack = createStackNavigator();
 
@@ -66,6 +70,14 @@ export default function LoggedInNav() {
         name="MercenaryInvite"
         component={MercenaryInvite}
         options={{ headerShown: false }}
+      />
+      <HomeStack.Screen name="AddOns_1" component={AddOns_1} options={{ headerShown: false }} />
+      <HomeStack.Screen name="AddOns_2" component={AddOns_2} options={{ headerShown: false }} />
+      <HomeStack.Screen name="AddOns_3" component={AddOns_3} options={{ headerShown: false }} />
+      <HomeStack.Screen
+        name="BankSelect"
+        component={BankSelect}
+        options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
       />
     </HomeStack.Navigator>
   );
