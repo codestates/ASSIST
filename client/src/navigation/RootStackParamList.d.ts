@@ -1,5 +1,8 @@
 export type RootStackParamList = {
   Home: undefined;
+  AddOns_1: undefined;
+  AddOns_2: undefined;
+  AddOns_3: undefined | { bank: string };
   MyPage: undefined;
   Lobby: undefined;
   TeamSelect: undefined;
@@ -10,7 +13,7 @@ export type RootStackParamList = {
   CreateTeam_4: undefined;
   CreateTeam_5: undefined;
   CreateTeam_6: undefined;
-  BankSelect: undefined;
+  BankSelect: { name: keyof RootStackParamList };
   LendingPage: undefined;
   LendingPage_1: undefined;
   LendingPage_2: undefined;
