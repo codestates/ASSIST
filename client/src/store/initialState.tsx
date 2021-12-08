@@ -6,7 +6,8 @@ export const userState = {
   name: '',
   gender: '',
   role: '',
-  team: [],
+  provider: '',
+  teams: [],
 };
 
 export const propsState = {};

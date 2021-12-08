@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTimer } from 'react-timer-hook';
 import styled from 'styled-components/native';
+import requestSmsAuth from '../../hooks/requestSmsAuth';
 import { colors } from '../../theme/colors';
 import { Regular } from '../../theme/fonts';
 
@@ -28,11 +29,16 @@ const ResendButton = styled.TouchableOpacity`
 type ValidationTimerProps = {
   setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
   clearInput?: () => void;
+  phone?: string;
 };
 
-export default function ValidationTimer({ setErrorMessage, clearInput }: ValidationTimerProps) {
+export default function ValidationTimer({
+  setErrorMessage,
+  clearInput,
+  phone,
+}: ValidationTimerProps) {
   const expiryTimestamp = new Date();
-  expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 5);
+  expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 120);
 
   const { seconds, minutes, start, restart } = useTimer({
     expiryTimestamp,
@@ -63,7 +69,9 @@ export default function ValidationTimer({ setErrorMessage, clearInput }: Validat
       setErrorMessage('');
       clearInput();
     }
-    restart(expiryTimestamp);
+    requestSmsAuth({ phone })
+      .then(() => restart(expiryTimestamp))
+      .catch((error) => console.log(error));
   };
 
   return (

@@ -30,7 +30,7 @@ export type RootStackParamList = {
   GetStarted_3: undefined | { phone: string };
   GetStarted_4: undefined;
   GetStarted_5: undefined | { gender: string };
-  GetStarted_6: undefined;
+  GetStarted_6: undefined | { accessToken: string };
   GenderSelect: undefined | { screenName: keyof RootStackParamList };
   GetStarted_Login: undefined | { email: string };
   ScheduleManage: undefined;

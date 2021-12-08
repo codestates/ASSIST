@@ -94,6 +94,7 @@ type LineInputProps = {
   type?: 'phone' | 'money' | 'timer' | 'password' | 'date';
   setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
   marginTop?: string;
+  phone?: string;
 };
 
 export default function LineInput({
@@ -107,6 +108,7 @@ export default function LineInput({
   type,
   setErrorMessage,
   marginTop,
+  phone,
 }: LineInputProps) {
   const timerWidth = useWindowDimensions().width * 0.27;
   const { field } = useController({ control, defaultValue: '', name });
@@ -221,7 +223,11 @@ export default function LineInput({
       </InputContainer>
       {getSubtitle(isError, conditions)}
       {type === 'timer' && (
-        <ValidationTimer setErrorMessage={setErrorMessage} clearInput={() => field.onChange('')} />
+        <ValidationTimer
+          setErrorMessage={setErrorMessage}
+          clearInput={() => field.onChange('')}
+          phone={phone}
+        />
       )}
     </Container>
   );
