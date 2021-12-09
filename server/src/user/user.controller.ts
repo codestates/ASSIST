@@ -65,6 +65,12 @@ export class UserController {
     return this.userService.getUser(req.user);
   }
 
+  @Get('/team')
+  @UseGuards(AuthGuard())
+  async getUserTeam(@Req() req: Request) {
+    return await this.userService.getUserTeam(req.user);
+  }
+
   @Get('/check')
   async checkEmail(@Query('email') email: string): Promise<{ check: boolean }> {
     return this.userService.checkEmail(email);

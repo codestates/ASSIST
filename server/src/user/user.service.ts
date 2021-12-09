@@ -109,6 +109,28 @@ export class UserService {
     return user;
   }
 
+  async getUserTeam(user: User) {
+    const found = await this.userRepository.findOne(
+      { id: user.id },
+      { relations: ['teams', 'team'] },
+    );
+
+    if (!found) {
+      throw new UnauthorizedException();
+    }
+
+    if (found.team) {
+      found.team.forEach((list: any) => {
+        list.leader = true;
+        found.teams = found.teams.filter((el) => el.id !== list.id);
+      });
+
+      found.teams = [...found.team, ...found.teams];
+    }
+    delete found.team;
+    return found.teams;
+  }
+
   async checkEmail(email: string): Promise<{ check: boolean }> {
     const regExp =
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;

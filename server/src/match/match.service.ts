@@ -38,6 +38,8 @@ export class MatchService {
     if (!check) {
       throw new BadRequestException('경기는 팀장만 생성 가능합니다.');
     }
+    const dayArr = ['일', '월', '화', '수', '목', '금', '토'];
+
     const { date, startTime } = dto;
     const alarmTime = new Date(date + ' ' + startTime);
     alarmTime.setHours(alarmTime.getHours() - 1);
@@ -45,11 +47,11 @@ export class MatchService {
     try {
       alarm = await this.alarmRepository.create({ time: alarmTime });
       await this.alarmRepository.save(alarm);
-
       match = await this.matchRepository.create({
         ...dto,
         alarm,
         team: { id: dto.teamId },
+        day: dayArr[new Date(date).getDay()],
       });
       await this.matchRepository.save(match);
     } catch (err) {
