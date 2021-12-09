@@ -17,7 +17,6 @@ import { RootState } from '../../store/reducers';
 import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 
-
 const schema = yup.object({
   name: yup.string().required(),
 });
@@ -33,7 +32,6 @@ export default function GetStarted_5({ route }: GetStartedProps) {
 
   const {
     control,
-    handleSubmit,
     getValues,
     formState: { isValid },
   } = useForm({
@@ -55,10 +53,6 @@ export default function GetStarted_5({ route }: GetStartedProps) {
   }, [navigation, isPressed]);
 
   const clearErrorMessage = () => setErrorMessage('');
-
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
 
   const goToNext = () => {
     setIsPressed(true);

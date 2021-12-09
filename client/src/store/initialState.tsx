@@ -7,7 +7,6 @@ export const userState = {
   gender: '',
   role: '',
   provider: '',
-  teams: [],
 };
 
 export const propsState = {};

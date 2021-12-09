@@ -34,7 +34,6 @@ const schema = yup.object({
 export default function GetStarted_4() {
   const {
     control,
-    handleSubmit,
     getValues,
     formState: { isValid },
     watch,
@@ -44,9 +43,6 @@ export default function GetStarted_4() {
   });
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
   const dispatch = useDispatch();
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
