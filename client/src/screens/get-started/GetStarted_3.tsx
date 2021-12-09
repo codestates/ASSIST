@@ -32,7 +32,6 @@ type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_3'>;
 export default function GetStarted_3({ route }: GetStartedProps) {
   const {
     control,
-    handleSubmit,
     getValues,
     formState: { isValid },
   } = useForm({
@@ -42,10 +41,6 @@ export default function GetStarted_3({ route }: GetStartedProps) {
 
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
 
   const showErrorModal = () => {
     setError();

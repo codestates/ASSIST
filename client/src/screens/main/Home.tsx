@@ -36,7 +36,6 @@ export default function Home() {
   }, [navigation, dispatch]);
 
   return (
-
     <CardScrollView home>
       <Card>
         <TouchableOpacity onPress={() => navigation.navigate('CreateTeam')}>
@@ -75,7 +74,6 @@ export default function Home() {
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuView>
         <MenuView last onPress={() => navigation.navigate('AddOns_3')}>
-
           <Regular size={13} gray>
             팀 정보
           </Regular>

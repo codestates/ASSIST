@@ -15,6 +15,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import LineSelect from '../../components/input/LineSelect';
+import axios, { AxiosResponse } from 'axios';
+import { ASSIST_SERVER_URL } from '@env';
+import { useDispatch } from 'react-redux';
+import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/userAction';
 
 const schema = yup.object({
   password: yup.string().required(),
@@ -34,8 +38,8 @@ type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_Login'>;
 export default function GetStarted_Login({ route }: GetStartedProps) {
   const {
     control,
-    handleSubmit,
     formState: { isValid },
+    getValues,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
@@ -43,22 +47,46 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const dispatch = useDispatch();
 
   const setError = () => setErrorMessage(' ');
   const clearError = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
+
   const showErrorModal = () => {
     setError();
     setModalVisible(true);
   };
+
   const hideErrorModal = () => {
     setModalVisible(false);
   };
+
   const goToFindPassword = () => {
     hideErrorModal();
     navigation.navigate('FindPassword', { screenName: 'GetStarted_Login' });
+  };
+
+  const requestLogin = async () => {
+    try {
+      const {
+        data: { accessToken },
+      }: AxiosResponse<{ accessToken: string }> = await axios.post(
+        `${ASSIST_SERVER_URL}/user/signin`,
+        {
+          email: String(route.params?.email),
+          password: String(getValues('password')),
+          provider: 'normal',
+        },
+      );
+      const { data }: AxiosResponse<UserInfoType> = await axios.get(`${ASSIST_SERVER_URL}/user`, {
+        headers: { authorization: `Bearer ${accessToken}` },
+      });
+      dispatch(getUserInfo(data));
+      dispatch(getAccessToken(accessToken));
+    } catch (error) {
+      console.log(error);
+      showErrorModal();
+    }
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -84,7 +112,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
       </CommonModal>
       <NextPageView>
         <MainTitle>
-          <Light size={22}>홍*길동님</Light>
+          <Light size={22}>{route.params?.name}님</Light>
           <Bold size={22}>다시 만나서 반가워요👋</Bold>
         </MainTitle>
         <LineSelect isFixed title="이메일" selected={route.params?.email} />
@@ -106,7 +134,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
       <NextButton
         text="로그인  >"
         disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => showErrorModal()}
+        onPress={() => requestLogin()}
       />
     </>
   );

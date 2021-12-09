@@ -35,7 +35,7 @@ export type RootStackParamList = {
   GetStarted_5: undefined | { gender: string };
   GetStarted_6: undefined | { accessToken: string };
   GenderSelect: undefined | { screenName: keyof RootStackParamList };
-  GetStarted_Login: undefined | { email: string };
+  GetStarted_Login: undefined | { email: string; name: string };
   ScheduleManage: undefined;
   ScheduleManage_1: undefined | { calendar: string; start: string; end: string };
   ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
