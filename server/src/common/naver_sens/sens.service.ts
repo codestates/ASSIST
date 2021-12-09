@@ -40,24 +40,21 @@ export class NaverSensService {
       });
   }
 
-  async sendKakaoAlarm(infoArr: AlimtalkDto[]): Promise<void> {
+  async sendKakaoAlarm(code: string, infoArr: AlimtalkDto[]): Promise<void> {
     const url = `https://sens.apigw.ntruss.com/alimtalk/v2/services/${process.env.KAKAOBIZ_SERVICEID}/messages`;
 
     const payload = [];
-    infoArr.forEach(({ phone, content, code }) => {
-      phone = phone.replace(/-/g, '');
-      const body: AlimTalkMessageRequest = {
-        templateCode: code,
-        plusFriendId: '@assist',
-        messages: [
-          {
-            to: phone,
-            content,
-          },
-        ],
-      };
-      payload.push(body);
+
+    infoArr.forEach((el) => {
+      el.to = el.to.replace(/-/g, '');
+      payload.push(el);
     });
+
+    const body: AlimTalkMessageRequest = {
+      templateCode: code,
+      plusFriendId: '@assist',
+      messages: payload,
+    };
 
     const options = {
       headers: {
@@ -67,15 +64,17 @@ export class NaverSensService {
         'x-ncp-apigw-signature-v2': this.makeSignature('biz'),
       },
     };
-    return axios
-      .post(url, payload, options)
+
+    axios
+      .post(url, body, options)
       .then(async (res) => {
         console.log(`알람톡 보내기 성공`);
       })
       .catch((err) => {
-        console.log(err.response);
-        throw new InternalServerErrorException('알람톡 보내기 실패');
+        console.log('알람톡보내기 실패 ', err.response);
       });
+
+    return;
   }
 
   private makeSignature(type?: string): string {
@@ -92,6 +91,7 @@ export class NaverSensService {
       serviceId = process.env.KAKAOBIZ_SERVICEID;
       url = `/alimtalk/v2/services/${serviceId}/messages`;
     }
+
     const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
 
     hmac.update(method);
