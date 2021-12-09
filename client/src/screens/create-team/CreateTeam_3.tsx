@@ -53,7 +53,7 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
 
   const goToNext = () => {
     setIsPressed(true);
-    navigation.navigate('BankSelect');
+    navigation.navigate('BankSelect', { name: 'CreateTeam_3' });
   };
 
   return (

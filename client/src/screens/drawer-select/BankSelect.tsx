@@ -4,6 +4,7 @@ import BottomDrawer from '../../components/drawer/BottomDrawer';
 import { Bold, Light } from '../../theme/fonts';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const TitleContainer = styled.View`
   margin: 15px 0px;
@@ -26,7 +27,9 @@ const Bank = styled(Light)`
 
 const BankList = ['카카오뱅크', '농협', '신한은행', 'IBK기업은행', '하나은행', '우리은행'];
 
-export default function BankSelect() {
+type BankSelectProps = StackScreenProps<RootStackParamList, 'BankSelect'>;
+
+export default function BankSelect({ route }: BankSelectProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <BottomDrawer>
@@ -34,7 +37,7 @@ export default function BankSelect() {
         <Title>은행 선택</Title>
       </TitleContainer>
       {BankList.map((bank) => (
-        <BankContainer key={bank} onPress={() => navigation.navigate('CreateTeam_3', { bank })}>
+        <BankContainer key={bank} onPress={() => navigation.navigate(route.params?.name, { bank })}>
           <Bank>{bank}</Bank>
         </BankContainer>
       ))}

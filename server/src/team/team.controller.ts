@@ -8,8 +8,10 @@ import {
   Req,
   UseGuards,
   Delete,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { query, Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateTeamDto } from './dto/create-dto';
 import { TeamService } from './team.service';
@@ -36,14 +38,22 @@ export class TeamController {
     return this.teamService.joinTeam(code, req.user);
   }
 
+  @Get('/check')
+  checkTeam(@Query('code') code: string): Promise<Team> {
+    return this.teamService.checkCode(code);
+  }
+
   @Get('/:id')
-  getDetail(@Param('id') id: number, @Req() req: Request): Promise<Team> {
+  getDetail(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+  ): Promise<Team> {
     return this.teamService.getDetail(id, req.user);
   }
 
   @Patch('/:id')
   patchTeam(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTeamDto: UpdateTeamDto,
     @Req() req: Request,
   ): Promise<object> {
@@ -51,17 +61,20 @@ export class TeamController {
   }
 
   @Get('/:id/member')
-  getMember(@Param('id') id: number): Promise<IgetMember> {
+  getMember(@Param('id', ParseIntPipe) id: number): Promise<IgetMember> {
     return this.teamService.getMember(id);
   }
 
   @Delete('/:id')
-  deleteTeam(@Param('id') id: number, @Req() req: Request): Promise<object> {
+  deleteTeam(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+  ): Promise<object> {
     return this.teamService.deleteTeam(id, req.user);
   }
   @Delete(':id/member/:userId')
   kickMember(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Param('userId') userId: number,
     @Req() req: Request,
   ) {

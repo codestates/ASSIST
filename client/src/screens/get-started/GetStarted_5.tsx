@@ -17,6 +17,7 @@ import { RootState } from '../../store/reducers';
 import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 
+
 const schema = yup.object({
   name: yup.string().required(),
 });

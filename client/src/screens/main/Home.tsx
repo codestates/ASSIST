@@ -36,6 +36,7 @@ export default function Home() {
   }, [navigation, dispatch]);
 
   return (
+
     <CardScrollView home>
       <Card>
         <TouchableOpacity onPress={() => navigation.navigate('CreateTeam')}>
@@ -61,19 +62,20 @@ export default function Home() {
         <TitleView>
           <Bold size={19}>🛠 부가기능</Bold>
         </TitleView>
-        <MenuView>
+        <MenuView onPress={() => navigation.navigate('AddOns_1')}>
           <Regular size={13} gray>
             지난 경기 기록
           </Regular>
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuView>
-        <MenuView>
+        <MenuView onPress={() => navigation.navigate('AddOns_2')}>
           <Regular size={13} gray>
             팀 구성원
           </Regular>
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuView>
-        <MenuView last>
+        <MenuView last onPress={() => navigation.navigate('AddOns_3')}>
+
           <Regular size={13} gray>
             팀 정보
           </Regular>
