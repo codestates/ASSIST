@@ -42,7 +42,7 @@ export class User extends BaseEntity {
   teams: Team[];
 
   @OneToMany(() => Team, (teams) => teams.leaderId)
-  team: Team;
+  team: Team[];
   @OneToMany(() => User_match, (user_match) => user_match.user)
   user_matchs!: User_match[];
 }

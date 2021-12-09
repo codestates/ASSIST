@@ -13,9 +13,8 @@ import { UpdateTeamDto } from './dto/update-dto';
 import { UserRepository } from 'src/user/user.repository';
 import { IgetMember } from './interface/getMember.interface';
 import { MatchRepository } from 'src/match/match.repository';
-import { UserService } from 'src/user/user.service';
-import { MakeMessage } from 'src/user/makeMessage';
 import { Team } from './team.entity';
+import { getManager } from 'typeorm';
 
 @Injectable()
 export class TeamService {
@@ -26,7 +25,6 @@ export class TeamService {
     private userRepository: UserRepository,
     @InjectRepository(MatchRepository)
     private matchRepository: MatchRepository,
-    private userService: UserService,
   ) {}
 
   async createTeam(createTeamDto: CreateTeamDto, user: User): Promise<Ipost> {
@@ -52,20 +50,19 @@ export class TeamService {
     return found;
   }
   async getDetail(id: number, user: User): Promise<any> {
-    const found: any = await this.teamRepository.findOne(
-      { id },
-      { relations: ['leaderId'] },
+    const check = await getManager().query(
+      `SELECT team.name,paymentDay,accountNumber,accountBank,inviteCode,leaderId,b.name as leaderName,b.phone as leaderPhone
+       FROM user_team join team on team.id = user_team.teamId join user as b on team.leaderId = b.id where teamId = ${id} and userId = ${user.id} `,
     );
 
-    if (!found) {
-      throw new NotFoundException('해당 팀이 존재하지 않습니다.');
+    if (!check.length) {
+      throw new NotFoundException('가입된 팀이 아닙니다.');
     }
-    delete found.leaderId.password;
 
     const nextMatch = await this.matchRepository.getNextMatch(id, user);
-    found.nextMatch = nextMatch;
+    check[0].nextMatch = nextMatch;
 
-    return found;
+    return check[0];
   }
 
   async patchTeam(id: number, updateTeamDto: UpdateTeamDto, user: User) {
