@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
@@ -28,13 +29,16 @@ export class MatchController {
     return this.matchService.createTeam(createMatchDto, req.user);
   }
   @Get('/:id')
-  getMatchDetail(@Param('id') matchId: number, @Req() req: Request) {
+  getMatchDetail(
+    @Param('id', ParseIntPipe) matchId: number,
+    @Req() req: Request,
+  ) {
     return this.matchService.getMatchDetail(matchId, req.user);
   }
 
   @Get('/team/:id')
   getlastMatchs(
-    @Param('id') teamId: number,
+    @Param('id', ParseIntPipe) teamId: number,
     @Query('page') page: number,
   ): Promise<Match[]> {
     return this.matchService.getlastMatchs(teamId, page);
@@ -42,7 +46,7 @@ export class MatchController {
 
   @Patch('/:id')
   changeCondition(
-    @Param('id') matchId: number,
+    @Param('id', ParseIntPipe) matchId: number,
     @Req() req: Request,
     @Body() updateMatchDto: UpdateMatchDto,
   ) {
@@ -51,7 +55,7 @@ export class MatchController {
 
   @Patch('/:id/vote')
   voteMatch(
-    @Param('id') matchId: number,
+    @Param('id', ParseIntPipe) matchId: number,
     @Req() req: Request,
     @Body() voteMatchDto: VoteMatchDto,
   ) {

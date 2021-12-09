@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { Ipost } from './interface/post.interface';
 import { UpdateTeamDto } from './dto/update-dto';
-import { MakeMessage } from 'src/user/makeMessage';
 
 @EntityRepository(Team)
 export class TeamRepository extends Repository<Team> {

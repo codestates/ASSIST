@@ -15,6 +15,7 @@ import { IgetMember } from './interface/getMember.interface';
 import { MatchRepository } from 'src/match/match.repository';
 import { UserService } from 'src/user/user.service';
 import { MakeMessage } from 'src/user/makeMessage';
+import { Team } from './team.entity';
 
 @Injectable()
 export class TeamService {
@@ -41,10 +42,15 @@ export class TeamService {
       phone: user.phone,
       leader: team.leaderId.name,
     };
-    let message = MakeMessage('T001', info);
-    this.userService.sendKakaoAlarm(info);
+    // let message = MakeMessage('T001', info);
+    // this.userService.sendKakaoAlarm(info);
   }
 
+  async checkCode(code: string): Promise<Team> {
+    const found = await this.teamRepository.findOne({ inviteCode: code });
+    if (!found) throw new NotFoundException('잘못된 코드입니다.');
+    return found;
+  }
   async getDetail(id: number, user: User): Promise<any> {
     const found: any = await this.teamRepository.findOne(
       { id },

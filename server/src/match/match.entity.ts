@@ -26,6 +26,9 @@ export class Match extends BaseEntity {
   condition: string;
 
   @Column()
+  reason: string;
+
+  @Column()
   date: string;
 
   @Column()

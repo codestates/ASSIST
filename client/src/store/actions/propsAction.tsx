@@ -7,7 +7,7 @@ export const ADD_NAME = 'ADD_NAME';
 export const ADD_GENDER = 'ADD_GENDER';
 export const CLEAR_ALL = 'CLEAR_ALL';
 
-export type propsAction =
+export type PropsAction =
   | ReturnType<typeof addEmail>
   | ReturnType<typeof addPassword>
   | ReturnType<typeof addPhone>
