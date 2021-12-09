@@ -11,6 +11,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import KakaoButton from '../../components/button/KakaoButton';
 import * as Clipboard from 'expo-clipboard';
 import { useToast } from 'react-native-toast-notifications';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const CodeContainer = styled.TouchableOpacity`
   width: 100%;
@@ -36,9 +37,11 @@ const ButtonContainer = styled.View`
   justify-content: space-between;
 `;
 
-export default function CreateTeam_5() {
+type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_5'>;
+
+export default function CreateTeam_5({ route }: CreateTeamProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const inviteCode = 'AX95Q2';
+  const inviteCode = String(route.params?.inviteCode);
   const toast = useToast();
 
   const copyToClipboard = () => {

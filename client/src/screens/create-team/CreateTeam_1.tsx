@@ -10,6 +10,8 @@ import SubTitle from '../../components/text/SubTitle';
 import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { addProps } from '../../store/actions/propsAction';
 
 const schema = yup.object({
   teamName: yup
@@ -21,17 +23,19 @@ const schema = yup.object({
 export default function CreateTeam_1() {
   const {
     control,
-    handleSubmit,
     watch,
+    getValues,
     formState: { isValid },
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
+  const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
+  const goToNext = () => {
+    dispatch(addProps({ name: String(getValues('teamName')) }));
+    navigation.navigate('CreateTeam_2');
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -63,10 +67,7 @@ export default function CreateTeam_1() {
           ]}
         />
       </NextPageView>
-      <NextButton
-        disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('CreateTeam_2')}
-      />
+      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
     </>
   );
 }
