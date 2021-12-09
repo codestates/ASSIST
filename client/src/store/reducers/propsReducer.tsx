@@ -1,7 +1,7 @@
-import { ADD_EMAIL, ADD_PASSWORD, ADD_PHONE, CLEAR_ALL, propsAction } from '../actions/propsAction';
+import { ADD_EMAIL, ADD_PASSWORD, ADD_PHONE, CLEAR_ALL, PropsAction } from '../actions/propsAction';
 import { propsState } from '../initialState';
 
-export default function signUpReducer(state = propsState, action: propsAction) {
+export default function signUpReducer(state = propsState, action: PropsAction) {
   switch (action.type) {
     case ADD_EMAIL:
       return Object.assign({}, state, action.payload);
