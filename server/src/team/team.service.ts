@@ -65,7 +65,7 @@ export class TeamService {
   }
   async getDetail(id: number, user: User): Promise<any> {
     const check = await getManager().query(
-      `SELECT team.name,paymentDay,accountNumber,accountBank,inviteCode,leaderId,b.name as leaderName,b.phone as leaderPhone
+      `SELECT team.name,paymentDay,accountNumber,accountBank,dues,inviteCode,leaderId,b.name as leaderName,b.phone as leaderPhone
        FROM user_team join team on team.id = user_team.teamId join user as b on team.leaderId = b.id where teamId = ${id} and userId = ${user.id} `,
     );
 
