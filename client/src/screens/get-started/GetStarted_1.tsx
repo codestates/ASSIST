@@ -12,7 +12,7 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
 import { useDispatch } from 'react-redux';
-import { addProps } from '../../store/actions/propsAction';
+import { addGetStarted } from '../../store/actions/propsAction';
 import { getAccessToken } from '../../store/actions/userAction';
 import axios from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
@@ -65,7 +65,7 @@ export default function GetStarted_1() {
       .get(`${ASSIST_SERVER_URL}/user/check?email=${String(getValues('email'))}`)
       .then(({ data: { check: newUser, name } }) => {
         if (newUser) {
-          dispatch(addProps({ email: String(getValues('email')) }));
+          dispatch(addGetStarted({ email: String(getValues('email')) }));
           navigation.navigate('GetStarted_2');
         } else {
           navigation.navigate('GetStarted_Login', {

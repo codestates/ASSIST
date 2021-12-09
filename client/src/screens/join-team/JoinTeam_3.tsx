@@ -5,6 +5,8 @@ import FinishPageView from '../../components/view/FinishPageView';
 import { Bold, Light } from '../../theme/fonts';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
 
 const Container = styled.View`
   width: 100%;
@@ -21,7 +23,7 @@ const TeamName = styled(Container)`
 
 export default function JoinTeam_6() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const { name } = useSelector((state: RootState) => state.propsReducer.joinTeam);
   return (
     <FinishPageView onPress={() => navigation.navigate('Home')}>
       <Container>
@@ -30,7 +32,7 @@ export default function JoinTeam_6() {
       </Container>
       <TeamName>
         <Bold gray size={17}>
-          FC살쾡이
+          {name}
         </Bold>
       </TeamName>
     </FinishPageView>

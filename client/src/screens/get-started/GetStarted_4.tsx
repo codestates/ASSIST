@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
-import { addProps } from '../../store/actions/propsAction';
+import { addGetStarted } from '../../store/actions/propsAction';
 
 const Seperator = styled.View`
   height: 15px;
@@ -105,7 +105,7 @@ export default function GetStarted_4() {
       <NextButton
         disabled={!isValid || Boolean(errorMessage)}
         onPress={() => {
-          dispatch(addProps({ password: String(getValues('password_1')) }));
+          dispatch(addGetStarted({ password: String(getValues('password_1')) }));
           navigation.navigate('GetStarted_5');
         }}
       />

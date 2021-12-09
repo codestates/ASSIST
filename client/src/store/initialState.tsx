@@ -9,4 +9,23 @@ export const userState = {
   provider: '',
 };
 
-export const propsState = {};
+export const propsState = {
+  joinTeam: {
+    name: '',
+    code: '',
+  },
+  createTeam: {
+    name: '',
+    paymentDay: 0,
+    accountBank: '',
+    accountNumber: '',
+    dues: '',
+  },
+  getStarted: {
+    email: '',
+    phone: '',
+    password: '',
+    name: '',
+    gender: '',
+  },
+};
