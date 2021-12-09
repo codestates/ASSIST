@@ -30,7 +30,7 @@ export class Team {
   accountBank: string;
 
   @Column()
-  dues: number;
+  dues: string;
 
   @Column({ unique: true })
   inviteCode: string;
