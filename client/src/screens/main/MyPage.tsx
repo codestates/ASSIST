@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
@@ -9,6 +9,8 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
+import { useDispatch } from 'react-redux';
+import { clearAll } from '../../store/actions/propsAction';
 
 const PhoneContainer = styled.View`
   flex-direction: row;
@@ -48,6 +50,14 @@ const Line = styled.View`
 export default function MyPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(clearAll());
+    });
+    return unsubscribe;
+  }, [navigation, dispatch]);
 
   const showErrorModal = () => {
     setModalVisible(true);

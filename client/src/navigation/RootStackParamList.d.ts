@@ -1,7 +1,8 @@
-import { string } from 'yup/lib/locale';
-
 export type RootStackParamList = {
   Home: undefined;
+  AddOns_1: undefined;
+  AddOns_2: undefined;
+  AddOns_3: undefined | { bank: string };
   MyPage: undefined;
   Lobby: undefined;
   TeamSelect: undefined;
@@ -12,7 +13,7 @@ export type RootStackParamList = {
   CreateTeam_4: undefined;
   CreateTeam_5: undefined;
   CreateTeam_6: undefined;
-  BankSelect: undefined;
+  BankSelect: { name: keyof RootStackParamList };
   LendingPage: undefined;
   LendingPage_1: undefined;
   LendingPage_2: undefined;
@@ -26,6 +27,15 @@ export type RootStackParamList = {
   JoinTeam_1: undefined | { reset: boolean };
   JoinTeam_2: undefined;
   JoinTeam_3: undefined;
+  GetStarted: undefined;
+  GetStarted_1: undefined;
+  GetStarted_2: undefined;
+  GetStarted_3: undefined | { phone: string };
+  GetStarted_4: undefined;
+  GetStarted_5: undefined | { gender: string };
+  GetStarted_6: undefined | { accessToken: string };
+  GenderSelect: undefined | { screenName: keyof RootStackParamList };
+  GetStarted_Login: undefined | { email: string };
   ScheduleManage: undefined;
   ScheduleManage_1: undefined | { calendar: string; start: string; end: string };
   ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
@@ -36,15 +46,6 @@ export type RootStackParamList = {
   StartTimeSelect: undefined | { start: string };
   EndTimeSelect: undefined | { end: string };
   StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
-  GetStarted: undefined;
-  GetStarted_1: undefined;
-  GetStarted_2: undefined;
-  GetStarted_3: undefined | { phone: string };
-  GetStarted_4: undefined;
-  GetStarted_5: undefined | { gender: string };
-  GetStarted_6: undefined;
-  GenderSelect: undefined | { screenName: keyof RootStackParamList };
-  GetStarted_Login: undefined | { email: string };
   ChangePassword: undefined | { screenName?: keyof RootStackParamList };
   FindPassword: undefined | { screenName?: keyof RootStackParamList };
   FindPassword_1: undefined | { screenName?: keyof RootStackParamList };
@@ -55,6 +56,19 @@ export type RootStackParamList = {
   NewPhone_2: undefined | { phone: string };
   MyProfile: undefined;
   MyProfile_1: undefined | { gender: string };
+  MatchVote: undefined;
+  MatchVote_1: undefined;
+  MatchVote_2: undefined;
+  MatchVote_3: undefined;
+  MatchVote_4: undefined;
+  MatchVote_5: undefined;
+  MatchVote_6: undefined;
+  MercenaryInvite: undefined;
+  MercenaryInvite_1: undefined;
+  MercenaryInvite_2: undefined;
+  MercenaryInvite_3: undefined;
+  MercenaryInvite_4: undefined;
+  MercenaryInvite_5: undefined;
   CustomerService: undefined;
   CustomerSerice_1: undefined;
   LogOutSelect: undefined;

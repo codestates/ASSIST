@@ -12,6 +12,11 @@ import * as yup from 'yup';
 import styled from 'styled-components/native';
 import LineSelect from '../../components/input/LineSelect';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
+import axios, { AxiosResponse } from 'axios';
+import { ASSIST_SERVER_URL } from '@env';
+import { getAccessToken, getUserInfo } from '../../store/actions/userAction';
 
 const schema = yup.object({
   name: yup.string().required(),
@@ -29,6 +34,7 @@ export default function GetStarted_5({ route }: GetStartedProps) {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { isValid },
   } = useForm({
     mode: 'onChange',
@@ -37,6 +43,7 @@ export default function GetStarted_5({ route }: GetStartedProps) {
 
   const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -56,6 +63,21 @@ export default function GetStarted_5({ route }: GetStartedProps) {
   const goToNext = () => {
     setIsPressed(true);
     navigation.navigate('GenderSelect', { screenName: 'GetStarted_5' });
+  };
+
+  const state = useSelector((state: RootState) => state.propsReducer);
+
+  const requestSignUp = () => {
+    axios
+      .post(`${ASSIST_SERVER_URL}/user/signup`, {
+        ...state,
+        name: String(getValues('name')),
+        gender: route.params?.gender,
+      })
+      .then(({ data: { accessToken } }: AxiosResponse<{ accessToken: string }>) => {
+        navigation.navigate('GetStarted_6', { accessToken });
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -87,7 +109,7 @@ export default function GetStarted_5({ route }: GetStartedProps) {
       <NextButton
         text="가입 완료"
         disabled={!isValid || route.params?.gender === undefined || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('GetStarted_6')}
+        onPress={() => requestSignUp()}
       />
     </>
   );

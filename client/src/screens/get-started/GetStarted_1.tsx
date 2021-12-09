@@ -11,6 +11,9 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
+import { useDispatch } from 'react-redux';
+import { addEmail } from '../../store/actions/propsAction';
+import { getAccessToken } from '../../store/actions/userAction';
 
 type showType = {
   show: boolean;
@@ -58,7 +61,8 @@ export default function GetStarted_1() {
     console.log(data);
   };
   // 기존 유저인지 확인
-  const [existingUser] = useState(true);
+  const [existingUser] = useState(false);
+  const dispatch = useDispatch();
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
@@ -75,7 +79,7 @@ export default function GetStarted_1() {
           <KakaoButton
             text="카카오로 1초만에 시작하기"
             isKakao
-            onPress={() => console.log('kakao clicked!')}
+            onPress={() => dispatch(getAccessToken('token'))}
           />
           <KakaoButton
             text={show ? '이메일 입력창 닫기' : '이메일로 시작하기'}
@@ -117,6 +121,7 @@ export default function GetStarted_1() {
             if (existingUser) {
               navigation.navigate('GetStarted_Login', { email: String(getValues('email')) });
             } else {
+              dispatch(addEmail(String(getValues('email'))));
               navigation.navigate('GetStarted_2');
             }
           }}

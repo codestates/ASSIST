@@ -1,25 +1,35 @@
 import React from 'react';
+import { useWindowDimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 
+type StyleProps = {
+  width: number;
+  margin?: number;
+};
+
 const Container = styled.View`
-  box-shadow: 2px 2px 8px rgba(60, 60, 60, 0.25);
+  box-shadow: 0px 5px 3px rgba(0, 0, 0, 0.2);
   background-color: ${colors.white};
-  padding: 32px;
-  border-radius: 8px;
-  width: 288px;
-  height: 160px;
-  align-items: flex-start;
-  justify-content: center;
+  padding: ${(props: StyleProps) =>
+    `${props.width * 0.08}px ${props.width * 0.08}px ${props.width * 0.1}px ${
+      props.width * 0.08
+    }px`};
+  border-radius: 15px;
+  width: 100%;
+  margin-top: ${(props: StyleProps) => props.margin || 25}px;
 `;
 
 type CardProps = {
   children: React.ReactNode;
+  margin?: number;
 };
 
-const Card = (props: CardProps) => {
-  const { children } = props;
-  return <Container>{props.children}</Container>;
-};
-
-export default Card;
+export default function Card({ children, margin }: CardProps) {
+  const { width } = useWindowDimensions();
+  return (
+    <Container margin={margin} width={width}>
+      {children}
+    </Container>
+  );
+}

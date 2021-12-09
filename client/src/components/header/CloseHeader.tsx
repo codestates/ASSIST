@@ -6,9 +6,11 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 
 const getColor = (color?: string) => {
-  const { blue, red, darkGray, gray } = colors;
+  const { blue, red, darkGray, gray, lightBlue } = colors;
   if (color === blue || color === red || color === darkGray || color === gray) {
     return colors.white;
+  } else if (color === lightBlue) {
+    return colors.blue;
   }
   return colors.darkGray;
 };

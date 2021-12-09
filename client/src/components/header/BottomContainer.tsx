@@ -17,6 +17,7 @@ const TeamSelector = styled.TouchableOpacity`
   align-items: center;
   margin-right: 15px;
 `;
+
 const TeamName = styled(Bold)`
   color: ${colors.blue};
   font-size: 17px;
