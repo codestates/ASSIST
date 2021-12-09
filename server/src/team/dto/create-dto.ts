@@ -14,6 +14,6 @@ export class CreateTeamDto {
   @IsString()
   accountBank: string;
   @IsOptional()
-  @IsNumber()
-  dues: number;
+  @IsString()
+  dues: string;
 }

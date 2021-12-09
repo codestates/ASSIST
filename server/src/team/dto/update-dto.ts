@@ -17,5 +17,5 @@ export class UpdateTeamDto {
   leaderId: number;
   @IsOptional()
   @IsString()
-  dues: number;
+  dues: string;
 }
