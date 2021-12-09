@@ -36,7 +36,7 @@ export default function Home() {
   }, [navigation, dispatch]);
 
   return (
-    <CardScrollView>
+    <CardScrollView home>
       <Card>
         <TouchableOpacity onPress={() => navigation.navigate('CreateTeam')}>
           <Text>팀 등록하기</Text>

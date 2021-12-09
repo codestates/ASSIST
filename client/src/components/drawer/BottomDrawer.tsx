@@ -28,8 +28,19 @@ const BackgroundView = styled.Pressable({
   ...StyleSheet.absoluteFillObject,
 });
 
+const DismissDrawer = styled.Pressable`
+  flex: 1;
+  flex-direction: column-reverse;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+`;
+
 const Wrapper = styled.View`
   padding: 22px 7px 0px 7px;
+`;
+
+const AvoidTouch = styled.TouchableWithoutFeedback`
+  width: 100%;
 `;
 
 type BottomDrawerProps = {
@@ -42,22 +53,26 @@ export default function BottomDrawer({ children }: BottomDrawerProps) {
 
   return (
     <Container behavior="padding">
-      <BackgroundView onPress={() => navigation.goBack()} />
-      <DismissKeyboard>
-        <AnimatedView
-          style={{
-            transform: [
-              {
-                translateY: current.progress.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [100, 0],
-                }),
-              },
-            ],
-          }}>
-          <Wrapper>{children}</Wrapper>
-        </AnimatedView>
-      </DismissKeyboard>
+      {/* <BackgroundView onPress={() => navigation.goBack()} /> */}
+      <DismissDrawer onPress={() => navigation.goBack()}>
+        <DismissKeyboard>
+          <AnimatedView
+            style={{
+              transform: [
+                {
+                  translateY: current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [100, 0],
+                  }),
+                },
+              ],
+            }}>
+            <AvoidTouch>
+              <Wrapper>{children}</Wrapper>
+            </AvoidTouch>
+          </AnimatedView>
+        </DismissKeyboard>
+      </DismissDrawer>
     </Container>
   );
 }
