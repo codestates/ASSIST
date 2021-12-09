@@ -1,0 +1,109 @@
+import * as CryptoJS from 'crypto-js';
+import axios from 'axios';
+import { InternalServerErrorException } from '@nestjs/common';
+import { AlimtalkDto } from './dto/sendTalk.dto';
+import { AlimTalkMessageRequest } from './interface/alimtalk_message';
+
+export class NaverSensService {
+  async sendSMS(phone: string, content: string): Promise<void> {
+    phone = phone.replace(/-/g, '');
+    const url = `https://sens.apigw.ntruss.com/sms/v2/services/${process.env.SMS_SERVICEID}/messages`;
+    const body = {
+      type: 'SMS',
+      contentType: 'COMM',
+      countryCode: '82',
+      from: process.env.HOST_PHONE, // 발신자 번호
+      content: `[어시스트 ASSIST]
+      인증번호 [${content}] 입니다.`,
+      messages: [
+        {
+          to: phone, // 수신자 번호
+        },
+      ],
+    };
+    const options = {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-ncp-iam-access-key': process.env.NCP_ACCESS,
+        'x-ncp-apigw-timestamp': Date.now().toString(),
+        'x-ncp-apigw-signature-v2': this.makeSignature(),
+      },
+    };
+    axios
+      .post(url, body, options)
+      .then(async (res) => {
+        console.log(`${phone}에게 문자보내기 성공`);
+      })
+      .catch((err) => {
+        console.error(err.response.data);
+        throw new InternalServerErrorException('문자보내기 실패');
+      });
+  }
+
+  async sendKakaoAlarm(infoArr: AlimtalkDto[]): Promise<void> {
+    const url = `https://sens.apigw.ntruss.com/alimtalk/v2/services/${process.env.KAKAOBIZ_SERVICEID}/messages`;
+
+    const payload = [];
+    infoArr.forEach(({ phone, content, code }) => {
+      phone = phone.replace(/-/g, '');
+      const body: AlimTalkMessageRequest = {
+        templateCode: code,
+        plusFriendId: '@assist',
+        messages: [
+          {
+            to: phone,
+            content,
+          },
+        ],
+      };
+      payload.push(body);
+    });
+
+    const options = {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-ncp-iam-access-key': process.env.NCP_ACCESS,
+        'x-ncp-apigw-timestamp': Date.now().toString(),
+        'x-ncp-apigw-signature-v2': this.makeSignature('biz'),
+      },
+    };
+    return axios
+      .post(url, payload, options)
+      .then(async (res) => {
+        console.log(`알람톡 보내기 성공`);
+      })
+      .catch((err) => {
+        console.log(err.response);
+        throw new InternalServerErrorException('알람톡 보내기 실패');
+      });
+  }
+
+  private makeSignature(type?: string): string {
+    const date = Date.now().toString();
+    const secretKey = process.env.NCP_SECRET;
+    const accessKey = process.env.NCP_ACCESS;
+    const method = 'POST';
+    const space = ' ';
+    const newLine = '\n';
+
+    let serviceId = process.env.SMS_SERVICEID;
+    let url = `/sms/v2/services/${serviceId}/messages`;
+    if (type === 'biz') {
+      serviceId = process.env.KAKAOBIZ_SERVICEID;
+      url = `/alimtalk/v2/services/${serviceId}/messages`;
+    }
+    const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
+
+    hmac.update(method);
+    hmac.update(space);
+    hmac.update(url);
+    hmac.update(newLine);
+    hmac.update(date);
+    hmac.update(newLine);
+    hmac.update(accessKey);
+    const hash = hmac.finalize();
+    const signature = hash.toString(CryptoJS.enc.Base64);
+
+    return signature;
+  }
+}

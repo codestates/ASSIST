@@ -42,8 +42,8 @@ export class TeamService {
       phone: user.phone,
       leader: team.leaderId.name,
     };
-    let message = MakeMessage('T001', info);
-    this.userService.sendKakaoAlarm(info);
+    // let message = MakeMessage('T001', info);
+    // this.userService.sendKakaoAlarm(info);
   }
 
   async checkCode(code: string): Promise<Team> {

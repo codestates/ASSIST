@@ -13,6 +13,7 @@ import {
   Res,
   Redirect,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateSMSAuth, CreateUserDto } from './dto/create-dto';
@@ -88,7 +89,7 @@ export class UserController {
   @Delete('/team/:id')
   @UseGuards(AuthGuard())
   async quitTeam(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
   ): Promise<object> {
     const userInfo = req.user;
