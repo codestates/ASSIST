@@ -188,6 +188,7 @@ export class UserService {
   }
 
   async findPw(findpwDto: FindpwDto) {
+
     const { number, password, email } = findpwDto;
 
     const found = await this.smsRepository.findOne({ number });
@@ -198,6 +199,10 @@ export class UserService {
     const user = await this.userRepository.findOne({ phone: found.phone, email });
     if (!user) {
       throw new NotFoundException('잘못된 요청입니다. 인증을 다시해주세요.');
+
+    const user = await this.userRepository.findOne({ phone: found.phone });
+    if (!user) {
+      throw new NotFoundException('잘못된 요청입니다.');
     }
 
     const salt: string = await bcrypt.genSalt(10);
@@ -209,6 +214,7 @@ export class UserService {
 
     const accessToken = await this.jwtService.sign(payload);
     return { accessToken };
+
   }
 
   async deleteUser(userInfo: User): Promise<Object> {
