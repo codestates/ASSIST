@@ -138,7 +138,7 @@ export class UserService {
     if (!regExp.test(email)) {
       throw new BadRequestException('올바른 형식의 이메일 주소가 아닙니다.');
     }
-    let payload = { check: true, name: null };
+    let payload = { check: true, name: null, phone: '' };
     const found = await this.userRepository.findOne({
       email,
       provider: 'normal',
@@ -146,6 +146,7 @@ export class UserService {
     console.log(found);
     if (found) {
       payload.check = false;
+      payload.phone = found.phone;
       let blank = '';
       for (let i = 1; i < found.name.length - 1; i++) {
         blank += '*';
@@ -166,7 +167,7 @@ export class UserService {
     Object.keys(updateInfo).forEach((el) => {
       userInfo[el] = updateInfo[el];
     });
-    if (phone) await this.userRepository.deleteConflictPhone(phone);
+    // if (phone) await this.userRepository.deleteConflictPhone(phone);
     await this.userRepository.save(userInfo);
 
     delete userInfo.password;
