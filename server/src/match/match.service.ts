@@ -21,6 +21,7 @@ import { UpdateMatchDto } from './dto/update-dto';
 import { VoteMatchDto } from './dto/vote-dto';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
 import { MakeM } from 'src/common/naver_sens/make_M_template';
+import { AlimtalkDto } from 'src/common/naver_sens/dto/sendTalk.dto';
 
 @Injectable()
 export class MatchService {
@@ -42,10 +43,11 @@ export class MatchService {
     }
     const dayArr = ['일', '월', '화', '수', '목', '금', '토'];
 
-    const { date, startTime, endTime, station } = dto;
+    const { date, startTime, endTime, address, address2 } = dto;
     const alarmTime = new Date(date + ' ' + startTime);
     const day = dayArr[new Date(date).getDay()];
     alarmTime.setHours(alarmTime.getHours() - 1);
+
     let alarm, match;
     try {
       alarm = await this.alarmRepository.create({ time: alarmTime });
@@ -80,14 +82,15 @@ export class MatchService {
     const naverSensService = new NaverSensService();
     const makeM = new MakeM();
 
-    let arr = [];
+    const arr: AlimtalkDto[] = [];
     users.forEach((user) => {
       const { content } = makeM.M001({
         team: name,
         startTime,
         date,
         endTime,
-        station,
+        address,
+        address2,
       });
       arr.push({ to: user.phone, content });
     });
@@ -110,6 +113,7 @@ export class MatchService {
           'user_match.reason',
           'user.name',
           'user.phone',
+          'user.id',
           'match',
         ])
         .leftJoin('match.user_matchs', 'user_match')
@@ -127,9 +131,10 @@ export class MatchService {
     data.nonRes = [];
 
     data.user_matchs.forEach((el) => {
+      console.log(el.user);
       switch (el.condition) {
         case '미응답':
-          if (el.id === user.id) data.vote = false;
+          if (el.user.id === user.id) data.vote = false;
           data.nonRes.push(el);
           break;
         case '참석':
