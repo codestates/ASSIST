@@ -12,10 +12,19 @@ type editProfileProps = {
   phone?: string;
   role?: string;
   password?: string;
+  name?: string;
+  gender?: string;
   noNavigate?: boolean;
 };
 
-export default function useEditProfile({ phone, role, password, noNavigate }: editProfileProps) {
+export default function useEditProfile({
+  phone,
+  role,
+  password,
+  name,
+  gender,
+  noNavigate,
+}: editProfileProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token } = useSelector((state: RootState) => state.userReducer);
   const toast = useToast();
@@ -24,7 +33,7 @@ export default function useEditProfile({ phone, role, password, noNavigate }: ed
     axios
       .patch(
         `${ASSIST_SERVER_URL}/user`,
-        { phone, role, password },
+        { phone, role, password, name, gender },
         { headers: { authorization: `Bearer ${token}` } },
       )
       .then(
@@ -37,6 +46,8 @@ export default function useEditProfile({ phone, role, password, noNavigate }: ed
             toast.show('전화번호가 변경되었습니다.');
           } else if (password) {
             toast.show('비밀번호가 변경되었습니다.');
+          } else if (gender || name) {
+            toast.show('프로필 수정이 완료되었습니다.');
           }
           if (!noNavigate) {
             navigation.navigate('MyPage_Main');
