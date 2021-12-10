@@ -41,7 +41,6 @@ export default function GetStarted_5({ route }: GetStartedProps) {
 
   const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -59,12 +58,12 @@ export default function GetStarted_5({ route }: GetStartedProps) {
     navigation.navigate('GenderSelect', { screenName: 'GetStarted_5' });
   };
 
-  const state = useSelector((state: RootState) => state.propsReducer);
+  const { getStarted } = useSelector((state: RootState) => state.propsReducer);
 
   const requestSignUp = () => {
     axios
       .post(`${ASSIST_SERVER_URL}/user/signup`, {
-        ...state,
+        ...getStarted,
         name: String(getValues('name')),
         gender: route.params?.gender,
       })

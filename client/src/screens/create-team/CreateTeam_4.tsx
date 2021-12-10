@@ -37,7 +37,7 @@ export default function CreateTeam_4() {
     axios
       .post(
         `${ASSIST_SERVER_URL}/team`,
-        { ...state.propsReducer, ...dues },
+        { ...state.propsReducer.createTeam, ...dues },
         { headers: { authorization: `Bearer ${state.userReducer.token}` } },
       )
       .then(({ data: { inviteCode } }: AxiosResponse<{ inviteCode: string }>) => {

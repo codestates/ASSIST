@@ -14,7 +14,7 @@ import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { addProps } from '../../store/actions/propsAction';
+import { addCreateTeam } from '../../store/actions/propsAction';
 
 const schema = yup.object({
   accountNumber: yup
@@ -58,7 +58,7 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
 
   const goToNext = () => {
     dispatch(
-      addProps({
+      addCreateTeam({
         accountBank: route.params?.bank,
         accountNumber: String(getValues('accountNumber')),
       }),

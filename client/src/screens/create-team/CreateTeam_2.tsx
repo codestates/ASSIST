@@ -12,7 +12,7 @@ import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { addProps } from '../../store/actions/propsAction';
+import { addCreateTeam } from '../../store/actions/propsAction';
 
 const schema = yup.object({
   date: yup
@@ -36,7 +36,7 @@ export default function CreateTeam_2() {
   const clearErrorMessage = () => setErrorMessage('');
 
   const goToNext = () => {
-    dispatch(addProps({ paymentDay: Number(getValues('date')) }));
+    dispatch(addCreateTeam({ paymentDay: Number(getValues('date')) }));
     navigation.navigate('CreateTeam_3');
   };
 

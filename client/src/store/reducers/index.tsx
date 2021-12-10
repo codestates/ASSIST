@@ -15,5 +15,5 @@ const rootReducer = combineReducers({
   propsReducer,
 });
 
-export default persistReducer(persistConfig, rootReducer);
 export type RootState = ReturnType<typeof rootReducer>;
+export default persistReducer(persistConfig, rootReducer);

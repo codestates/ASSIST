@@ -8,6 +8,10 @@ import SkipButton from '../../components/button/SkipButton';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
+import axios from 'axios';
+import { ASSIST_SERVER_URL } from '@env';
 
 const TeamName = styled.View`
   width: 100%;
@@ -20,6 +24,23 @@ const TeamName = styled.View`
 
 export default function JoinTeam_2() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { name, code } = useSelector((state: RootState) => state.propsReducer.joinTeam);
+  const { token } = useSelector((state: RootState) => state.userReducer);
+
+  const joinTeam = () => {
+    axios
+      .post(
+        `${ASSIST_SERVER_URL}/team/join`,
+        { code },
+        {
+          headers: { authorization: `Bearer ${token}` },
+        },
+      )
+      .then(() => {
+        navigation.navigate('JoinTeam_3');
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <>
@@ -33,7 +54,7 @@ export default function JoinTeam_2() {
         </MainTitle>
         <TeamName>
           <Bold gray size={17}>
-            FC살쾡이
+            {name}
           </Bold>
         </TeamName>
       </NextPageView>
@@ -41,7 +62,7 @@ export default function JoinTeam_2() {
         text="제 소속팀이 아니에요  >"
         onPress={() => navigation.navigate('JoinTeam_1', { reset: true })}
       />
-      <NextButton onPress={() => navigation.navigate('JoinTeam_3')} />
+      <NextButton onPress={() => joinTeam()} />
     </>
   );
 }
