@@ -15,6 +15,8 @@ import { IgetMember } from './interface/getMember.interface';
 import { MatchRepository } from 'src/match/match.repository';
 import { Team } from './team.entity';
 import { getManager } from 'typeorm';
+import { NaverSensService } from 'src/common/naver_sens/sens.service';
+import { MakeT } from 'src/common/naver_sens/make_T_template';
 
 @Injectable()
 export class TeamService {
@@ -33,15 +35,27 @@ export class TeamService {
 
   async joinTeam(code: string, user: User): Promise<any> {
     const team = await this.teamRepository.joinTeam(code, user);
+
     let info = {
       team: team.name,
       code: team.inviteCode,
       name: user.name,
-      phone: user.phone,
       leader: team.leaderId.name,
     };
-    // let message = MakeMessage('T001', info);
-    // this.userService.sendKakaoAlarm(info);
+
+    let info2 = {
+      team: team.name,
+      name: team.leaderId.name,
+    };
+    const makeT = new MakeT();
+    const naverSensService = new NaverSensService();
+    const { code: tempCode, content } = makeT.T001(info);
+    const { code: tempCode2, content: content2 } = makeT.T002(info2);
+    naverSensService.sendKakaoAlarm(tempCode, [{ content, to: user.phone }]);
+    naverSensService.sendKakaoAlarm(tempCode2, [
+      { content: content2, to: team.leaderId.phone },
+    ]);
+    return { id: team.id };
   }
 
   async checkCode(code: string): Promise<Team> {
@@ -51,7 +65,7 @@ export class TeamService {
   }
   async getDetail(id: number, user: User): Promise<any> {
     const check = await getManager().query(
-      `SELECT team.name,paymentDay,accountNumber,accountBank,inviteCode,leaderId,b.name as leaderName,b.phone as leaderPhone
+      `SELECT team.name,paymentDay,accountNumber,accountBank,dues,inviteCode,leaderId,b.name as leaderName,b.phone as leaderPhone
        FROM user_team join team on team.id = user_team.teamId join user as b on team.leaderId = b.id where teamId = ${id} and userId = ${user.id} `,
     );
 

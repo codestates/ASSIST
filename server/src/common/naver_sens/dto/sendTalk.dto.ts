@@ -1,5 +1,4 @@
 export class AlimtalkDto {
-  phone: string;
+  to: string;
   content: string;
-  code: string;
 }
