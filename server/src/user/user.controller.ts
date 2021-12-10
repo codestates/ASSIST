@@ -23,6 +23,7 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { UpdateDto } from './dto/update-dto';
 import { PatchUser } from './interface/res.patchUser';
+import { FindpwDto } from './dto/findpw-dto';
 
 @Controller('user')
 export class UserController {
@@ -59,6 +60,11 @@ export class UserController {
     return this.userService.patchUser(updateInfo, userInfo);
   }
 
+  @Patch('/findpw')
+  async findPw(@Body() findpwDto: FindpwDto) {
+    return this.userService.findPw(findpwDto);
+  }
+
   @Get('')
   @UseGuards(AuthGuard())
   async getUser(@Req() req: Request): Promise<any> {
@@ -75,6 +81,7 @@ export class UserController {
   async checkEmail(@Query('email') email: string): Promise<{ check: boolean }> {
     return this.userService.checkEmail(email);
   }
+
   @Post('')
   @UseGuards(AuthGuard())
   async checkPw(
