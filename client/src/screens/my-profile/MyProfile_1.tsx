@@ -14,6 +14,8 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import useEditProfile from '../../hooks/useEditProfile';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const ContentContainer = styled.View`
   padding: 30px 15px;
@@ -27,15 +29,25 @@ const Seperator = styled.View`
   height: 15px;
 `;
 
+const schema = yup.object({
+  name: yup.string().required(),
+});
+
 type MyProfileProps = StackScreenProps<RootStackParamList, 'MyProfile_1'>;
 
 export default function MyProfile_1({ route }: MyProfileProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { name, gender, email } = useSelector((state: RootState) => state.userReducer);
 
-  const { control, watch, getValues } = useForm({
+  const {
+    control,
+    watch,
+    getValues,
+    formState: { isValid },
+  } = useForm({
     mode: 'onChange',
     defaultValues: { name },
+    resolver: yupResolver(schema),
   });
 
   const editProfile = useEditProfile({
@@ -44,7 +56,6 @@ export default function MyProfile_1({ route }: MyProfileProps) {
   });
   const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -55,18 +66,18 @@ export default function MyProfile_1({ route }: MyProfileProps) {
     return unsubscribe;
   }, [navigation, isPressed]);
 
-  useEffect(() => {
-    if (watch('name') !== name) {
-      return setIsValid(true);
+  const checkValid = () => {
+    if (!isValid) {
+      return true;
+    } else if (watch('name') !== name) {
+      return false;
     } else if (route.params?.gender) {
       if (route.params.gender !== gender) {
-        return setIsValid(true);
+        return false;
       }
-    } else if (isValid === false) {
-      return;
     }
-    return setIsValid(false);
-  });
+    return true;
+  };
 
   const clearErrorMessage = () => setErrorMessage('');
 
@@ -110,7 +121,7 @@ export default function MyProfile_1({ route }: MyProfileProps) {
           />
         </ContentContainer>
       </ColoredScrollView>
-      <NextButton text="수정하기  >" disabled={!isValid} onPress={() => finishEditing()} />
+      <NextButton text="수정하기  >" disabled={checkValid()} onPress={() => finishEditing()} />
     </>
   );
 }
