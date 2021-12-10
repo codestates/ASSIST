@@ -17,6 +17,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UpdateDto } from './dto/update-dto';
 import { User } from './user.entity';
 import { PatchUser } from './interface/res.patchUser';
+import { FindpwDto } from './dto/findpw-dto';
 
 @Injectable()
 export class UserService {
@@ -184,6 +185,26 @@ export class UserService {
       throw new UnauthorizedException('잘못된 비밀번호 입니다.');
     }
     return { message: 'ok' };
+  }
+
+  async findPw(findpwDto: FindpwDto) {
+    const { number, password } = findpwDto;
+
+    const found = await this.smsRepository.findOne({ number });
+    if (!found) {
+      throw new NotFoundException('입력하신 인증번호가 올바르지 않습니다.');
+    }
+
+    const user = await this.userRepository.findOne({ phone: found.phone });
+    if (!user) {
+      throw new NotFoundException('잘못된 요청입니다.');
+    }
+
+    const salt: string = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    await this.userRepository.save(user);
+
+    return { message: '변경되었습니다.' };
   }
 
   async deleteUser(userInfo: User): Promise<Object> {
