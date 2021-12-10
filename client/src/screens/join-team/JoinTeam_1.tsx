@@ -14,9 +14,14 @@ import * as yup from 'yup';
 import styled from 'styled-components/native';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
+import { ASSIST_SERVER_URL } from '@env';
+import axios, { AxiosResponse } from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
+import { addJoinTeam } from '../../store/actions/propsAction';
 
 const schema = yup.object({
-  invitationCode: yup
+  inviteCode: yup
     .string()
     .matches(/^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{1,6}$/)
     .required(),
@@ -32,21 +37,19 @@ type JoinTeamProps = StackScreenProps<RootStackParamList, 'JoinTeam_1'>;
 export default function JoinTeam_1({ route }: JoinTeamProps) {
   const {
     control,
-    handleSubmit,
     watch,
     reset,
+    getValues,
     formState: { isValid },
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
-
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
-
+  const { token } = useSelector((state: RootState) => state.userReducer);
+  const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
+
   const showErrorModal = () => {
     setError();
     setModalVisible(true);
@@ -63,15 +66,26 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       if (route.params?.reset) {
-        reset({ invitationCode: '' });
+        reset({ inviteCode: '' });
       }
     });
     return unsubscribe;
   }, [route.params?.reset, navigation, reset]);
 
-  const goToNext = () => {
-    navigation.setParams({ reset: false });
-    navigation.navigate('JoinTeam_2');
+  const checkTeamName = () => {
+    axios
+      .get(`${ASSIST_SERVER_URL}/team/check?code=${String(getValues('inviteCode'))}`, {
+        headers: { authorization: `Bearer ${token}` },
+      })
+      .then(({ data: { name } }: AxiosResponse<{ name: string }>) => {
+        dispatch(addJoinTeam({ name, code: String(getValues('inviteCode')) }));
+        navigation.setParams({ reset: false });
+        navigation.navigate('JoinTeam_2');
+      })
+      .catch((error) => {
+        showErrorModal();
+        console.log(error);
+      });
   };
 
   return (
@@ -102,18 +116,18 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
           clearErrorMessage={clearError}
           control={control}
           title="초대 코드"
-          name="invitationCode"
+          name="inviteCode"
           placeholder="초대 코드를 입력해주세요"
           errorMessage={errorMessage}
           conditions={[
             {
-              name: `글자수 ${String(watch('invitationCode') || '').length}/6`,
+              name: `글자수 ${String(watch('inviteCode') || '').length}/6`,
               regex: /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{1,6}$/,
             },
           ]}
         />
       </NextPageView>
-      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
+      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => checkTeamName()} />
     </>
   );
 }

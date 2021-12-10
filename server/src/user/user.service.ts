@@ -109,6 +109,28 @@ export class UserService {
     return user;
   }
 
+  async getUserTeam(user: User) {
+    const found = await this.userRepository.findOne(
+      { id: user.id },
+      { relations: ['teams', 'team'] },
+    );
+
+    if (!found) {
+      throw new UnauthorizedException();
+    }
+
+    if (found.team) {
+      found.team.forEach((list: any) => {
+        list.leader = true;
+        found.teams = found.teams.filter((el) => el.id !== list.id);
+      });
+
+      found.teams = [...found.team, ...found.teams];
+    }
+    delete found.team;
+    return found.teams;
+  }
+
   async checkEmail(email: string): Promise<{ check: boolean }> {
     const regExp =
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -116,13 +138,21 @@ export class UserService {
     if (!regExp.test(email)) {
       throw new BadRequestException('올바른 형식의 이메일 주소가 아닙니다.');
     }
-    let payload = { check: true };
+    let payload = { check: true, name: null };
     const found = await this.userRepository.findOne({
       email,
       provider: 'normal',
     });
     console.log(found);
-    if (found) payload.check = false;
+    if (found) {
+      payload.check = false;
+      let blank = '';
+      for (let i = 1; i < found.name.length - 1; i++) {
+        blank += '*';
+      }
+      payload.name = found.name[0] + blank + found.name[found.name.length - 1];
+    }
+
     return payload;
   }
 

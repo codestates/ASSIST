@@ -19,6 +19,8 @@ import { User_match } from 'src/others/user_match.entity';
 import { Match } from './match.entity';
 import { UpdateMatchDto } from './dto/update-dto';
 import { VoteMatchDto } from './dto/vote-dto';
+import { NaverSensService } from 'src/common/naver_sens/sens.service';
+import { MakeM } from 'src/common/naver_sens/make_M_template';
 
 @Injectable()
 export class MatchService {
@@ -38,27 +40,30 @@ export class MatchService {
     if (!check) {
       throw new BadRequestException('경기는 팀장만 생성 가능합니다.');
     }
-    const { date, startTime } = dto;
+    const dayArr = ['일', '월', '화', '수', '목', '금', '토'];
+
+    const { date, startTime, endTime, station } = dto;
     const alarmTime = new Date(date + ' ' + startTime);
+    const day = dayArr[new Date(date).getDay()];
     alarmTime.setHours(alarmTime.getHours() - 1);
     let alarm, match;
     try {
       alarm = await this.alarmRepository.create({ time: alarmTime });
       await this.alarmRepository.save(alarm);
-
       match = await this.matchRepository.create({
         ...dto,
         alarm,
         team: { id: dto.teamId },
+        day,
       });
       await this.matchRepository.save(match);
     } catch (err) {
       console.log('match 생성에러', err);
       throw new InternalServerErrorException();
     }
-    const { users } = await this.teamRepository.findOne(
+    const { name, users } = await this.teamRepository.findOne(
       { id: dto.teamId },
-      { relations: ['users'], select: ['id'] },
+      { relations: ['users'], select: ['id', 'name'] },
     );
 
     const data = users.map((user) => {
@@ -71,6 +76,23 @@ export class MatchService {
       .into(User_match)
       .values(data)
       .execute();
+
+    const naverSensService = new NaverSensService();
+    const makeM = new MakeM();
+
+    let arr = [];
+    users.forEach((user) => {
+      const { content } = makeM.M001({
+        team: name,
+        startTime,
+        date,
+        endTime,
+        station,
+      });
+      arr.push({ to: user.phone, content });
+    });
+
+    naverSensService.sendKakaoAlarm('M001', arr);
 
     //이후 알림톡보내기
 
@@ -125,8 +147,15 @@ export class MatchService {
     return data;
   }
 
-  async getlastMatchs(teamId: number, page: number = 1): Promise<any> {
-    const offset = page * 10 - 10;
+  async getlastMatchs(
+    teamId: number,
+    page: number,
+    limit: number,
+  ): Promise<any> {
+    if (!page) page = 1;
+    if (!limit) limit = 5;
+    const offset = page * limit - limit;
+
     const [lastMatchs, count] = await this.matchRepository.findAndCount({
       where: {
         date: Raw((alias) => `${alias} < :date`, {
@@ -136,10 +165,10 @@ export class MatchService {
       },
       order: { date: 'DESC', endTime: 'DESC', id: 'DESC' },
       skip: offset,
-      take: 10,
+      take: limit,
     });
 
-    const totalPage = Math.round(count / 10);
+    const totalPage = Math.round(count / limit);
 
     const payload = { lastMatchs, totalPage };
     if (page === 1) {

@@ -11,7 +11,7 @@ export type RootStackParamList = {
   CreateTeam_2: undefined;
   CreateTeam_3: undefined | { bank: string };
   CreateTeam_4: undefined;
-  CreateTeam_5: undefined;
+  CreateTeam_5: undefined | { inviteCode: string };
   CreateTeam_6: undefined;
   BankSelect: { name: keyof RootStackParamList };
   LendingPage: undefined;
@@ -35,7 +35,7 @@ export type RootStackParamList = {
   GetStarted_5: undefined | { gender: string };
   GetStarted_6: undefined | { accessToken: string };
   GenderSelect: undefined | { screenName: keyof RootStackParamList };
-  GetStarted_Login: undefined | { email: string };
+  GetStarted_Login: undefined | { email: string; name: string };
   ScheduleManage: undefined;
   ScheduleManage_1: undefined | { calendar: string; start: string; end: string };
   ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };

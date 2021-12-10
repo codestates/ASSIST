@@ -30,7 +30,6 @@ export default function CardScrollView({ children, color, home }: CardScrollView
       <View home={home} color={color}>
         {children}
       </View>
-
     </ScrollView>
   );
 }

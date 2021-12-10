@@ -13,9 +13,11 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { addCreateTeam } from '../../store/actions/propsAction';
 
 const schema = yup.object({
-  bankAccount: yup
+  accountNumber: yup
     .string()
     .matches(/^^[0-9]+(-[0-9]+)+$$/)
     .required(),
@@ -27,13 +29,14 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const {
     control,
-    handleSubmit,
     formState: { isValid },
+    getValues,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
 
+  const dispatch = useDispatch();
   const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -47,13 +50,20 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
   }, [navigation, isPressed]);
 
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
+
+  const goToSelect = () => {
+    setIsPressed(true);
+    navigation.navigate('BankSelect', { name: 'CreateTeam_3' });
   };
 
   const goToNext = () => {
-    setIsPressed(true);
-    navigation.navigate('BankSelect', { name: 'CreateTeam_3' });
+    dispatch(
+      addCreateTeam({
+        accountBank: route.params?.bank,
+        accountNumber: String(getValues('accountNumber')),
+      }),
+    );
+    navigation.navigate('CreateTeam_4');
   };
 
   return (
@@ -73,12 +83,12 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
           title="은행"
           isPressed={isPressed}
           selected={route.params?.bank}
-          onPress={() => goToNext()}
+          onPress={() => goToSelect()}
         />
         <LineInput
           control={control}
           title="계좌번호"
-          name="bankAccount"
+          name="accountNumber"
           placeholder="계좌번호를 입력해주세요"
           errorMessage={errorMessage}
           clearErrorMessage={clearErrorMessage}
@@ -93,7 +103,7 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
       <SkipButton onPress={() => navigation.navigate('CreateTeam_4')} />
       <NextButton
         disabled={!isValid || route.params?.bank === undefined || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('CreateTeam_4')}
+        onPress={() => goToNext()}
       />
     </>
   );

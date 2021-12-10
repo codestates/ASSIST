@@ -7,8 +7,6 @@ const Container = styled.SafeAreaView`
   width: ${(props: HeaderProps) => props.width}px;
   height: ${(props: HeaderProps) => (props.height ? String(props.height) + 'px' : 'auto')};
   background-color: ${colors.white};
-  border-bottom-color: ${colors.lightGray};
-  border-bottom-width: 1.5px;
 `;
 
 type HeaderProps = {

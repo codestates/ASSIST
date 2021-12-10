@@ -11,6 +11,8 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { addCreateTeam } from '../../store/actions/propsAction';
 
 const schema = yup.object({
   date: yup
@@ -23,16 +25,19 @@ const schema = yup.object({
 export default function CreateTeam_2() {
   const {
     control,
-    handleSubmit,
     formState: { isValid },
+    getValues,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
+  const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
+
+  const goToNext = () => {
+    dispatch(addCreateTeam({ paymentDay: Number(getValues('date')) }));
+    navigation.navigate('CreateTeam_3');
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -70,10 +75,7 @@ export default function CreateTeam_2() {
         />
       </NextPageView>
       <SkipButton onPress={() => navigation.navigate('CreateTeam_3')} />
-      <NextButton
-        disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('CreateTeam_3')}
-      />
+      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
     </>
   );
 }

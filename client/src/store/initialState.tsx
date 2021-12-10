@@ -7,7 +7,25 @@ export const userState = {
   gender: '',
   role: '',
   provider: '',
-  teams: [],
 };
 
-export const propsState = {};
+export const propsState = {
+  joinTeam: {
+    name: '',
+    code: '',
+  },
+  createTeam: {
+    name: '',
+    paymentDay: 0,
+    accountBank: '',
+    accountNumber: '',
+    dues: '',
+  },
+  getStarted: {
+    email: '',
+    phone: '',
+    password: '',
+    name: '',
+    gender: '',
+  },
+};

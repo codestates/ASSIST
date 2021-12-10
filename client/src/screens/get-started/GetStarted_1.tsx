@@ -12,8 +12,10 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
 import { useDispatch } from 'react-redux';
-import { addEmail } from '../../store/actions/propsAction';
+import { addGetStarted } from '../../store/actions/propsAction';
 import { getAccessToken } from '../../store/actions/userAction';
+import axios from 'axios';
+import { ASSIST_SERVER_URL } from '@env';
 
 type showType = {
   show: boolean;
@@ -46,7 +48,6 @@ const schema = yup.object({
 export default function GetStarted_1() {
   const {
     control,
-    handleSubmit,
     getValues,
     formState: { isValid },
   } = useForm({
@@ -57,12 +58,24 @@ export default function GetStarted_1() {
   const [show, setshow] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
-  // 기존 유저인지 확인
-  const [existingUser] = useState(false);
+
   const dispatch = useDispatch();
+  const checkNewUser = () => {
+    axios
+      .get(`${ASSIST_SERVER_URL}/user/check?email=${String(getValues('email'))}`)
+      .then(({ data: { check: newUser, name } }) => {
+        if (newUser) {
+          dispatch(addGetStarted({ email: String(getValues('email')) }));
+          navigation.navigate('GetStarted_2');
+        } else {
+          navigation.navigate('GetStarted_Login', {
+            email: String(getValues('email')),
+            name: String(name),
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
@@ -115,17 +128,7 @@ export default function GetStarted_1() {
         </InputContainer>
       </NextPageView>
       <NextContainer show={show}>
-        <NextButton
-          disabled={!isValid || Boolean(errorMessage)}
-          onPress={() => {
-            if (existingUser) {
-              navigation.navigate('GetStarted_Login', { email: String(getValues('email')) });
-            } else {
-              dispatch(addEmail(String(getValues('email'))));
-              navigation.navigate('GetStarted_2');
-            }
-          }}
-        />
+        <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => checkNewUser()} />
       </NextContainer>
     </>
   );

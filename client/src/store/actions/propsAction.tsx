@@ -1,28 +1,26 @@
 import { propsState } from '../initialState';
 
-export const ADD_EMAIL = 'ADD_EMAIL';
-export const ADD_PASSWORD = 'ADD_PASSWORD';
-export const ADD_PHONE = 'ADD_PHONE';
-export const ADD_NAME = 'ADD_NAME';
-export const ADD_GENDER = 'ADD_GENDER';
+export const ADD_GETSTARTED = 'ADD_GETSTARTED';
+export const ADD_CREATETEAM = 'ADD_CREATETEAM';
+export const ADD_JOINTEAM = 'ADD_JOINTEAM';
 export const CLEAR_ALL = 'CLEAR_ALL';
 
 export type PropsAction =
-  | ReturnType<typeof addEmail>
-  | ReturnType<typeof addPassword>
-  | ReturnType<typeof addPhone>
+  | ReturnType<typeof addGetStarted>
+  | ReturnType<typeof addCreateTeam>
+  | ReturnType<typeof addJoinTeam>
   | ReturnType<typeof clearAll>;
 
-export const addEmail = (email: string) => {
-  return { type: ADD_EMAIL, payload: { email } };
+export const addGetStarted = (props: object) => {
+  return { type: ADD_GETSTARTED, payload: props };
 };
 
-export const addPassword = (password: string) => {
-  return { type: ADD_PASSWORD, payload: { password } };
+export const addJoinTeam = (props: object) => {
+  return { type: ADD_JOINTEAM, payload: props };
 };
 
-export const addPhone = (phone: string) => {
-  return { type: ADD_PHONE, payload: { phone } };
+export const addCreateTeam = (props: object) => {
+  return { type: ADD_CREATETEAM, payload: props };
 };
 
 export const clearAll = () => {

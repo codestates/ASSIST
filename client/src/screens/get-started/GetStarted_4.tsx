@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
-import { addPassword } from '../../store/actions/propsAction';
+import { addGetStarted } from '../../store/actions/propsAction';
 
 const Seperator = styled.View`
   height: 15px;
@@ -34,7 +34,6 @@ const schema = yup.object({
 export default function GetStarted_4() {
   const {
     control,
-    handleSubmit,
     getValues,
     formState: { isValid },
     watch,
@@ -44,9 +43,6 @@ export default function GetStarted_4() {
   });
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
   const dispatch = useDispatch();
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -109,7 +105,7 @@ export default function GetStarted_4() {
       <NextButton
         disabled={!isValid || Boolean(errorMessage)}
         onPress={() => {
-          dispatch(addPassword(String(getValues('password_1'))));
+          dispatch(addGetStarted({ password: String(getValues('password_1')) }));
           navigation.navigate('GetStarted_5');
         }}
       />
