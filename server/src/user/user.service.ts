@@ -188,23 +188,27 @@ export class UserService {
   }
 
   async findPw(findpwDto: FindpwDto) {
-    const { number, password } = findpwDto;
+    const { number, password, email } = findpwDto;
 
     const found = await this.smsRepository.findOne({ number });
     if (!found) {
       throw new NotFoundException('입력하신 인증번호가 올바르지 않습니다.');
     }
 
-    const user = await this.userRepository.findOne({ phone: found.phone });
+    const user = await this.userRepository.findOne({ phone: found.phone, email });
     if (!user) {
-      throw new NotFoundException('잘못된 요청입니다.');
+      throw new NotFoundException('잘못된 요청입니다. 인증을 다시해주세요.');
     }
 
     const salt: string = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
     await this.userRepository.save(user);
 
-    return { message: '변경되었습니다.' };
+    const payload = { ...user };
+    delete payload.password;
+
+    const accessToken = await this.jwtService.sign(payload);
+    return { accessToken };
   }
 
   async deleteUser(userInfo: User): Promise<Object> {
@@ -265,8 +269,7 @@ export class UserService {
       });
       if (!found) {
         const name = user.profile._json.kakao_account.profile.nickname;
-        const phone =
-          '0' + user.profile._json.kakao_account.phone_number.split(' ')[1];
+        const phone = '0' + user.profile._json.kakao_account.phone_number.split(' ')[1];
         const password = user.profile._json.id;
         const gender = '남';
         return await this.signUp({
