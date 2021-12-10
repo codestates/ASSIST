@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTimer } from 'react-timer-hook';
 import styled from 'styled-components/native';
-import requestSmsAuth from '../../hooks/requestSmsAuth';
+import useRequestSms from '../../hooks/useRequestSms';
 import { colors } from '../../theme/colors';
 import { Regular } from '../../theme/fonts';
 
@@ -49,6 +49,7 @@ export default function ValidationTimer({
       }
     },
   });
+  const requestSms = useRequestSms({ phone });
 
   useEffect(() => {
     start();
@@ -64,14 +65,17 @@ export default function ValidationTimer({
     }
   };
 
-  const restartTimer = () => {
+  const restartTimer = async () => {
     if (setErrorMessage && clearInput) {
       setErrorMessage('');
       clearInput();
     }
-    requestSmsAuth({ phone })
-      .then(() => restart(expiryTimestamp))
-      .catch((error) => console.log(error));
+    try {
+      await requestSms();
+      restart(expiryTimestamp);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

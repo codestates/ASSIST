@@ -16,7 +16,7 @@ import CommonModalButton from '../../components/button/CommonModalButton';
 import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
 import { addGetStarted } from '../../store/actions/propsAction';
-import verifySmsAuth from '../../hooks/verifySmsAuth';
+import useVerifySms from '../../hooks/useVerifySms';
 
 const Line = styled.View`
   margin-top: 13px;
@@ -41,6 +41,10 @@ export default function GetStarted_3({ route }: GetStartedProps) {
 
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const verifySms = useVerifySms({
+    phone: String(route.params?.phone),
+    number: String(getValues('validation')),
+  });
 
   const showErrorModal = () => {
     setError();
@@ -57,16 +61,15 @@ export default function GetStarted_3({ route }: GetStartedProps) {
   const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const goToNext = () => {
-    verifySmsAuth({ phone: String(route.params?.phone), number: String(getValues('validation')) })
-      .then(() => {
-        dispatch(addGetStarted({ phone: String(route.params?.phone) }));
-        navigation.navigate('GetStarted_4');
-      })
-      .catch((error) => {
-        console.log(error);
-        showErrorModal();
-      });
+  const goToNext = async () => {
+    try {
+      await verifySms();
+      dispatch(addGetStarted({ phone: String(route.params?.phone) }));
+      navigation.navigate('GetStarted_4');
+    } catch (error) {
+      console.log(error);
+      showErrorModal();
+    }
   };
 
   return (
