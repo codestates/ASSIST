@@ -12,7 +12,7 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
 import { useDispatch } from 'react-redux';
-import { addEmail } from '../../store/actions/propsAction';
+import { addProps } from '../../store/actions/propsAction';
 import { getAccessToken } from '../../store/actions/userAction';
 import axios from 'axios';
 import { ASSIST_SERVER_URL } from '@env';

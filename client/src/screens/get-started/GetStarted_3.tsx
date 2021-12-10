@@ -15,7 +15,7 @@ import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModa
 import CommonModalButton from '../../components/button/CommonModalButton';
 import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
-import { addPhone } from '../../store/actions/propsAction';
+import { addProps } from '../../store/actions/propsAction';
 import verifySmsAuth from '../../hooks/verifySmsAuth';
 
 const Line = styled.View`
@@ -60,7 +60,7 @@ export default function GetStarted_3({ route }: GetStartedProps) {
   const goToNext = () => {
     verifySmsAuth({ phone: String(route.params?.phone), number: String(getValues('validation')) })
       .then(() => {
-        dispatch(addPhone(String(route.params?.phone)));
+        dispatch(addProps({ phone: String(route.params?.phone) }));
         navigation.navigate('GetStarted_4');
       })
       .catch((error) => {
