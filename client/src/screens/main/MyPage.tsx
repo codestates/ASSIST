@@ -9,8 +9,9 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearAll } from '../../store/actions/propsAction';
+import { RootState } from '../../store/reducers';
 
 const PhoneContainer = styled.View`
   flex-direction: row;
@@ -51,6 +52,7 @@ export default function MyPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
+  const { phone, name } = useSelector((state: RootState) => state.userReducer);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -91,14 +93,14 @@ export default function MyPage() {
       <ColoredScrollView titleColor={colors.white}>
         <MainTitle marginBottom="5px">
           <>
-            <Bold size={22}>홍길동</Bold>
+            <Bold size={22}>{name}</Bold>
             <Light size={22}>님</Light>
           </>
           <Light size={22}>안녕하세요 👋</Light>
         </MainTitle>
         <>
           <PhoneContainer>
-            <Regular>010-1234-1234</Regular>
+            <Regular>{phone}</Regular>
             <ChangeButton onPress={() => navigation.navigate('NewPhone')}>
               <Regular size={14} white>
                 변경하기

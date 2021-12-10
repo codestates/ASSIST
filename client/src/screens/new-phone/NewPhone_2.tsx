@@ -14,7 +14,8 @@ import LineSelect from '../../components/input/LineSelect';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import styled from 'styled-components/native';
-import { useToast } from 'react-native-toast-notifications';
+import useVerifySms from '../../hooks/useVerifySms';
+import useEditProfile from '../../hooks/useEditProfile';
 
 const Line = styled.View`
   margin-top: 13px;
@@ -30,20 +31,20 @@ type NewPhoneProps = StackScreenProps<RootStackParamList, 'NewPhone_2'>;
 export default function NewPhone_2({ route }: NewPhoneProps) {
   const {
     control,
-    handleSubmit,
     formState: { isValid },
+    getValues,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
 
-  const toast = useToast();
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
+  const editProfile = useEditProfile({ phone: String(route.params?.phone) });
+  const verifySms = useVerifySms({
+    phone: String(route.params?.phone),
+    number: String(getValues('validation')),
+  });
 
   const showErrorModal = () => {
     setError();
@@ -57,12 +58,15 @@ export default function NewPhone_2({ route }: NewPhoneProps) {
     setModalVisible(false);
   };
 
-  const finishEditing = () => {
-    navigation.navigate('MyPage_Main');
-    toast.show('전화번호가 변경되었습니다.');
+  const finishEditing = async () => {
+    try {
+      await verifySms();
+      await editProfile();
+    } catch (error) {
+      console.log(error);
+      showErrorModal();
+    }
   };
-
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <>
@@ -95,6 +99,7 @@ export default function NewPhone_2({ route }: NewPhoneProps) {
           errorMessage={errorMessage}
           clearErrorMessage={clearError}
           setErrorMessage={setErrorMessage}
+          phone={route.params?.phone}
         />
       </NextPageView>
       <NextButton
