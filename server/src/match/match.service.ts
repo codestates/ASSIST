@@ -10,11 +10,7 @@ import { Alarm_schedule } from 'src/others/alarm.entity';
 import { TeamRepository } from 'src/team/team.repository';
 import { User } from 'src/user/user.entity';
 import { CreateMatchDto } from './dto/create-dto';
-import {
-  AlarmRepository,
-  MatchRepository,
-  UserMatchRepository,
-} from './match.repository';
+import { AlarmRepository, MatchRepository, UserMatchRepository } from './match.repository';
 import { User_match } from 'src/others/user_match.entity';
 import { Match } from './match.entity';
 import { UpdateMatchDto } from './dto/update-dto';
@@ -72,12 +68,7 @@ export class MatchService {
       return { user, match };
     });
 
-    this.userMatchRepository
-      .createQueryBuilder()
-      .insert()
-      .into(User_match)
-      .values(data)
-      .execute();
+    this.userMatchRepository.createQueryBuilder().insert().into(User_match).values(data).execute();
 
     const naverSensService = new NaverSensService();
     const makeM = new MakeM();
@@ -152,11 +143,7 @@ export class MatchService {
     return data;
   }
 
-  async getlastMatchs(
-    teamId: number,
-    page: number,
-    limit: number,
-  ): Promise<any> {
+  async getlastMatchs(teamId: number, page: number, limit: number): Promise<any> {
     if (!page) page = 1;
     if (!limit) limit = 5;
     const offset = page * limit - limit;
@@ -187,15 +174,8 @@ export class MatchService {
     return payload;
   }
 
-  async changeCondition(
-    matchId: number,
-    user: User,
-    updateMatchDto: UpdateMatchDto,
-  ) {
-    const match = await this.matchRepository.findOne(
-      { id: matchId },
-      { relations: ['team'] },
-    );
+  async changeCondition(matchId: number, user: User, updateMatchDto: UpdateMatchDto) {
+    const match = await this.matchRepository.findOne({ id: matchId }, { relations: ['team'] });
     if (!match) {
       throw new NotFoundException('해당 경기가 존재하지 않습니다.');
     }
@@ -230,5 +210,14 @@ export class MatchService {
       .execute();
 
     return { message: 'ok' };
+  }
+
+  async fixMatch() {
+    let now = new Date();
+    let nextday = new Date(now.setDate(now.getDate() + 1)).toISOString().slice(0, 10);
+
+    const data = await this.matchRepository.find({ date: nextday });
+
+    console.log(data);
   }
 }
