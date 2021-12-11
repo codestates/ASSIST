@@ -22,12 +22,12 @@ const getColor = ({
   red,
   yellow,
 }: styleProps) => {
+  if (blue) return '#006FAD';
   if (white) return '#FFFFFF';
   if (darkGray) return '#3C3C3C';
   if (gray) return '#868686';
   if (lightGray) return '#DDDDDD';
   if (whiteSmoke) return '#F5F5F5';
-  if (blue) return '#006FAD';
   if (red) return '#AD0000';
   if (yellow) return '#FEE500';
   return '#3C3C3C';
