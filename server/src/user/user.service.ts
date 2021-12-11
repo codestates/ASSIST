@@ -18,6 +18,7 @@ import { UpdateDto } from './dto/update-dto';
 import { User } from './user.entity';
 import { PatchUser } from './interface/res.patchUser';
 import { FindpwDto } from './dto/findpw-dto';
+import { MatchRepository } from 'src/match/match.repository';
 
 @Injectable()
 export class UserService {
@@ -26,6 +27,8 @@ export class UserService {
     private userRepository: UserRepository,
     @InjectRepository(SmsRepository) private smsRepository: SmsRepository,
     private jwtService: JwtService,
+    @InjectRepository(MatchRepository)
+    private matchRepository: MatchRepository,
   ) {}
 
   async sendSMS(phone: string, content: string): Promise<void> {
@@ -111,25 +114,41 @@ export class UserService {
   }
 
   async getUserTeam(user: User) {
-    const found = await this.userRepository.findOne(
-      { id: user.id },
-      { relations: ['teams', 'team'] },
-    );
+    const data: any = await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'teams.id', 'teams.name', 'team.id', 'team.name'])
+      .leftJoin('user.teams', 'teams')
+      .leftJoin('user.team', 'team')
+      .where('user.id = :id', { id: user.id })
+      .getOne();
 
-    if (!found) {
+    if (!data) {
       throw new UnauthorizedException();
     }
 
-    if (found.team) {
-      found.team.forEach((list: any) => {
-        list.leader = true;
-        found.teams = found.teams.filter((el) => el.id !== list.id);
-      });
-
-      found.teams = [...found.team, ...found.teams];
+    if (!data.teams.length) {
+      return [];
     }
-    delete found.team;
-    return found.teams;
+
+    if (data.team.length) {
+      data.team.forEach((list: any) => {
+        list.leader = true;
+        data.teams = data.teams.filter((el) => el.id !== list.id);
+      });
+      data.teams = [...data.team, ...data.teams];
+    }
+
+    data.teams.forEach((el) => {
+      if (!el.leader) el.leader = false;
+      delete el.paymentDay, el.accountNumber, el.accountBank, el.dues, el.inviteCode;
+    });
+
+    const nextMatch = await this.matchRepository.getNextMatch(data.teams[0].id, user);
+
+    data.teams[0].nextMatch = nextMatch;
+    delete data.team;
+
+    return data.teams;
   }
 
   async checkEmail(email: string): Promise<{ check: boolean }> {
