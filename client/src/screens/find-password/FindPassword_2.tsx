@@ -1,4 +1,3 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
@@ -11,8 +10,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import useEditProfile from '../../hooks/useEditProfile';
+import axios, { AxiosResponse } from 'axios';
+import { ASSIST_SERVER_URL } from '@env';
+import { useDispatch } from 'react-redux';
+import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/userAction';
 import { useToast } from 'react-native-toast-notifications';
-
 
 const Seperator = styled.View`
   height: 15px;
@@ -37,20 +40,21 @@ type FindPasswordProps = StackScreenProps<RootStackParamList, 'FindPassword_2'>;
 export default function FindPassword_2({ route }: FindPasswordProps) {
   const {
     control,
-    handleSubmit,
     formState: { isValid },
     watch,
+    getValues,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
 
-  const toast = useToast();
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
+  const editProfile = useEditProfile({
+    password: String(getValues('password_1')),
+  });
+  const dispatch = useDispatch();
+  const toast = useToast();
 
   const getButtonText = () => {
     if (route.params?.screenName === 'GetStarted_Login') {
@@ -59,16 +63,35 @@ export default function FindPassword_2({ route }: FindPasswordProps) {
     return '변경하기';
   };
 
-  const getScreenToGo = () => {
-    if (route.params?.screenName === 'GetStarted_Login') {
-      // 로그인하기
-      console.log('log in');
-    } else {
-      navigation.navigate('MyPage_Main');
-      toast.show('비밀번호 변경이 완료 되었습니다.');
+  const getScreenToGo = async () => {
+    try {
+      if (route.params?.screenName === 'MyPage_Main') {
+        await editProfile();
+      } else if (route.params?.screenName === 'GetStarted_Login') {
+        const {
+          data: { accessToken },
+        }: AxiosResponse<{ accessToken: string }> = await axios.patch(
+          `${ASSIST_SERVER_URL}/user/findpw`,
+          {
+            number: route.params?.code,
+            email: route.params?.email,
+            password: String(getValues('password_1')),
+          },
+        );
+        const { data }: AxiosResponse<UserInfoType> = await axios.get(`${ASSIST_SERVER_URL}/user`, {
+          headers: { authorization: `Bearer ${accessToken}` },
+        });
+        dispatch(getUserInfo(data));
+        dispatch(getAccessToken(accessToken));
+        toast.show('비밀번호가 변경되었습니다.');
+      } else {
+        console.error('잘못된 접근입니다.');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <>
       <NextPageView>

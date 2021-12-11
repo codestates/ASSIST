@@ -28,4 +28,7 @@ export const propsState = {
     name: '',
     gender: '',
   },
+  findPassword: {
+    phone: '',
+  },
 };

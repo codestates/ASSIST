@@ -12,6 +12,7 @@ import CommonModalButton from '../../components/button/CommonModalButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearAll } from '../../store/actions/propsAction';
 import { RootState } from '../../store/reducers';
+import useRequestSms from '../../hooks/useRequestSms';
 
 const PhoneContainer = styled.View`
   flex-direction: row;
@@ -60,6 +61,7 @@ export default function MyPage() {
     });
     return unsubscribe;
   }, [navigation, dispatch]);
+  const requestSms = useRequestSms({ phone });
 
   const showErrorModal = () => {
     setModalVisible(true);
@@ -67,6 +69,15 @@ export default function MyPage() {
 
   const hideErrorModal = () => {
     setModalVisible(false);
+  };
+
+  const goToChangePassword = async () => {
+    try {
+      await requestSms();
+      navigation.navigate('ChangePassword', { screenName: 'MyPage_Main', phone });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const checkCanDelete = () => {
@@ -112,8 +123,7 @@ export default function MyPage() {
             <Regular>내 프로필</Regular>
             <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
           </MenuButton>
-          <MenuButton
-            onPress={() => navigation.navigate('ChangePassword', { screenName: 'MyPage_Main' })}>
+          <MenuButton onPress={() => goToChangePassword()}>
             <Regular>비밀번호 재설정</Regular>
             <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
           </MenuButton>
