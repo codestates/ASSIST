@@ -1,28 +1,16 @@
 import React, { useEffect } from 'react';
 import { Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { colors } from '../../theme/colors';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
 import { clearAll } from '../../store/actions/propsAction';
 import CardScrollView from '../../components/view/CardScrollView';
 import Card from '../../components/card/Card';
-import { Bold, Regular } from '../../theme/fonts';
-import { MaterialIcons } from '@expo/vector-icons';
-
-const TitleView = styled.View`
-  margin-bottom: 30px;
-`;
-
-const MenuView = styled.TouchableOpacity`
-  margin-bottom: ${(props: { last?: boolean }) => (props.last ? '0px' : '20px')};
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-`;
+import AddOnsCard from '../../components/card/addOnsCard';
+import AddTeamCard from '../../components/card/AddTeamCard';
+import NoMatchCard from '../../components/card/NoMatchCard';
+import NextMatchCard from '../../components/card/NextMatchCard';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -57,29 +45,12 @@ export default function Home() {
           <Text>용병 구하기</Text>
         </TouchableOpacity>
       </Card>
-      <Card>
-        <TitleView>
-          <Bold size={19}>🛠 부가기능</Bold>
-        </TitleView>
-        <MenuView onPress={() => navigation.navigate('AddOns_1')}>
-          <Regular size={13} gray>
-            지난 경기 기록
-          </Regular>
-          <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
-        </MenuView>
-        <MenuView onPress={() => navigation.navigate('AddOns_2')}>
-          <Regular size={13} gray>
-            팀 구성원
-          </Regular>
-          <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
-        </MenuView>
-        <MenuView last onPress={() => navigation.navigate('AddOns_3')}>
-          <Regular size={13} gray>
-            팀 정보
-          </Regular>
-          <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
-        </MenuView>
-      </Card>
+      <NextMatchCard conditions="경기 확정" />
+      <NextMatchCard conditions="투표 완료" />
+      <NextMatchCard conditions="인원 모집 중" />
+      <NoMatchCard />
+      <AddTeamCard />
+      <AddOnsCard />
     </CardScrollView>
   );
 }
