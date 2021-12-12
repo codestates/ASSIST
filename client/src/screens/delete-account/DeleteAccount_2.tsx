@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import NextPageView from '../../components/view/NextPageView';
-import { MaterialIcons } from '@expo/vector-icons';
 import MainTitle from '../../components/text/MainTitle';
 import NextButton from '../../components/button/NextButton';
-import { colors } from '../../theme/colors';
 import { Bold, Light } from '../../theme/fonts';
+import { useDispatch } from 'react-redux';
+import { logOutUser } from '../../store/actions/userAction';
 
 const Container = styled.View`
   flex: 1;
@@ -27,6 +27,7 @@ const TextContainer = styled.View`
 `;
 
 export default function DeleteAccount_2() {
+  const dispatch = useDispatch();
   return (
     <>
       <NextPageView>
@@ -45,7 +46,7 @@ export default function DeleteAccount_2() {
           </MainTitle>
         </Container>
       </NextPageView>
-      <NextButton text="어시스트 홈페이지로 이동  >" onPress={() => console.log('go to home')} />
+      <NextButton text="어시스트 홈페이지로 이동  >" onPress={() => dispatch(logOutUser())} />
     </>
   );
 }

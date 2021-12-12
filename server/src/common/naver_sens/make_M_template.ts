@@ -27,7 +27,7 @@ export class MakeM {
     - ${data.startTime} ~ ${data.endTime}
     
     ◼︎ 경기 장소
-    - ${data.station}`;
+    - ${data.address} ${data.address2}`;
 
     return { code: 'M001', content };
   }
@@ -50,7 +50,7 @@ export class MakeM {
        - ${data.startTime} - ${data.endTime}
        
        ◼︎ 경기 장소
-       - ${data.station}
+       - ${data.address} ${data.address2}
        
        ◼︎ 모집 마감
        - ${getHangleDate(data.date)} (내일) ${data.deadline}
@@ -77,7 +77,7 @@ export class MakeM {
        - ${data.startTime} - ${data.endTime}
        
        ◼︎ 경기 장소
-       - ${data.station}
+       - ${data.address} ${data.address2}
        
        ◼︎ 모집 마감
        - ${getHangleDate(data.date)} (내일) ${data.deadline}
@@ -108,7 +108,7 @@ export class MakeM {
        - ${data.startTime} - ${data.endTime}
        
        ◼︎ 경기 장소
-       - ${data.station}
+       - ${data.address} ${data.address2}
        
        ◼︎ 모집 마감
        - ${getHangleDate(data.date)} (오늘) ${data.deadline}
@@ -130,7 +130,7 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.station}
+       - 주소 : ${data.address} ${data.address2}
        
        ◼︎ 모집 결과
        - 참석 : ${data.attend}명
@@ -157,7 +157,7 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.station}
+       - 주소 : ${data.address} ${data.address2}
        
        ◼︎ 모집 결과
        - 참석 : ${data.attend}명
@@ -178,7 +178,7 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.station}
+       - 주소 : ${data.address} ${data.address2}
        
        ◼︎ 모집 결과
        - 참석 : ${data.attend}
@@ -201,7 +201,7 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.station}
+       - 주소 : ${data.address} ${data.address2}
        
        —-
        
@@ -218,7 +218,7 @@ export class MakeM {
      ◼ 경기 정보
      - 일자 : ${getHangleDate(data.date)}
      - 시간 : ${data.startTime} - ${data.endTime}
-     - 주소 : ${data.station}
+     - 주소 : ${data.address} ${data.address2}
      
      ◼︎ 취소 사유
      - ${data.reason}`;
@@ -235,7 +235,7 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.station}
+       - 주소 : ${data.address} ${data.address2}
        
        ◼︎ 구인 인원
        - ${data.need}명

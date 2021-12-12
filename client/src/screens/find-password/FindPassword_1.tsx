@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MainTitle from '../../components/text/MainTitle';
 import NextPageView from '../../components/view/NextPageView';
-import { Bold, Light, Medium, Regular, Thin } from '../../theme/fonts';
+import { Bold, Light, Regular } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ import LineSelect from '../../components/input/LineSelect';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import styled from 'styled-components/native';
+import useVerifySms from '../../hooks/useVerifySms';
 
 const Line = styled.View`
   margin-top: 13px;
@@ -29,19 +30,20 @@ type FindPasswordProps = StackScreenProps<RootStackParamList, 'FindPassword_1'>;
 export default function FindPassword_1({ route }: FindPasswordProps) {
   const {
     control,
-    handleSubmit,
     formState: { isValid },
+    getValues,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
 
+  const verifySms = useVerifySms({
+    phone: String(route.params?.phone),
+    number: String(getValues('validation')),
+  });
+
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
 
   const showErrorModal = () => {
     setError();
@@ -53,6 +55,16 @@ export default function FindPassword_1({ route }: FindPasswordProps) {
 
   const hideErrorModal = () => {
     setModalVisible(false);
+  };
+
+  const goToNext = async () => {
+    try {
+      await verifySms();
+      navigation.navigate('FindPassword_2', { code: Number(getValues('validation')) });
+    } catch (error) {
+      console.log(error);
+      showErrorModal();
+    }
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -77,7 +89,7 @@ export default function FindPassword_1({ route }: FindPasswordProps) {
           </>
           <Light size={22}>입력해주세요</Light>
         </MainTitle>
-        <LineSelect title="휴대폰 번호" selected="010-1234-1234" isFixed />
+        <LineSelect title="휴대폰 번호" selected={route.params?.phone} isFixed />
         <LineInput
           type="timer"
           control={control}
@@ -87,12 +99,10 @@ export default function FindPassword_1({ route }: FindPasswordProps) {
           errorMessage={errorMessage}
           clearErrorMessage={clearError}
           setErrorMessage={setErrorMessage}
+          phone={route.params?.phone}
         />
       </NextPageView>
-      <NextButton
-        disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('FindPassword_2')}
-      />
+      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
     </>
   );
 }

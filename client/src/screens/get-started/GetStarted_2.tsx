@@ -9,7 +9,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
-import requestSmsAuth from '../../hooks/requestSmsAuth';
+import useRequestSms from '../../hooks/useRequestSms';
 
 const schema = yup.object({
   phone: yup
@@ -28,13 +28,15 @@ export default function GetStarted_2() {
     resolver: yupResolver(schema),
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const requestSms = useRequestSms({ phone: String(getValues('phone')) });
   const clearErrorMessage = () => setErrorMessage('');
-  const goToNext = () => {
-    requestSmsAuth({ phone: String(getValues('phone')) })
-      .then(() => {
-        navigation.navigate('GetStarted_3', { phone: String(getValues('phone')) });
-      })
-      .catch((error) => console.log(error));
+  const goToNext = async () => {
+    try {
+      await requestSms();
+      navigation.navigate('GetStarted_3', { phone: String(getValues('phone')) });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

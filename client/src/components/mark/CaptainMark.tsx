@@ -4,17 +4,21 @@ import { colors } from '../../theme/colors';
 import { Bold } from '../../theme/fonts';
 
 const Container = styled.View`
-  width: 28px;
-  height: 20px;
+  width: ${(props: CaptainMarkProps) => (props.size === 'small' ? '18px' : '25px')};
+  height: ${(props: CaptainMarkProps) => (props.size === 'small' ? '14px' : '17px')};
   justify-content: center;
   align-items: center;
   background-color: ${colors.yellow};
 `;
 
-export default function CaptainMark() {
+type CaptainMarkProps = {
+  size?: 'small' | 'large';
+};
+
+export default function CaptainMark({ size }: CaptainMarkProps) {
   return (
-    <Container>
-      <Bold>C</Bold>
+    <Container size={size}>
+      <Bold size={size === 'small' ? 12 : 13}>C</Bold>
     </Container>
   );
 }

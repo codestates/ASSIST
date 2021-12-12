@@ -4,7 +4,9 @@ export class CreateMatchDto {
   @IsNumber()
   teamId: number;
   @IsString()
-  station: string;
+  address: string;
+  @IsString()
+  address2: string;
   @IsString()
   date: string;
   @IsString()

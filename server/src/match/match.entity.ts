@@ -20,7 +20,10 @@ export class Match extends BaseEntity {
   id: number;
 
   @Column()
-  station: string;
+  address: string;
+
+  @Column()
+  address2: string;
 
   @Column({ default: '인원 모집 중' })
   condition: string;

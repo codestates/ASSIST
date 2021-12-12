@@ -19,6 +19,7 @@ import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import { useDispatch } from 'react-redux';
 import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/userAction';
+import useRequestSms from '../../hooks/useRequestSms';
 
 const schema = yup.object({
   password: yup.string().required(),
@@ -48,6 +49,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
+  const requestSms = useRequestSms({ phone: route.params?.phone });
 
   const setError = () => setErrorMessage(' ');
   const clearError = () => setErrorMessage('');
@@ -61,9 +63,16 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
     setModalVisible(false);
   };
 
-  const goToFindPassword = () => {
-    hideErrorModal();
-    navigation.navigate('FindPassword', { screenName: 'GetStarted_Login' });
+  const goToFindPassword = async (isModal?: boolean) => {
+    if (isModal) {
+      hideErrorModal();
+    }
+    await requestSms();
+    navigation.navigate('FindPassword', {
+      screenName: 'GetStarted_Login',
+      phone: route.params?.phone,
+      email: route.params?.email,
+    });
   };
 
   const requestLogin = async () => {
@@ -107,7 +116,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
         <CommonModalButton
           color="transparent"
           text="비밀번호를 모르겠어요  >"
-          onPress={() => goToFindPassword()}
+          onPress={() => goToFindPassword(true)}
         />
       </CommonModal>
       <NextPageView>
@@ -127,10 +136,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
           clearErrorMessage={clearError}
         />
       </NextPageView>
-      <SkipButton
-        text="비밀번호를 모르겠어요  >"
-        onPress={() => navigation.navigate('FindPassword', { screenName: 'GetStarted_Login' })}
-      />
+      <SkipButton text="비밀번호를 모르겠어요  >" onPress={() => goToFindPassword()} />
       <NextButton
         text="로그인  >"
         disabled={!isValid || Boolean(errorMessage)}

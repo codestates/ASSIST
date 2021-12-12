@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
+import { colors } from '../../theme/colors';
 
 const ButtonContainer = styled.TouchableOpacity`
   width: ${(props: ButtonProps) => props.width};
@@ -11,6 +12,8 @@ const ButtonContainer = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  border-color: ${(props: ButtonProps) => (props.blueText ? colors.blue : 'none')};
+  border-width: ${(props: ButtonProps) => (props.blueText ? '1.2px' : 'none')};
 `;
 
 type ButtonProps = {
@@ -21,14 +24,23 @@ type ButtonProps = {
   buttonRadius?: string;
   buttonBgColor: string;
   disabled?: boolean;
+  blueText?: boolean;
   children: React.ReactNode;
 };
-const CommonButton = (props: ButtonProps) => {
-  const { onPress, buttonRadius, children, buttonBorder, buttonBgColor, width, height, disabled } =
-    props;
-
+const CommonButton = ({
+  onPress,
+  buttonRadius,
+  children,
+  buttonBorder,
+  buttonBgColor,
+  width,
+  height,
+  disabled,
+  blueText,
+}: ButtonProps) => {
   return (
     <ButtonContainer
+      blueText={blueText}
       disabled={disabled}
       onPress={onPress}
       width={width}

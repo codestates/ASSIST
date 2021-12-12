@@ -9,6 +9,7 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
+import useRequestSms from '../../hooks/useRequestSms';
 
 const schema = yup.object({
   phone: yup
@@ -20,7 +21,6 @@ const schema = yup.object({
 export default function NewPhone_1() {
   const {
     control,
-    handleSubmit,
     getValues,
     formState: { isValid },
   } = useForm({
@@ -29,9 +29,16 @@ export default function NewPhone_1() {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
+  const requestSms = useRequestSms({ phone: String(getValues('phone')) });
+
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
+  const goToNext = async () => {
+    try {
+      await requestSms();
+      navigation.navigate('NewPhone_2', { phone: String(getValues('phone')) });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -61,10 +68,7 @@ export default function NewPhone_1() {
           ]}
         />
       </NextPageView>
-      <NextButton
-        disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => navigation.navigate('NewPhone_2', { phone: String(getValues('phone')) })}
-      />
+      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
     </>
   );
 }
