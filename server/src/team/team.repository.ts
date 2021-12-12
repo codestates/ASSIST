@@ -3,11 +3,7 @@ import { EntityRepository, Repository, getRepository } from 'typeorm';
 import { CreateTeamDto } from './dto/create-dto';
 import { v4 as uuid } from 'uuid';
 import { User } from 'src/user/user.entity';
-import {
-  InternalServerErrorException,
-  NotFoundException,
-  ConflictException,
-} from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException, ConflictException } from '@nestjs/common';
 import { Ipost } from './interface/post.interface';
 import { UpdateTeamDto } from './dto/update-dto';
 
@@ -37,10 +33,7 @@ export class TeamRepository extends Repository<Team> {
   }
 
   async joinTeam(code: string, user: User): Promise<Team> {
-    const team = await this.findOne(
-      { inviteCode: code },
-      { relations: ['users', 'leaderId'] },
-    );
+    const team = await this.findOne({ inviteCode: code }, { relations: ['users', 'leaderId'] });
     if (!team) {
       throw new NotFoundException('초대코드가 잘못되었습니다.');
     }
@@ -56,10 +49,7 @@ export class TeamRepository extends Repository<Team> {
     return team;
   }
 
-  async patchTeam(
-    found: Team | any,
-    updateTeamDto: UpdateTeamDto,
-  ): Promise<Object> {
+  async patchTeam(found: Team | any, updateTeamDto: UpdateTeamDto): Promise<Object> {
     const { leaderId } = updateTeamDto;
     found = { ...found, ...updateTeamDto };
     if (leaderId) {
