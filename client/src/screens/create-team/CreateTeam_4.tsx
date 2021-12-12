@@ -13,8 +13,9 @@ import * as yup from 'yup';
 import SkipButton from '../../components/button/SkipButton';
 import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import { getSelectedTeam } from '../../store/actions/userAction';
 
 const schema = yup.object({
   dues: yup.string().required(),
@@ -32,6 +33,7 @@ export default function CreateTeam_4() {
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
   const state = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
 
   const createTeam = (dues?: { dues: string }) => {
     axios
@@ -40,7 +42,8 @@ export default function CreateTeam_4() {
         { ...state.propsReducer.createTeam, ...dues },
         { headers: { authorization: `Bearer ${state.userReducer.token}` } },
       )
-      .then(({ data: { inviteCode } }: AxiosResponse<{ inviteCode: string }>) => {
+      .then(({ data: { id, inviteCode } }: AxiosResponse<{ id: number; inviteCode: string }>) => {
+        dispatch(getSelectedTeam({ id, name: state.propsReducer.createTeam.name, leader: true }));
         navigation.navigate('CreateTeam_5', { inviteCode });
       })
       .catch((error) => console.log(error));

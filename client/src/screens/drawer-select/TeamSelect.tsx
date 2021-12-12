@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import BottomDrawer from '../../components/drawer/BottomDrawer';
 import { colors } from '../../theme/colors';
-import { Bold, Light } from '../../theme/fonts';
+import { Bold, Light, Regular } from '../../theme/fonts';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -47,6 +47,13 @@ const Check = styled.View`
   margin-left: 20px;
 `;
 
+const TextContainer = styled.View`
+  width: 100%;
+  height: 120px;
+  justify-content: center;
+  align-items: center;
+`;
+
 type UserTeams = Array<{ id: number; name: string; leader: boolean }>;
 
 export default function TeamSelect() {
@@ -78,12 +85,20 @@ export default function TeamSelect() {
     navigation.navigate('Home');
   };
 
-  return (
-    <BottomDrawer>
-      <TitleContainer>
-        <Title>팀 선택</Title>
-      </TitleContainer>
-      {teams.map((team) => (
+  const createOrJoin = () => {
+    dispatch(getSelectedTeam({ id: -2, name: '', leader: false }));
+    navigation.navigate('Home');
+  };
+
+  const ListTeams = (teams: UserTeams) => {
+    if (teams.length === 0) {
+      return (
+        <TextContainer>
+          <Regular gray>아직 소속된 팀이 없습니다.</Regular>
+        </TextContainer>
+      );
+    } else {
+      return teams.map((team) => (
         <TeamContainer key={team.id} onPress={() => goToTeam(team)}>
           <Team>{team.name}</Team>
           <IconContainer>
@@ -95,8 +110,17 @@ export default function TeamSelect() {
             )}
           </IconContainer>
         </TeamContainer>
-      ))}
-      <TeamContainer onPress={() => navigation.navigate('CreateTeam')}>
+      ));
+    }
+  };
+
+  return (
+    <BottomDrawer>
+      <TitleContainer>
+        <Title>팀 선택</Title>
+      </TitleContainer>
+      {ListTeams(teams)}
+      <TeamContainer onPress={() => createOrJoin()}>
         <NewTeam>+ 새로운 소속팀</NewTeam>
       </TeamContainer>
     </BottomDrawer>

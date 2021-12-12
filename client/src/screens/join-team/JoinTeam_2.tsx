@@ -8,10 +8,11 @@ import SkipButton from '../../components/button/SkipButton';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
+import { getSelectedTeam } from '../../store/actions/userAction';
 
 const TeamName = styled.View`
   width: 100%;
@@ -26,6 +27,7 @@ export default function JoinTeam_2() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { name, code } = useSelector((state: RootState) => state.propsReducer.joinTeam);
   const { token } = useSelector((state: RootState) => state.userReducer);
+  const dispatch = useDispatch();
 
   const joinTeam = () => {
     axios
@@ -36,7 +38,8 @@ export default function JoinTeam_2() {
           headers: { authorization: `Bearer ${token}` },
         },
       )
-      .then(() => {
+      .then(({ data: { id } }: AxiosResponse<{ id: number }>) => {
+        dispatch(getSelectedTeam({ id, name, leader: false }));
         navigation.navigate('JoinTeam_3');
       })
       .catch((error) => console.log(error));

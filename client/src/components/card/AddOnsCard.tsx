@@ -22,7 +22,7 @@ const MenuView = styled.TouchableOpacity`
 export default function AddOnsCard() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <Card>
+    <Card margin={30}>
       <TitleView>
         <Bold size={19}>🛠 부가기능</Bold>
       </TitleView>

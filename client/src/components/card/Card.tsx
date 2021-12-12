@@ -17,7 +17,7 @@ const Container = styled.View`
     }px`};
   border-radius: 15px;
   width: 100%;
-  margin-top: ${(props: StyleProps) => props.margin || 25}px;
+  margin-top: ${(props: StyleProps) => props.margin || 0}px;
 `;
 
 type CardProps = {
