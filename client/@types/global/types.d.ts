@@ -2,7 +2,7 @@ export type NextMatch = {
   id: number;
   address: string;
   address2: string;
-  condition: string;
+  condition: '인원 모집 중' | '경기 확정';
   reason: string;
   date: string;
   day: string;

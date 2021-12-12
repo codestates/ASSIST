@@ -14,21 +14,29 @@ const TitleText = styled(Bold)`
 
 const SubtitleText = styled(Regular)`
   font-size: 13px;
-  margin-bottom: 26px;
+  margin-bottom: ${(props: NoMatchCardProps) => (props.isLeader ? '26px' : '0px')};
   color: ${colors.gray};
 `;
 
-export default function NoMatchCard() {
+type NoMatchCardProps = {
+  isLeader?: boolean;
+};
+
+export default function NoMatchCard({ isLeader }: NoMatchCardProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Card>
       <TitleText>예정된 경기가 없어요 🤔</TitleText>
-      <SubtitleText>지금 새로운 경기 일정을 등록 해 보세요!</SubtitleText>
-      <CommonModalButton
-        text="등록하기  >"
-        color="blue"
-        onPress={() => navigation.navigate('ScheduleManage')}
-      />
+      <SubtitleText isLeader={isLeader}>
+        {isLeader ? '지금 새로운 경기 일정을 등록 해 보세요!' : '새로운 경기가 생기면 알려드릴게요'}
+      </SubtitleText>
+      {isLeader && (
+        <CommonModalButton
+          text="등록하기  >"
+          color="blue"
+          onPress={() => navigation.navigate('ScheduleManage')}
+        />
+      )}
     </Card>
   );
 }

@@ -1,14 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect, useState } from 'react';
-import { Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearAll } from '../../store/actions/propsAction';
 import CardScrollView from '../../components/view/CardScrollView';
-import Card from '../../components/card/Card';
 import AddOnsCard from '../../components/card/AddOnsCard';
 import AddTeamCard from '../../components/card/AddTeamCard';
 import NoMatchCard from '../../components/card/NoMatchCard';
@@ -26,19 +23,16 @@ export default function Home() {
   const [nextMatch, setNextMatch] = useState<NextMatch>(null);
 
   useEffect(() => {
-    if (selectedTeam.id < 0) {
-      getFirstTeam().catch((error) => console.log(error));
-    } else {
-      getTeamInfo().catch((error) => console.log(error));
-    }
-  }, [selectedTeam.id]);
-
-  useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(clearAll());
+      if (selectedTeam.id < 0) {
+        getFirstTeam().catch((error) => console.log(error));
+      } else {
+        getTeamInfo().catch((error) => console.log(error));
+      }
     });
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, selectedTeam.id]);
 
   const getFirstTeam = async () => {
     try {
@@ -48,6 +42,7 @@ export default function Home() {
           headers: { authorization: `Bearer ${token}` },
         },
       );
+      console.log('first : ', data);
       if (data.id >= 0) {
         const { id, name, leader } = data;
         dispatch(getSelectedTeam({ id, name, leader }));
@@ -66,39 +61,40 @@ export default function Home() {
           headers: { authorization: `Bearer ${token}` },
         },
       );
+      console.log('change : ', data);
       setNextMatch(data.nextMatch);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const getMatchCard = (nextMatch: NextMatch) => {
+    if (selectedTeam.id < 0) {
+      return <AddTeamCard />;
+    } else {
+      if (!nextMatch) {
+        if (selectedTeam.leader) {
+          return <NoMatchCard isLeader />;
+        } else {
+          return <NoMatchCard />;
+        }
+      } else {
+        if (nextMatch.condition === '경기 확정') {
+          return <NextMatchCard nextMatch={nextMatch} conditions="경기 확정" />;
+        } else if (nextMatch.condition === '인원 모집 중') {
+          if (nextMatch.vote) {
+            return <NextMatchCard nextMatch={nextMatch} conditions="투표 완료" />;
+          } else {
+            return <NextMatchCard nextMatch={nextMatch} conditions="인원 모집 중" />;
+          }
+        }
+      }
+    }
+  };
+
   return (
     <CardScrollView home>
-      <Card>
-        <TouchableOpacity onPress={() => navigation.navigate('CreateTeam')}>
-          <Text>{nextMatch?.condition}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('JoinTeam')}>
-          <Text>팀 가입하기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('LendingPage')}>
-          <Text>랜딩 페이지</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('ScheduleManage')}>
-          <Text>일정 관리</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MatchVote')}>
-          <Text>인원 모집 중</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MercenaryInvite')}>
-          <Text>용병 구하기</Text>
-        </TouchableOpacity>
-      </Card>
-      <NextMatchCard conditions="경기 확정" />
-      <NextMatchCard conditions="투표 완료" />
-      <NextMatchCard conditions="인원 모집 중" />
-      <NoMatchCard />
-      <AddTeamCard />
+      {getMatchCard(nextMatch)}
       <AddOnsCard />
     </CardScrollView>
   );

@@ -73,8 +73,8 @@ export default function TeamSelect() {
     }
   };
 
-  const goToTeam = ({ id, name, leader }: SelectedTeamType) => {
-    dispatch(getSelectedTeam({ id, name, leader }));
+  const goToTeam = (team: SelectedTeamType) => {
+    dispatch(getSelectedTeam(team));
     navigation.navigate('Home');
   };
 
