@@ -35,7 +35,7 @@ export type RootStackParamList = {
   GetStarted_5: undefined | { gender: string };
   GetStarted_6: undefined | { accessToken: string };
   GenderSelect: undefined | { screenName: keyof RootStackParamList };
-  GetStarted_Login: undefined | { email: string; name: string };
+  GetStarted_Login: undefined | { email: string; name: string; phone: string };
   ScheduleManage: undefined;
   ScheduleManage_1: undefined | { calendar: string; start: string; end: string };
   ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
@@ -46,10 +46,14 @@ export type RootStackParamList = {
   StartTimeSelect: undefined | { start: string };
   EndTimeSelect: undefined | { end: string };
   StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
-  ChangePassword: undefined | { screenName?: keyof RootStackParamList };
-  FindPassword: undefined | { screenName?: keyof RootStackParamList };
-  FindPassword_1: undefined | { screenName?: keyof RootStackParamList };
-  FindPassword_2: undefined | { screenName?: keyof RootStackParamList };
+  ChangePassword: undefined | { screenName?: keyof RootStackParamList; phone?: string };
+  FindPassword:
+    | undefined
+    | { screenName?: keyof RootStackParamList; phone?: string; email?: string };
+  FindPassword_1: undefined | { screenName?: keyof RootStackParamList; phone?: string };
+  FindPassword_2:
+    | undefined
+    | { screenName?: keyof RootStackParamList; code?: number; email?: string };
   MyPage_Main: undefined;
   NewPhone: undefined;
   NewPhone_1: undefined;

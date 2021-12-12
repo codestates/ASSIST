@@ -16,7 +16,7 @@ export default function FindPasswordNav({ route }: FindPasswordProps) {
         options={{
           header: () => <DotsHeader current={1} total={2} />,
         }}
-        initialParams={{ screenName: route.params?.screenName }}
+        initialParams={{ screenName: route.params?.screenName, phone: route.params?.phone }}
         component={FindPassword_1}
       />
       <FindPasswordStack.Screen
@@ -24,7 +24,7 @@ export default function FindPasswordNav({ route }: FindPasswordProps) {
         options={{
           header: () => <DotsHeader current={2} total={2} />,
         }}
-        initialParams={{ screenName: route.params?.screenName }}
+        initialParams={{ screenName: route.params?.screenName, email: route.params?.email }}
         component={FindPassword_2}
       />
     </FindPasswordStack.Navigator>

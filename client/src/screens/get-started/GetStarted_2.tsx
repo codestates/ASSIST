@@ -9,7 +9,6 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
-import requestSmsAuth from '../../hooks/useRequestSms';
 import useRequestSms from '../../hooks/useRequestSms';
 
 const schema = yup.object({

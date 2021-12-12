@@ -63,7 +63,7 @@ export default function GetStarted_1() {
   const checkNewUser = () => {
     axios
       .get(`${ASSIST_SERVER_URL}/user/check?email=${String(getValues('email'))}`)
-      .then(({ data: { check: newUser, name } }) => {
+      .then(({ data: { check: newUser, name, phone } }) => {
         if (newUser) {
           dispatch(addGetStarted({ email: String(getValues('email')) }));
           navigation.navigate('GetStarted_2');
@@ -71,6 +71,7 @@ export default function GetStarted_1() {
           navigation.navigate('GetStarted_Login', {
             email: String(getValues('email')),
             name: String(name),
+            phone: String(phone),
           });
         }
       })
