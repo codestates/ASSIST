@@ -4,14 +4,15 @@ import { User_match } from 'src/others/user_match.entity';
 import { Alarm_schedule } from 'src/others/alarm.entity';
 import { User } from 'src/user/user.entity';
 import { Raw } from 'typeorm';
+import { getDate } from 'src/common/getDate';
 @EntityRepository(Match)
 export class MatchRepository extends Repository<Match> {
   async getNextMatch(teamId: number, user: User) {
     const nextMatch: any = await this.findOne({
-      relations: ['user_matchs'],
+      relations: ['user_matchs', 'user_matchs.user'],
       where: {
         date: Raw((alias) => `${alias} >= :date`, {
-          date: new Date().toISOString().slice(0, 10),
+          date: getDate(),
         }),
         team: { id: teamId },
         condition: Raw((alias) => `${alias} IN (:...condition)`, {
@@ -21,8 +22,14 @@ export class MatchRepository extends Repository<Match> {
     });
 
     if (nextMatch) {
-      const vote = nextMatch.user_matchs.find((el) => el.id === user.id) ? true : false;
+      let find = nextMatch.user_matchs.find((el) => el.id === user.id);
 
+      nextMatch.vote = false;
+      if (find) {
+        if (find.condition === '찬성' || find.condition === '미정' || find.condition === '불참') {
+          nextMatch.vote = true;
+        }
+      }
       delete nextMatch.user_matchs;
 
       if (nextMatch.condition === '인원 모집 중') {
@@ -35,7 +42,6 @@ export class MatchRepository extends Repository<Match> {
           await this.save(nextMatch);
         }
       }
-      nextMatch.vote = vote;
     }
     return nextMatch ? nextMatch : null;
   }

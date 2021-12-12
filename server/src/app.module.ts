@@ -7,6 +7,7 @@ import { TeamModule } from './team/team.module';
 import { MatchModule } from './match/match.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from 'src/configs/typeorm.config';
+import { KakaoAlimModule } from './kakaoalim/kakaoalim.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { typeOrmConfig } from 'src/configs/typeorm.config';
     UserModule,
     TeamModule,
     MatchModule,
+    KakaoAlimModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -26,10 +26,7 @@ export class TeamController {
   constructor(private teamService: TeamService) {}
 
   @Post()
-  createTeam(
-    @Body() createTeamDto: CreateTeamDto,
-    @Req() req: Request,
-  ): Promise<Ipost> {
+  createTeam(@Body() createTeamDto: CreateTeamDto, @Req() req: Request): Promise<Ipost> {
     return this.teamService.createTeam(createTeamDto, req.user);
   }
 
@@ -44,10 +41,7 @@ export class TeamController {
   }
 
   @Get('/:id')
-  getDetail(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req: Request,
-  ): Promise<Team> {
+  getDetail(@Param('id', ParseIntPipe) id: number, @Req() req: Request): Promise<Team> {
     return this.teamService.getDetail(id, req.user);
   }
 
@@ -56,7 +50,7 @@ export class TeamController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTeamDto: UpdateTeamDto,
     @Req() req: Request,
-  ): Promise<object> {
+  ) {
     return this.teamService.patchTeam(id, updateTeamDto, req.user);
   }
 
@@ -66,10 +60,7 @@ export class TeamController {
   }
 
   @Delete('/:id')
-  deleteTeam(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req: Request,
-  ): Promise<object> {
+  deleteTeam(@Param('id', ParseIntPipe) id: number, @Req() req: Request): Promise<object> {
     return this.teamService.deleteTeam(id, req.user);
   }
   @Delete(':id/member/:userId')
