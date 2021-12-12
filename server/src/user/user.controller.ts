@@ -97,11 +97,11 @@ export class UserController {
   @UseGuards(AuthGuard())
   async deleteUser(@Req() req: Request) {
     const userInfo = req.user;
-    // await this.userService.deleteUser(userInfo);
+    await this.userService.deleteUser(userInfo);
     if (userInfo.provider === 'kakao') {
       const kakaoId = userInfo.password;
       await this.kakaoAlimService.sendU001(userInfo);
-      // await this.userService.deleteKakaoLink(kakaoId);
+      await this.userService.deleteKakaoLink(kakaoId);
     }
     return { message: 'ok' };
   }
@@ -116,15 +116,23 @@ export class UserController {
   @Get('/kakao')
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuth(@Req() req) {
-    console.log(req);
-    return req;
+    console.log('들어와진다');
+    // return req;
   }
 
   @Get('/kakao/callback')
-  @Redirect('http://localhost:3000', 302)
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuthCallback(@Req() req, @Res() res) {
+    console.log('콜백들어온다');
     const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
-    return { url: `${process.env.HOMEPAGE_URL}/accessToken=${accessToken}` };
+    res.redirect(`${process.env.HOMEPAGE_URL}/accessToken=${accessToken}`);
+  }
+
+  @Get('/kakao/callback2')
+  @UseGuards(AuthGuard('kakao'))
+  async kakaoAuthCallback2(@Req() req, @Res() res) {
+    console.log('콜백들어온다');
+    const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
+    res.redirect(`${process.env.HOMEPAGE_URL_LOCAL}/accessToken=${accessToken}`);
   }
 }
