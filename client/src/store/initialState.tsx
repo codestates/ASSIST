@@ -29,6 +29,13 @@ export const propsState = {
     name: '',
     gender: '',
   },
+  scheduleManage: {
+    date: '',
+    startTime: '',
+    endTime: '',
+    address: '',
+    address2: '',
+    deadline: '',
   findPassword: {
     phone: '',
   },

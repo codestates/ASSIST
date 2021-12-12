@@ -10,8 +10,10 @@ import { persistor, store } from './src/store';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { Provider } from 'react-redux';
 import Navigation from './Navigation';
+import { ASSIST_SERVER_URL } from '@env';
 
 function App() {
+  console.log(ASSIST_SERVER_URL);
   const [loading, setLoading] = useState(true);
 
   const onFinish = () => setLoading(false);

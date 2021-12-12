@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 
@@ -11,6 +10,9 @@ import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light, Regular } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
+import { RootState } from '../../store/reducers';
+import axios from 'axios';
+import { ASSIST_SERVER_URL } from '@env';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -43,13 +45,14 @@ const MatchInfoContents = styled.View`
   justify-content: space-between;
 `;
 
-type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_3'>;
-
-export default function ScheduleManage_4({ route }: ScheduleManageProps) {
+export default function ScheduleManage_4() {
+  console.log(ASSIST_SERVER_URL);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
+  const { scheduleManage } = useSelector((state: RootState) => state.propsReducer);
+  const { token } = useSelector((state: RootState) => state.userReducer);
 
   const [isPressed, setIsPressed] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -60,7 +63,20 @@ export default function ScheduleManage_4({ route }: ScheduleManageProps) {
     return unsubscribe;
   }, [navigation, isPressed]);
 
-  const clearErrorMessage = () => setErrorMessage('');
+  const handleSaveSchedule = () => {
+    // 알림톡 보내기
+    // 팀 아이디 하드코딩 수정해야함
+    axios
+      .post(
+        `${ASSIST_SERVER_URL}/match`,
+        { ...scheduleManage, teamId: 430 },
+        {
+          headers: { authorization: `Bearer ${token}` },
+        },
+      )
+      .then(() => navigation.navigate('ScheduleManage_5'))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
@@ -79,24 +95,18 @@ export default function ScheduleManage_4({ route }: ScheduleManageProps) {
             </MatchInfoTitle>
             <ContentsSpaceContents />
             <MatchInfoContents>
-              <Regular size={20}>2021-08-18(수)</Regular>
+              <Regular size={20}>{scheduleManage.date}</Regular>
               <Bold size={20}>
-                시작 18:00 <AntDesign name="arrowright" size={20} /> 20:00 종료
+                시작 {scheduleManage.startTime} <AntDesign name="arrowright" size={20} />
+                {scheduleManage.endTime} 종료
               </Bold>
-              <Regular size={16}>서울 동대문구 천호대로 133</Regular>
-              <Regular size={16}>홈플러스 동대문점 옥상층 HM풋살파크</Regular>
+              <Regular size={16}>{scheduleManage.address}</Regular>
+              <Regular size={16}>{scheduleManage.address2}</Regular>
             </MatchInfoContents>
           </MatchInfoContainer>
         </Container>
       </NextPageView>
-      <NextButton
-        disabled={false}
-        text="팀 전체에 공지하기"
-        onPress={() => {
-          // 알림톡 보내기
-          navigation.navigate('ScheduleManage_5');
-        }}
-      />
+      <NextButton disabled={false} text="팀 전체에 공지하기" onPress={handleSaveSchedule} />
     </>
   );
 }

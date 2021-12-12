@@ -46,6 +46,7 @@ const schema = yup.object({
 });
 
 export default function GetStarted_1() {
+  console.log(ASSIST_SERVER_URL);
   const {
     control,
     getValues,

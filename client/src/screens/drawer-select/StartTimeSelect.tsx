@@ -35,7 +35,7 @@ export default function StartTimeSelect() {
     navigation.navigate({
       name: 'ScheduleManage_1',
       params: {
-        start: `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`,
+        startTime: `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`,
       },
       merge: true,
     });

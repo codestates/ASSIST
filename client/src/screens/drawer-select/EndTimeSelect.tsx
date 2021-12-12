@@ -35,7 +35,7 @@ export default function EndTimeSelect() {
     navigation.navigate({
       name: 'ScheduleManage_1',
       params: {
-        end: `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`,
+        endTime: `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`,
       },
       merge: true,
     });
