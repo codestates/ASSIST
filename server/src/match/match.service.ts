@@ -70,7 +70,7 @@ export class MatchService {
     const leaderId = user.id;
     const data = users.map((user) => {
       if (user.id === leaderId) {
-        return { user, condition: '참가', match };
+        return { user, condition: '참석', match };
       }
       return { user, match };
     });
@@ -115,13 +115,13 @@ export class MatchService {
         .leftJoin('match.user_matchs', 'user_match')
         .leftJoin('user_match.user', 'user')
         .where('match.id = :matchId', { matchId })
-        .andWhere('user_match.match = :id', { id: matchId })
-
+        .andWhere('user_match.matchId = :id', { id: matchId })
         .getOne();
     } catch (err) {
       throw new InternalServerErrorException('database err');
     }
 
+    console.log(data);
     data.vote = true;
     data.attend = [];
     data.absent = [];
