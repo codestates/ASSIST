@@ -7,6 +7,7 @@ export const userState = {
   gender: '',
   role: '',
   provider: '',
+  selectedTeam: { id: -1, name: '', leader: false },
 };
 
 export const propsState = {
