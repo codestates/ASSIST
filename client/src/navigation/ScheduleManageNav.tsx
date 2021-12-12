@@ -14,7 +14,7 @@ const ScheduleManage = createStackNavigator();
 
 export default function ScheduleManageNav() {
   return (
-    <ScheduleManage.Navigator>
+    <ScheduleManage.Navigator initialRouteName="ScheduleManage_1">
       <ScheduleManage.Screen
         name="ScheduleManage_1"
         options={{

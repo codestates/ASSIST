@@ -1,8 +1,7 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import FinishPageView from '../../components/view/FinishPageView';
-import NextButton from '../../components/button/NextButton';
 import { Bold, Light } from '../../theme/fonts';
 
 export default function ScheduleManage_5() {

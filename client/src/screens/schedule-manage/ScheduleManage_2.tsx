@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -12,6 +13,7 @@ import LineSelect from '../../components/input/LineSelect';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import LineInput from '../../components/input/LineInput';
+import { addScheduleManage } from '../../store/actions/propsAction';
 
 const schema = yup.object({
   detailAddr: yup.string(),
@@ -21,9 +23,11 @@ type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_
 
 export default function ScheduleManage_2({ route }: ScheduleManageProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
 
   const {
     control,
+    getValues,
     formState: { isValid },
   } = useForm({
     mode: 'onChange',
@@ -59,7 +63,7 @@ export default function ScheduleManage_2({ route }: ScheduleManageProps) {
           <Light size={22}>입력해 주세요 🏟</Light>
         </MainTitle>
         <LineSelect
-          title="경기 일정"
+          title="주소"
           isPressed={isPressed}
           selected={route.params?.stadiumAddr}
           onPress={() => handleStadium()}
@@ -76,6 +80,12 @@ export default function ScheduleManage_2({ route }: ScheduleManageProps) {
       <NextButton
         disabled={!route.params?.stadiumAddr || Boolean(errorMessage)}
         onPress={() => {
+          dispatch(
+            addScheduleManage({
+              address: String(route.params?.stadiumAddr),
+              address2: String(getValues('detailAddr')),
+            }),
+          );
           navigation.navigate('ScheduleManage_3');
         }}
       />

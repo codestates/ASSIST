@@ -5,7 +5,6 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import BottomDrawer from '../../components/drawer/BottomDrawer';
 import { StackScreenProps } from '@react-navigation/stack';
-import { colors } from '../../theme/colors';
 
 LocaleConfig.locales['ko'] = {
   dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
@@ -53,10 +52,9 @@ export default function CalendarSelect({ route }: CalendarSelectProps) {
       <Calendar
         markingType={'dot'}
         onDayPress={(day) => {
-          setMarkedDates(day.dateString);
           navigation.navigate({
             name: 'ScheduleManage_1',
-            params: { calendar: day.dateString },
+            params: { date: day.dateString },
             merge: true,
           });
         }}

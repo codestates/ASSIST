@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
@@ -11,11 +9,13 @@ import NextButton from '../../components/button/NextButton';
 import LineSelect from '../../components/input/LineSelect';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
+import { addScheduleManage } from '../../store/actions/propsAction';
 
 type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_1'>;
 
 export default function ScheduleManage_1({ route }: ScheduleManageProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
 
   const [isCalendarPressed, setIsCalendarPressed] = useState(false);
   const [isStartPressed, setIsStartPressed] = useState(false);
@@ -61,29 +61,36 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
         <LineSelect
           title="경기 일정"
           isPressed={isCalendarPressed}
-          selected={route.params?.calendar}
+          selected={route.params?.date}
           onPress={() => handleCalendar()}
         />
         <LineSelect
           title="시작 시간"
           isPressed={isStartPressed}
-          selected={route.params?.start}
+          selected={route.params?.startTime}
           onPress={() => handleStartTime()}
         />
         <LineSelect
           title="종료 시간"
           isPressed={isEndPressed}
-          selected={route.params?.end}
+          selected={route.params?.endTime}
           onPress={() => handleEndTime()}
         />
       </NextPageView>
       <NextButton
         disabled={
-          route.params?.calendar === undefined ||
-          route.params?.start === undefined ||
-          route.params?.end === undefined
+          route.params?.date === undefined ||
+          route.params?.startTime === undefined ||
+          route.params?.endTime === undefined
         }
         onPress={() => {
+          dispatch(
+            addScheduleManage({
+              date: String(route.params?.date),
+              startTime: String(route.params?.startTime),
+              endTime: String(route.params?.endTime),
+            }),
+          );
           navigation.navigate('ScheduleManage_2');
         }}
       />

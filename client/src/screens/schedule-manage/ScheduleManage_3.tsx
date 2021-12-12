@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import styled from 'styled-components/native';
 
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -38,13 +37,11 @@ const CounterRightTitle = styled.View`
   justify-content: center;
 `;
 
-type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_3'>;
-
-export default function ScheduleManage_3({ route }: ScheduleManageProps) {
+export default function ScheduleManage_3() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
 
   const [isPressed, setIsPressed] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -55,7 +52,9 @@ export default function ScheduleManage_3({ route }: ScheduleManageProps) {
     return unsubscribe;
   }, [navigation, isPressed]);
 
-  const clearErrorMessage = () => setErrorMessage('');
+  const onPress = () => {
+    navigation.navigate('ScheduleManage_4');
+  };
 
   return (
     <>
@@ -80,12 +79,7 @@ export default function ScheduleManage_3({ route }: ScheduleManageProps) {
           </CounterRightTitle>
         </CounterContainer>
       </NextPageView>
-      <NextButton
-        disabled={false}
-        onPress={() => {
-          navigation.navigate('ScheduleManage_4');
-        }}
-      />
+      <NextButton disabled={false} onPress={onPress} />
     </>
   );
 }
