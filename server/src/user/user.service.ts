@@ -17,6 +17,8 @@ import { JwtService } from '@nestjs/jwt';
 import { UpdateDto } from './dto/update-dto';
 import { User } from './user.entity';
 import { PatchUser } from './interface/res.patchUser';
+import { FindpwDto } from './dto/findpw-dto';
+import { MatchRepository } from 'src/match/match.repository';
 
 @Injectable()
 export class UserService {
@@ -25,6 +27,8 @@ export class UserService {
     private userRepository: UserRepository,
     @InjectRepository(SmsRepository) private smsRepository: SmsRepository,
     private jwtService: JwtService,
+    @InjectRepository(MatchRepository)
+    private matchRepository: MatchRepository,
   ) {}
 
   async sendSMS(phone: string, content: string): Promise<void> {
@@ -109,26 +113,51 @@ export class UserService {
     return user;
   }
 
-  async getUserTeam(user: User) {
-    const found = await this.userRepository.findOne(
-      { id: user.id },
-      { relations: ['teams', 'team'] },
-    );
+  async getUserTeam(user: User, option?) {
+    const data: any = await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'teams.id', 'teams.name', 'team.id', 'team.name'])
+      .leftJoin('user.teams', 'teams')
+      .leftJoin('user.team', 'team')
+      .where('user.id = :id', { id: user.id })
+      .getOne();
 
-    if (!found) {
+    if (!data) {
       throw new UnauthorizedException();
     }
 
-    if (found.team) {
-      found.team.forEach((list: any) => {
-        list.leader = true;
-        found.teams = found.teams.filter((el) => el.id !== list.id);
-      });
-
-      found.teams = [...found.team, ...found.teams];
+    if (!data.teams.length) {
+      return option
+        ? {
+            id: -1,
+            name: '',
+            leader: false,
+            nextMatch: null,
+          }
+        : [];
     }
-    delete found.team;
-    return found.teams;
+
+    if (data.team.length) {
+      data.team.forEach((list: any) => {
+        list.leader = true;
+        data.teams = data.teams.filter((el) => el.id !== list.id);
+      });
+      data.teams = [...data.team, ...data.teams];
+    }
+
+    data.teams.forEach((el) => {
+      if (!el.leader) el.leader = false;
+      delete el.paymentDay, el.accountNumber, el.accountBank, el.dues, el.inviteCode;
+    });
+
+    if (option) {
+      const nextMatch = await this.matchRepository.getNextMatch(data.teams[0].id, user);
+      data.teams[0].nextMatch = nextMatch;
+      return data.teams[0];
+    }
+
+    delete data.team;
+    return data.teams;
   }
 
   async checkEmail(email: string): Promise<{ check: boolean }> {
@@ -138,13 +167,22 @@ export class UserService {
     if (!regExp.test(email)) {
       throw new BadRequestException('올바른 형식의 이메일 주소가 아닙니다.');
     }
-    let payload = { check: true };
+    let payload = { check: true, name: null, phone: '' };
     const found = await this.userRepository.findOne({
       email,
       provider: 'normal',
     });
     console.log(found);
-    if (found) payload.check = false;
+    if (found) {
+      payload.check = false;
+      payload.phone = found.phone;
+      let blank = '';
+      for (let i = 1; i < found.name.length - 1; i++) {
+        blank += '*';
+      }
+      payload.name = found.name[0] + blank + found.name[found.name.length - 1];
+    }
+
     return payload;
   }
 
@@ -158,7 +196,7 @@ export class UserService {
     Object.keys(updateInfo).forEach((el) => {
       userInfo[el] = updateInfo[el];
     });
-    if (phone) await this.userRepository.deleteConflictPhone(phone);
+    // if (phone) await this.userRepository.deleteConflictPhone(phone);
     await this.userRepository.save(userInfo);
 
     delete userInfo.password;
@@ -175,6 +213,30 @@ export class UserService {
       throw new UnauthorizedException('잘못된 비밀번호 입니다.');
     }
     return { message: 'ok' };
+  }
+
+  async findPw(findpwDto: FindpwDto) {
+    const { number, password, email } = findpwDto;
+
+    const found = await this.smsRepository.findOne({ number });
+    if (!found) {
+      throw new NotFoundException('입력하신 인증번호가 올바르지 않습니다.');
+    }
+
+    const user = await this.userRepository.findOne({ phone: found.phone, email });
+    if (!user) {
+      throw new NotFoundException('잘못된 요청입니다. 인증을 다시해주세요.');
+    }
+
+    const salt: string = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    await this.userRepository.save(user);
+
+    const payload = { ...user };
+    delete payload.password;
+
+    const accessToken = await this.jwtService.sign(payload);
+    return { accessToken };
   }
 
   async deleteUser(userInfo: User): Promise<Object> {
@@ -235,8 +297,7 @@ export class UserService {
       });
       if (!found) {
         const name = user.profile._json.kakao_account.profile.nickname;
-        const phone =
-          '0' + user.profile._json.kakao_account.phone_number.split(' ')[1];
+        const phone = '0' + user.profile._json.kakao_account.phone_number.split(' ')[1];
         const password = user.profile._json.id;
         const gender = '남';
         return await this.signUp({

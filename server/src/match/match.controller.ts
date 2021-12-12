@@ -40,8 +40,9 @@ export class MatchController {
   getlastMatchs(
     @Param('id', ParseIntPipe) teamId: number,
     @Query('page') page: number,
+    @Query('limit') limit: number,
   ): Promise<Match[]> {
-    return this.matchService.getlastMatchs(teamId, page);
+    return this.matchService.getlastMatchs(teamId, page, limit);
   }
 
   @Patch('/:id')
