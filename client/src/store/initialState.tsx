@@ -36,6 +36,7 @@ export const propsState = {
     address: '',
     address2: '',
     deadline: '',
+  },
   findPassword: {
     phone: '',
   },

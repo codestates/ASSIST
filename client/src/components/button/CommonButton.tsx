@@ -12,8 +12,8 @@ const ButtonContainer = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  border-color: ${(props: ButtonProps) => (props.blueText ? colors.blue : 'none')};
-  border-width: ${(props: ButtonProps) => (props.blueText ? '1.2px' : 'none')};
+  border-color: ${colors.blue}
+  border-width: ${(props: ButtonProps) => (props.blueText ? '1.2px' : '0')};
 `;
 
 type ButtonProps = {

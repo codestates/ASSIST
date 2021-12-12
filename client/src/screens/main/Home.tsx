@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearAll } from '../../store/actions/propsAction';
 import CardScrollView from '../../components/view/CardScrollView';
 import Card from '../../components/card/Card';
-import AddOnsCard from '../../components/card/addOnsCard';
+import AddOnsCard from '../../components/card/AddOnsCard';
 import AddTeamCard from '../../components/card/AddTeamCard';
 import NoMatchCard from '../../components/card/NoMatchCard';
 import NextMatchCard from '../../components/card/NextMatchCard';
@@ -32,6 +32,13 @@ export default function Home() {
       getTeamInfo().catch((error) => console.log(error));
     }
   }, [selectedTeam.id]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(clearAll());
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const getFirstTeam = async () => {
     try {

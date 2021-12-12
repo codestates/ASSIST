@@ -29,6 +29,7 @@ export const addCreateTeam = (props: object) => {
 
 export const addScheduleManage = (props: object) => {
   return { type: ADD_SCHEDULEMANAGE, payload: props };
+};
 
 export const addFindPassword = (props: object) => {
   return { type: ADD_FINDPASSWORD, payload: props };
