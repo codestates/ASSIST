@@ -137,14 +137,15 @@ export class TeamService {
   }
 
   async getMember(id: number): Promise<IgetMember> {
-    let { users } = await this.teamRepository.findOne({
+    let { users, leaderId } = await this.teamRepository.findOne({
       where: { id },
-      relations: ['users'],
+      relations: ['users', 'leaderId'],
     });
+    console.log(leaderId);
     users.forEach((user) => {
       delete user.password;
     });
-    return { count: users.length, users };
+    return { count: users.length, users, leaderId: leaderId.id };
   }
 
   async kickMember(id: number, userId: number, user: User) {
