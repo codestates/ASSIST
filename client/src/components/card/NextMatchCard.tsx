@@ -8,6 +8,7 @@ import GatheringMark from '../mark/GatheringMark';
 import Card from './Card';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { NextMatch } from '../../../@types/global/types';
 
 const TitleView = styled.View`
   flex-direction: row;
@@ -24,9 +25,10 @@ const SubtitleView = styled.View`
 
 type NextMatchCardProps = {
   conditions: '경기 확정' | '인원 모집 중' | '투표 완료';
+  nextMatch: NextMatch;
 };
 
-export default function NextMatchCard({ conditions }: NextMatchCardProps) {
+export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const getMark = () => {
@@ -60,10 +62,14 @@ export default function NextMatchCard({ conditions }: NextMatchCardProps) {
         {getMark()}
       </TitleView>
       <SubtitleView>
-        <Regular size={17}>2021-08-18 (수)</Regular>
-        <Bold size={17}>시작 18:00 → 20:00 종료</Bold>
+        <Regular size={17}>
+          {nextMatch?.date} ({nextMatch?.day})
+        </Regular>
+        <Bold size={17}>
+          시작 {nextMatch?.startTime} → {nextMatch?.endTime} 종료
+        </Bold>
         <Regular size={14} gray>
-          서울특별시 용산구 용산대로 12번길 3, 4층
+          {nextMatch?.address} {nextMatch?.address2}
         </Regular>
       </SubtitleView>
       {getButton()}
