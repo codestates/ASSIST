@@ -113,7 +113,7 @@ export class UserService {
     return user;
   }
 
-  async getUserTeam(user: User) {
+  async getUserTeam(user: User, option?) {
     const data: any = await this.userRepository
       .createQueryBuilder('user')
       .select(['user.id', 'teams.id', 'teams.name', 'team.id', 'team.name'])
@@ -127,7 +127,14 @@ export class UserService {
     }
 
     if (!data.teams.length) {
-      return [];
+      return option
+        ? {
+            id: -1,
+            name: '',
+            leader: false,
+            nextMatch: null,
+          }
+        : [];
     }
 
     if (data.team.length) {
@@ -143,11 +150,13 @@ export class UserService {
       delete el.paymentDay, el.accountNumber, el.accountBank, el.dues, el.inviteCode;
     });
 
-    const nextMatch = await this.matchRepository.getNextMatch(data.teams[0].id, user);
+    if (option) {
+      const nextMatch = await this.matchRepository.getNextMatch(data.teams[0].id, user);
+      data.teams[0].nextMatch = nextMatch;
+      return data.teams[0];
+    }
 
-    data.teams[0].nextMatch = nextMatch;
     delete data.team;
-
     return data.teams;
   }
 

@@ -52,10 +52,7 @@ export class UserController {
 
   @Patch('/')
   @UseGuards(AuthGuard())
-  async patchUser(
-    @Req() req: Request,
-    @Body() updateInfo: UpdateDto,
-  ): Promise<PatchUser> {
+  async patchUser(@Req() req: Request, @Body() updateInfo: UpdateDto): Promise<PatchUser> {
     const userInfo: User = req.user;
     return this.userService.patchUser(updateInfo, userInfo);
   }
@@ -77,6 +74,12 @@ export class UserController {
     return await this.userService.getUserTeam(req.user);
   }
 
+  @Get('/firstteam')
+  @UseGuards(AuthGuard())
+  async getUserfirstteam(@Req() req: Request) {
+    return await this.userService.getUserTeam(req.user, true);
+  }
+
   @Get('/check')
   async checkEmail(@Query('email') email: string): Promise<{ check: boolean }> {
     return this.userService.checkEmail(email);
@@ -84,10 +87,7 @@ export class UserController {
 
   @Post('')
   @UseGuards(AuthGuard())
-  async checkPw(
-    @Req() req: Request,
-    @Body('password') password: string,
-  ): Promise<object> {
+  async checkPw(@Req() req: Request, @Body('password') password: string): Promise<object> {
     const userInfo = req.user;
     return this.userService.checkPw(userInfo, password);
   }
@@ -101,10 +101,7 @@ export class UserController {
 
   @Delete('/team/:id')
   @UseGuards(AuthGuard())
-  async quitTeam(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req: Request,
-  ): Promise<object> {
+  async quitTeam(@Param('id', ParseIntPipe) id: number, @Req() req: Request): Promise<object> {
     const userInfo = req.user;
     return this.userService.quitTeam(id, userInfo);
   }
