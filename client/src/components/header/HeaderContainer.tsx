@@ -1,12 +1,24 @@
 import React from 'react';
-import { useWindowDimensions } from 'react-native';
+import { Platform, useWindowDimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
+
+const getPadding = () => {
+  if (Platform.OS === 'android') {
+    return '40px';
+  } else if (Platform.OS === 'web') {
+    return '20px';
+  } else {
+    return '0px';
+  }
+};
 
 const Container = styled.SafeAreaView`
   width: ${(props: HeaderProps) => props.width}px;
   height: ${(props: HeaderProps) => (props.height ? String(props.height) + 'px' : 'auto')};
   background-color: ${colors.white};
+  padding-top: ${getPadding()};
+  justify-content: center;
 `;
 
 type HeaderProps = {

@@ -18,7 +18,7 @@ const Container = styled.View`
 const TeamSelector = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
   margin-right: 15px;
 `;
 
