@@ -10,15 +10,14 @@ import { Alarm_schedule } from 'src/others/alarm.entity';
 import { TeamRepository } from 'src/team/team.repository';
 import { User } from 'src/user/user.entity';
 import { CreateMatchDto } from './dto/create-dto';
-import {
-  AlarmRepository,
-  MatchRepository,
-  UserMatchRepository,
-} from './match.repository';
+import { AlarmRepository, MatchRepository, UserMatchRepository } from './match.repository';
 import { User_match } from 'src/others/user_match.entity';
 import { Match } from './match.entity';
 import { UpdateMatchDto } from './dto/update-dto';
 import { VoteMatchDto } from './dto/vote-dto';
+import { NaverSensService } from 'src/common/naver_sens/sens.service';
+import { MakeM } from 'src/common/naver_sens/make_M_template';
+import { AlimtalkDto } from 'src/common/naver_sens/dto/sendTalk.dto';
 
 @Injectable()
 export class MatchService {
@@ -40,9 +39,11 @@ export class MatchService {
     }
     const dayArr = ['일', '월', '화', '수', '목', '금', '토'];
 
-    const { date, startTime } = dto;
+    const { date, startTime, endTime, address, address2 } = dto;
     const alarmTime = new Date(date + ' ' + startTime);
+    const day = dayArr[new Date(date).getDay()];
     alarmTime.setHours(alarmTime.getHours() - 1);
+
     let alarm, match;
     try {
       alarm = await this.alarmRepository.create({ time: alarmTime });
@@ -51,28 +52,41 @@ export class MatchService {
         ...dto,
         alarm,
         team: { id: dto.teamId },
-        day: dayArr[new Date(date).getDay()],
+        day,
       });
       await this.matchRepository.save(match);
     } catch (err) {
       console.log('match 생성에러', err);
       throw new InternalServerErrorException();
     }
-    const { users } = await this.teamRepository.findOne(
+    const { name, users } = await this.teamRepository.findOne(
       { id: dto.teamId },
-      { relations: ['users'], select: ['id'] },
+      { relations: ['users'], select: ['id', 'name'] },
     );
 
     const data = users.map((user) => {
       return { user, match };
     });
 
-    this.userMatchRepository
-      .createQueryBuilder()
-      .insert()
-      .into(User_match)
-      .values(data)
-      .execute();
+    this.userMatchRepository.createQueryBuilder().insert().into(User_match).values(data).execute();
+
+    const naverSensService = new NaverSensService();
+    const makeM = new MakeM();
+
+    const arr: AlimtalkDto[] = [];
+    users.forEach((user) => {
+      const { content } = makeM.M001({
+        team: name,
+        startTime,
+        date,
+        endTime,
+        address,
+        address2,
+      });
+      arr.push({ to: user.phone, content });
+    });
+
+    naverSensService.sendKakaoAlarm('M001', arr);
 
     //이후 알림톡보내기
 
@@ -90,6 +104,7 @@ export class MatchService {
           'user_match.reason',
           'user.name',
           'user.phone',
+          'user.id',
           'match',
         ])
         .leftJoin('match.user_matchs', 'user_match')
@@ -107,9 +122,10 @@ export class MatchService {
     data.nonRes = [];
 
     data.user_matchs.forEach((el) => {
+      console.log(el.user);
       switch (el.condition) {
         case '미응답':
-          if (el.id === user.id) data.vote = false;
+          if (el.user.id === user.id) data.vote = false;
           data.nonRes.push(el);
           break;
         case '참석':
@@ -127,8 +143,11 @@ export class MatchService {
     return data;
   }
 
-  async getlastMatchs(teamId: number, page: number = 1): Promise<any> {
-    const offset = page * 10 - 10;
+  async getlastMatchs(teamId: number, page: number, limit: number): Promise<any> {
+    if (!page) page = 1;
+    if (!limit) limit = 5;
+    const offset = page * limit - limit;
+
     const [lastMatchs, count] = await this.matchRepository.findAndCount({
       where: {
         date: Raw((alias) => `${alias} < :date`, {
@@ -138,10 +157,10 @@ export class MatchService {
       },
       order: { date: 'DESC', endTime: 'DESC', id: 'DESC' },
       skip: offset,
-      take: 10,
+      take: limit,
     });
 
-    const totalPage = Math.round(count / 10);
+    const totalPage = Math.round(count / limit);
 
     const payload = { lastMatchs, totalPage };
     if (page === 1) {
@@ -155,15 +174,8 @@ export class MatchService {
     return payload;
   }
 
-  async changeCondition(
-    matchId: number,
-    user: User,
-    updateMatchDto: UpdateMatchDto,
-  ) {
-    const match = await this.matchRepository.findOne(
-      { id: matchId },
-      { relations: ['team'] },
-    );
+  async changeCondition(matchId: number, user: User, updateMatchDto: UpdateMatchDto) {
+    const match = await this.matchRepository.findOne({ id: matchId }, { relations: ['team'] });
     if (!match) {
       throw new NotFoundException('해당 경기가 존재하지 않습니다.');
     }
@@ -198,5 +210,14 @@ export class MatchService {
       .execute();
 
     return { message: 'ok' };
+  }
+
+  async fixMatch() {
+    let now = new Date();
+    let nextday = new Date(now.setDate(now.getDate() + 1)).toISOString().slice(0, 10);
+
+    const data = await this.matchRepository.find({ date: nextday });
+
+    console.log(data);
   }
 }

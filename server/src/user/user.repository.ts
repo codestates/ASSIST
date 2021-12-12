@@ -27,7 +27,7 @@ export class UserRepository extends Repository<User> {
         userInfo.password = await bcrypt.hash(password, salt);
       }
       const user = this.create(userInfo);
-      await this.deleteConflictPhone(phone);
+      // await this.deleteConflictPhone(phone);
       await this.save(user);
       return user;
     }
