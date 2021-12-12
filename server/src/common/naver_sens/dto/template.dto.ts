@@ -2,7 +2,8 @@ export class M001dto {
   team: string;
   startTime: string;
   endTime: string;
-  station: string;
+  address: string;
+  address2: string;
   date: string;
 }
 export class M002dto {
@@ -11,7 +12,8 @@ export class M002dto {
   date: string;
   startTime: string;
   endTime: string;
-  station: string;
+  address: string;
+  address2: string;
   deadline: string;
 }
 

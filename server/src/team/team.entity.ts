@@ -29,6 +29,9 @@ export class Team {
   @Column()
   accountBank: string;
 
+  @Column()
+  dues: string;
+
   @Column({ unique: true })
   inviteCode: string;
 

@@ -6,14 +6,14 @@ import { User } from 'src/user/user.entity';
 import { Raw } from 'typeorm';
 @EntityRepository(Match)
 export class MatchRepository extends Repository<Match> {
-  async getNextMatch(id: number, user: User) {
+  async getNextMatch(teamId: number, user: User) {
     const nextMatch: any = await this.findOne({
       relations: ['user_matchs'],
       where: {
         date: Raw((alias) => `${alias} >= :date`, {
           date: new Date().toISOString().slice(0, 10),
         }),
-        team: { id },
+        team: { id: teamId },
         condition: Raw((alias) => `${alias} IN (:...condition)`, {
           condition: ['경기 확정', '인원 모집 중'],
         }),
@@ -21,9 +21,7 @@ export class MatchRepository extends Repository<Match> {
     });
 
     if (nextMatch) {
-      const vote = nextMatch.user_matchs.find((el) => el.id === user.id)
-        ? true
-        : false;
+      const vote = nextMatch.user_matchs.find((el) => el.id === user.id) ? true : false;
 
       delete nextMatch.user_matchs;
 
