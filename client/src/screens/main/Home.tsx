@@ -15,6 +15,7 @@ import { ASSIST_SERVER_URL } from '@env';
 import { RootState } from '../../store/reducers';
 import { FirstTeam, NextMatch, TeamInfo } from '../../../@types/global/types';
 import { getSelectedTeam } from '../../store/actions/userAction';
+import { Platform } from 'react-native';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export default function Home() {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(clearAll());
       if (selectedTeam.id === -1) {
+
         getFirstTeam().catch((error) => console.log(error));
       } else {
         getTeamInfo().catch((error) => console.log(error));

@@ -17,9 +17,12 @@ import { Team } from './team.entity';
 import { getManager } from 'typeorm';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
 import { MakeT } from 'src/common/naver_sens/make_T_template';
+import { check } from 'prettier';
 
 @Injectable()
 export class TeamService {
+  makeT = new MakeT();
+  naverSensService = new NaverSensService();
   constructor(
     @InjectRepository(TeamRepository)
     private teamRepository: TeamRepository,
@@ -41,20 +44,19 @@ export class TeamService {
       code: team.inviteCode,
       name: user.name,
       leader: team.leaderId.name,
+      to: user.phone,
     };
 
     let info2 = {
       team: team.name,
       name: team.leaderId.name,
+      to: team.leaderId.phone,
     };
-    const makeT = new MakeT();
-    const naverSensService = new NaverSensService();
-    const { code: tempCode, content } = makeT.T001(info);
-    const { code: tempCode2, content: content2 } = makeT.T002(info2);
-    naverSensService.sendKakaoAlarm(tempCode, [{ content, to: user.phone }]);
-    naverSensService.sendKakaoAlarm(tempCode2, [
-      { content: content2, to: team.leaderId.phone },
-    ]);
+
+    const form1 = this.makeT.T001(info.to, info);
+    const form2 = this.makeT.T002(info2.to, info2);
+    this.naverSensService.sendKakaoAlarm('T001', [form1]);
+    this.naverSensService.sendKakaoAlarm('T002', [form2]);
     return { id: team.id };
   }
 
@@ -80,10 +82,7 @@ export class TeamService {
   }
 
   async patchTeam(id: number, updateTeamDto: UpdateTeamDto, user: User) {
-    const found = await this.teamRepository.findOne(
-      { id },
-      { relations: ['leaderId'] },
-    );
+    const found = await this.teamRepository.findOne({ id }, { relations: ['leaderId'] });
 
     if (!found) {
       throw new NotFoundException('요청한 팀이 없습니다.');
@@ -93,30 +92,44 @@ export class TeamService {
       throw new UnauthorizedException('팀 수정은 리더만 할 수 있습니다.');
     }
 
+    let leader;
     if (updateTeamDto.leaderId) {
-      const check = await this.userRepository.findOne({
+      leader = await this.userRepository.findOne({
         id: updateTeamDto.leaderId,
       });
-      if (!check)
-        throw new NotFoundException('리더로 변경할 해당 유저가 없습니다.');
+      if (!leader) throw new NotFoundException('리더로 변경할 해당 유저가 없습니다.');
     }
-    return this.teamRepository.patchTeam(found, updateTeamDto);
+
+    let returnData = await this.teamRepository.patchTeam(found, updateTeamDto);
+
+    if (leader) {
+      let form1 = this.makeT.T003(user.phone, { team: found.name, leader: leader.name });
+      let form2 = this.makeT.T004(leader.phone, { team: found.name, leader: user.name });
+      await this.naverSensService.sendKakaoAlarm('T003', [form1]);
+      await this.naverSensService.sendKakaoAlarm('T004', [form2]);
+    }
+
+    return returnData;
   }
 
   async deleteTeam(id: number, user: User) {
-    let team = await this.teamRepository.findOne(
-      { id },
-      { relations: ['leaderId', 'users'] },
-    );
+    let team = await this.teamRepository.findOne({ id }, { relations: ['leaderId', 'users'] });
     if (!team) {
       throw new NotFoundException('요청한 팀이 존재하지 않습니다.');
     }
     if (team.leaderId.id !== user.id) {
       throw new UnauthorizedException('팀 해체는 팀장만 할 수 있습니다.');
     }
-    if (team.users.length > 1) {
-      throw new BadRequestException('팀 해체는 다른 팀원이 없어야 가능합니다.');
+    let arr = [];
+    for (let member of team.users) {
+      if (member.id === user.id) continue;
+      let form1 = this.makeT.T005(member.phone, { team: team.name });
+      arr.push(form1);
     }
+    let form2 = this.makeT.T006(user.phone, { team: team.name });
+
+    this.naverSensService.sendKakaoAlarm('T005', arr);
+    this.naverSensService.sendKakaoAlarm('T006', [form2]);
 
     await this.teamRepository.delete({ id });
 
@@ -124,21 +137,19 @@ export class TeamService {
   }
 
   async getMember(id: number): Promise<IgetMember> {
-    let { users } = await this.teamRepository.findOne({
+    let { users, leaderId } = await this.teamRepository.findOne({
       where: { id },
-      relations: ['users'],
+      relations: ['users', 'leaderId'],
     });
+    console.log(leaderId);
     users.forEach((user) => {
       delete user.password;
     });
-    return { count: users.length, users };
+    return { count: users.length, users, leaderId: leaderId.id };
   }
 
   async kickMember(id: number, userId: number, user: User) {
-    const team = await this.teamRepository.findOne(
-      { id },
-      { relations: ['leaderId', 'users'] },
-    );
+    const team = await this.teamRepository.findOne({ id }, { relations: ['leaderId', 'users'] });
     if (!team) {
       throw new NotFoundException('해당 팀은 존재하지 않습니다.');
     }
@@ -149,8 +160,18 @@ export class TeamService {
     if (userId === user.id) {
       throw new NotFoundException('자기 자신을 강퇴할 수 없습니다.');
     }
-    team.users = team.users.filter((el) => el.id !== user.id);
+    let index = team.users.findIndex((el) => el.id === userId);
+    if (index === -1) {
+      throw new NotFoundException('해당 유저는 팀원이 아닙니다.');
+    }
+    let kickUser = team.users.splice(index, 1)[0];
     await this.teamRepository.save(team);
+
+    let form1 = this.makeT.T007(user.phone, { team: team.name, name: kickUser.name });
+    let form2 = this.makeT.T008(kickUser.phone, { team: team.name });
+
+    this.naverSensService.sendKakaoAlarm('T007', [form1]);
+    this.naverSensService.sendKakaoAlarm('T008', [form2]);
     return { message: '완료되었습니다.' };
   }
 }
