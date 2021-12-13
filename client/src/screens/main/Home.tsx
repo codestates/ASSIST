@@ -27,7 +27,6 @@ export default function Home() {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(clearAll());
       if (selectedTeam.id === -1) {
-
         getFirstTeam().catch((error) => console.log(error));
       } else {
         getTeamInfo().catch((error) => console.log(error));

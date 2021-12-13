@@ -1,20 +1,15 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import styled from 'styled-components/native';
-
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import LendingPageView from '../../components/view/LendingPageView';
+import LandingPageView from '../../components/view/LandingPageView';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
+import Landing_6 from '../../assets/images/Landing_6.png';
+import { Dimensions } from 'react-native';
 
-const HeaderSpaceTitle = styled.View`
-  width: 100%;
-  height: 32px;
-`;
 const TitleSpaceTitle = styled.View`
   width: 100%;
   height: 20px;
@@ -38,7 +33,6 @@ const Title = styled.View`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-vertical: 2px;
 `;
 
 const TitleRightButton = styled.TouchableOpacity`
@@ -50,49 +44,49 @@ const TitleRightButton = styled.TouchableOpacity`
 
 const ImageContainer = styled.View`
   flex: 1;
-  position: relative;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  bottom: -${Dimensions.get('window').height / 3}px;
+`;
+
+const LandingImage = styled.Image`
+  width: 100%;
+  height: 100%;
+`;
+
+const Line = styled.View`
   margin-bottom: 5px;
 `;
 
-const LendingImage = styled.Image`
-  width: 100%;
-  height: 90%;
-  position: absolute;
-  bottom: 15px;
-  left: 0;
-`;
-
-export default function LendingPage_3() {
+export default function LandingPage_6() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <LendingPageView>
-      <HeaderSpaceTitle />
+    <LandingPageView>
       <MainTitle>
         <TitleContainer>
-          <TitleLeftButton onPress={() => navigation.navigate('LendingPage_2')}>
-            <AntDesign name="left" size={32} color={colors.lightGray} />
+          <TitleLeftButton onPress={() => navigation.navigate('LandingPage_5')}>
+            <AntDesign name="left" size={26} color={colors.lightGray} />
           </TitleLeftButton>
           <Title>
-            <Bold size={18}>1. 팀 등록</Bold>
+            <Bold size={17}>4. 회비 관리</Bold>
             <TitleSpaceTitle />
-            <Bold size={18}>
-              팀을 등록 <Light size={18}>하고,</Light>
-            </Bold>
-            <Bold size={18}>
-              팀원을 초대 <Light size={18}>해 보세요!</Light>
+            <Line>
+              <Light>매월 회비 챙기기 귀찮으셨죠?</Light>
+            </Line>
+            <Bold>
+              회비 납부 1일전 알림톡 <Light>을 보내드립니다!</Light>
             </Bold>
           </Title>
-          <TitleRightButton onPress={() => navigation.navigate('LendingPage_4')}>
-            <AntDesign name="right" size={32} color={colors.lightGray} />
+          <TitleRightButton onPress={() => navigation.navigate('LandingPage_7')}>
+            <AntDesign name="right" size={26} color={colors.lightGray} />
           </TitleRightButton>
         </TitleContainer>
       </MainTitle>
       <ImageContainer>
-        <LendingImage
-          source={require('../../assets/images/lending_3.png')}
-          resizeMode={'contain'}
-        />
+        <LandingImage source={Landing_6} resizeMode={'contain'} />
       </ImageContainer>
-    </LendingPageView>
+    </LandingPageView>
   );
 }

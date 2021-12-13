@@ -1,24 +1,18 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import styled from 'styled-components/native';
-
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import LendingPageView from '../../components/view/LendingPageView';
+import LandingPageView from '../../components/view/LandingPageView';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
-
-const HeaderSpaceTitle = styled.View`
-  width: 100%;
-  height: 64px;
-`;
+import Landing_5 from '../../assets/images/Landing_5.png';
+import { Dimensions } from 'react-native';
 
 const TitleSpaceTitle = styled.View`
   width: 100%;
-  height: 3px;
+  height: 20px;
 `;
 
 const TitleContainer = styled.View`
@@ -30,7 +24,8 @@ const TitleContainer = styled.View`
 const TitleLeftButton = styled.TouchableOpacity`
   flex: 1;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-bottom: 12px;
 `;
 
 const Title = styled.View`
@@ -43,50 +38,55 @@ const Title = styled.View`
 const TitleRightButton = styled.TouchableOpacity`
   flex: 1;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-bottom: 12px;
 `;
 
 const ImageContainer = styled.View`
   flex: 1;
-  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  bottom: -${Dimensions.get('window').height / 3}px;
+`;
+
+const LandingImage = styled.Image`
+  width: 100%;
+  height: 100%;
+`;
+
+const Line = styled.View`
   margin-bottom: 5px;
 `;
 
-const LendingImage = styled.Image`
-  width: 100%;
-  height: 62%;
-  align-items: center;
-`;
-
-const LendingCopyRight = styled(Light)`
-  font-size: 18px;
-  color: ${colors.lightGray};
-`;
-
-export default function LendingPage_7() {
+export default function LandingPage_5() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <LendingPageView>
-      <HeaderSpaceTitle />
+    <LandingPageView>
       <MainTitle>
         <TitleContainer>
-          <TitleLeftButton onPress={() => navigation.navigate('LendingPage_6')}>
-            <AntDesign name="left" size={32} color={colors.lightGray} />
+          <TitleLeftButton onPress={() => navigation.navigate('LandingPage_4')}>
+            <AntDesign name="left" size={26} color={colors.lightGray} />
           </TitleLeftButton>
           <Title>
-            <Bold size={18}>복잡한 팀 관리,</Bold>
+            <Bold size={17}>3. 용병 초대</Bold>
             <TitleSpaceTitle />
-            <Light size={18}>이제 저희 어시스트 해 드릴게요!</Light>
+            <Line>
+              <Light>경기 할 인원이 부족하세요?</Light>
+            </Line>
+            <Bold>
+              주변 플레이어를 용병으로 초대 <Light>해 보세요!</Light>
+            </Bold>
           </Title>
-          <TitleRightButton onPress={() => navigation.navigate('LendingPage_8')}>
-            <AntDesign name="right" size={32} color={colors.lightGray} />
+          <TitleRightButton onPress={() => navigation.navigate('LandingPage_6')}>
+            <AntDesign name="right" size={26} color={colors.lightGray} />
           </TitleRightButton>
         </TitleContainer>
       </MainTitle>
       <ImageContainer>
-        <LendingImage source={require('../../assets/images/lending_7.png')} />
-        <LendingCopyRight>Illustration by Storyset</LendingCopyRight>
+        <LandingImage source={Landing_5} resizeMode={'contain'} />
       </ImageContainer>
-    </LendingPageView>
+    </LandingPageView>
   );
 }
