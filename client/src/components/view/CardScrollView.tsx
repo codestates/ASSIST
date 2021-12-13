@@ -15,7 +15,7 @@ type styleProps = {
 const View = styled.View`
   width: 100%;
   background-color: ${(props: styleProps) => props.color || colors.lightGray};
-  padding: 0px 20px;
+  padding: ${(props: styleProps) => (props.home ? '30px' : '0px')} 20px;
   ${(props: styleProps) =>
     props.home &&
     `border-top-color: ${colors.lightGray};

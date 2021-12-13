@@ -7,7 +7,6 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
-import CaptainMark from '../mark/CaptainMark';
 
 const Container = styled.View`
   flex-direction: row;
@@ -25,23 +24,24 @@ const TeamSelector = styled.TouchableOpacity`
 const TeamName = styled(Bold)`
   color: ${colors.blue};
   font-size: 17px;
-  margin-right: 5px;
+  margin-right: 2px;
 `;
 
 export default function BottomContainer() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { name, leader, id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
+  const { name, id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
+
   return (
     <Container>
       {id >= 0 ? (
         <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
           <TeamName>{name}</TeamName>
-          {leader && <CaptainMark size="small" />}
+          <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
         </TeamSelector>
       ) : (
-        <TeamSelector onPress={() => navigation.navigate('CreateTeam')}>
-          <TeamName>+ 팀 추가</TeamName>
-          <MaterialIcons name="keyboard-arrow-down" size={26} color={colors.blue} />
+        <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
+          <TeamName>팀 선택</TeamName>
+          <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
         </TeamSelector>
       )}
       <TeamSelector>
