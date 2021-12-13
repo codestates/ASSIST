@@ -115,7 +115,6 @@ export class MatchService {
         .leftJoin('match.user_matchs', 'user_match')
         .leftJoin('user_match.user', 'user')
         .where('match.id = :matchId', { matchId })
-        .andWhere('user_match.matchId = :id', { id: matchId })
         .getOne();
     } catch (err) {
       throw new InternalServerErrorException('database err');
@@ -131,7 +130,9 @@ export class MatchService {
     data.user_matchs.forEach((el) => {
       switch (el.condition) {
         case '미응답':
-          if (el.user.id === user.id) data.vote = false;
+          if (el.user.id === user.id) {
+            data.vote = false;
+          }
           data.nonRes.push(el);
           break;
         case '참석':
