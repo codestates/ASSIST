@@ -7,11 +7,6 @@ import { colors } from '../../theme/colors';
 import { Regular } from '../../theme/fonts';
 import HeaderContainer from './HeaderContainer';
 
-type DotsHeaderProps = {
-  current: number;
-  total: number;
-};
-
 const BlueDot = styled.View`
   width: 10px;
   height: 10px;
@@ -31,7 +26,8 @@ const DotIndicator = styled.View`
 
 const Wrapper = styled.View`
   width: 100%;
-  justify-content: space-between;
+  justify-content: ${(props: { isLanding?: boolean }) =>
+    props.isLanding ? 'center' : 'space-between'};
   flex-direction: row;
   padding: 15px 10px;
 `;
@@ -45,15 +41,23 @@ const ReturnText = styled(Regular)`
   color: ${colors.gray};
 `;
 
-export default function DotsHeader({ current, total }: DotsHeaderProps) {
+type DotsHeaderProps = {
+  current: number;
+  total: number;
+  isLanding?: boolean;
+};
+
+export default function DotsHeader({ current, total, isLanding }: DotsHeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <HeaderContainer>
-      <Wrapper>
-        <ReturnButton onPress={() => navigation.goBack()}>
-          <MaterialIcons name="keyboard-arrow-left" size={19} color={colors.gray} />
-          <ReturnText>이전</ReturnText>
-        </ReturnButton>
+      <Wrapper isLanding={isLanding}>
+        {isLanding || (
+          <ReturnButton onPress={() => navigation.goBack()}>
+            <MaterialIcons name="keyboard-arrow-left" size={19} color={colors.gray} />
+            <ReturnText>이전</ReturnText>
+          </ReturnButton>
+        )}
         <DotIndicator>
           {Array.from(Array(total), (_, i) =>
             current - 1 === i ? <BlueDot key={i} /> : <GrayDot key={i} />,
