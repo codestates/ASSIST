@@ -17,7 +17,6 @@ const Container = styled.View`
     }px`};
   border-radius: 15px;
   width: 100%;
-  margin-top: ${(props: StyleProps) => props.margin || 0}px;
 `;
 
 type CardProps = {
@@ -25,11 +24,7 @@ type CardProps = {
   margin?: number;
 };
 
-export default function Card({ children, margin }: CardProps) {
+export default function Card({ children }: CardProps) {
   const { width } = useWindowDimensions();
-  return (
-    <Container margin={margin} width={width}>
-      {children}
-    </Container>
-  );
+  return <Container width={width}>{children}</Container>;
 }

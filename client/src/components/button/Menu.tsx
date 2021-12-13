@@ -3,7 +3,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../theme/colors';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RootState } from '../../store/reducers';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';

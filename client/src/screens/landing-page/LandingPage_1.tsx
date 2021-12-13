@@ -47,12 +47,10 @@ const LandingCopyRight = styled(Light)`
 
 const LightText = styled(Light)`
   margin-bottom: 5px;
-  white-space: nowrap;
 `;
 
 const BoldText = styled(Bold)`
   margin-bottom: 5px;
-  white-space: nowrap;
 `;
 
 const FlexWrapper = styled.View`
