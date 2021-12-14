@@ -22,11 +22,12 @@ export class MatchRepository extends Repository<Match> {
     });
 
     if (nextMatch) {
-      let find = nextMatch.user_matchs.find((el) => el.id === user.id);
+      let find = nextMatch.user_matchs.find((el) => el.user.id === user.id);
 
       nextMatch.vote = false;
+
       if (find) {
-        if (find.condition === '찬성' || find.condition === '미정' || find.condition === '불참') {
+        if (find.condition === '참석' || find.condition === '미정' || find.condition === '불참') {
           nextMatch.vote = true;
         }
       }
