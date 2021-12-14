@@ -16,6 +16,7 @@ import { addGetStarted } from '../../store/actions/propsAction';
 import { getAccessToken } from '../../store/actions/userAction';
 import axios from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
+import * as Linking from 'expo-linking';
 
 type showType = {
   show: boolean;
@@ -93,7 +94,10 @@ export default function GetStarted_1() {
           <KakaoButton
             text="카카오로 1초만에 시작하기"
             isKakao
-            onPress={() => dispatch(getAccessToken('token'))}
+            onPress={() => {
+              Linking.openURL(`${ASSIST_SERVER_URL}/user/kakao`);
+              // window.location.href = 'http://localhost/user/kakao';
+            }}
           />
           <KakaoButton
             text={show ? '이메일 입력창 닫기' : '이메일로 시작하기'}
