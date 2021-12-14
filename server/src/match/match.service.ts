@@ -106,7 +106,6 @@ export class MatchService {
         .select([
           'user_match.id',
           'user_match.condition',
-          'user_match.reason',
           'user.name',
           'user.phone',
           'user.id',
@@ -136,12 +135,21 @@ export class MatchService {
           data.nonRes.push(el);
           break;
         case '참석':
+          if (el.user.id === user.id) {
+            data.vote = 'attend';
+          }
           data.attend.push(el);
           break;
         case '불참':
+          if (el.user.id === user.id) {
+            data.vote = 'absent';
+          }
           data.absent.push(el);
           break;
         case '미정':
+          if (el.user.id === user.id) {
+            data.vote = 'hold';
+          }
           data.hold.push(el);
           break;
       }

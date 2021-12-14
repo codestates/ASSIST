@@ -16,9 +16,6 @@ export class User_match {
   @Column({ default: '미응답' })
   condition: string;
 
-  @Column({ default: null })
-  reason: string;
-
   @ManyToOne(() => User, (user) => user.user_matchs)
   user: User;
 
