@@ -119,8 +119,6 @@ export class MatchService {
       throw new InternalServerErrorException('database err');
     }
 
-    console.log(data);
-    data.vote = true;
     data.attend = [];
     data.absent = [];
     data.hold = [];
@@ -254,7 +252,7 @@ export class MatchService {
     if (beforeCondi === afterCondi) {
       throw new NotFoundException(`이미 ${beforeCondi}으로 투표하셨습니다.`);
     }
-    if (match.condition === '경기 취소' || '경기 완료') {
+    if (match.condition === '경기 취소' || match.condition === '경기 완료') {
       throw new NotFoundException('해당 경기에 투표할 수 없습니다.');
     }
     await this.userMatchRepository
