@@ -119,8 +119,6 @@ export class MatchService {
       throw new InternalServerErrorException('database err');
     }
 
-    console.log(data);
-    data.vote = true;
     data.attend = [];
     data.absent = [];
     data.hold = [];

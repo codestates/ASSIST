@@ -14,10 +14,11 @@ import { UserRepository } from 'src/user/user.repository';
 import { IgetMember } from './interface/getMember.interface';
 import { MatchRepository } from 'src/match/match.repository';
 import { Team } from './team.entity';
-import { getManager } from 'typeorm';
+import { getManager, getRepository, Raw } from 'typeorm';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
 import { MakeT } from 'src/common/naver_sens/make_T_template';
-import { check } from 'prettier';
+import { getDate } from 'src/common/getDate';
+import { User_match } from 'src/others/user_match.entity';
 
 @Injectable()
 export class TeamService {
@@ -38,6 +39,28 @@ export class TeamService {
 
   async joinTeam(code: string, user: User): Promise<any> {
     const team = await this.teamRepository.joinTeam(code, user);
+
+    const nextMatchs: any = await this.matchRepository.find({
+      relations: ['user_matchs'],
+      where: {
+        date: Raw((alias) => `${alias} >= :date`, {
+          date: getDate(),
+        }),
+        team: { id: team.id },
+        condition: Raw((alias) => `${alias} IN (:...condition)`, {
+          condition: ['경기 확정', '인원 모집 중'],
+        }),
+      },
+    });
+
+    const userMatchRepo = getRepository(User_match);
+
+    if (nextMatchs.length) {
+      nextMatchs.forEach(async (el) => {
+        const vote = userMatchRepo.create({ condition: '미응답', user, match: el });
+        await userMatchRepo.save(vote);
+      });
+    }
 
     let info = {
       team: team.name,
