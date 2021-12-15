@@ -66,6 +66,9 @@ export class UserService {
   }
   async sendAuthNum(phone: string) {
     const number = String(Math.floor(Math.random() * 1000000));
+    if (number.length !== 6) {
+      return this.sendAuthNum(phone);
+    }
     await this.sendSMS(phone, number);
 
     return await this.smsRepository.createSms({ phone, number });

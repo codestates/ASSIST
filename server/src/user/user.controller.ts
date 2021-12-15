@@ -25,6 +25,8 @@ import { UpdateDto } from './dto/update-dto';
 import { PatchUser } from './interface/res.patchUser';
 import { FindpwDto } from './dto/findpw-dto';
 import { KakaoAlimService } from 'src/kakaoalim/kakaoalim.service';
+import { KaKaoDto } from './dto/kakao-dto';
+import axios from 'axios';
 
 @Controller('user')
 export class UserController {
@@ -136,5 +138,14 @@ export class UserController {
 
     console.log(`${process.env.HOMEPAGE_URL_LOCAL}/`);
     res.redirect(`${process.env.HOMEPAGE_URL_LOCAL}/?accessToken=${accessToken}`);
+  }
+
+  @Post('kakao/mobile')
+  async kakaoAuthMobile(@Body('accessToken') kakaoToken: KaKaoDto) {
+    const user = axios.get('https://kapi.kakao.com/v2/user/me', {
+      headers: { Authorization: `Bearer ${kakaoToken}` },
+      withCredentials: true,
+    });
+    return await this.userService.kakaoAuthCallback(user);
   }
 }
