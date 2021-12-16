@@ -106,7 +106,6 @@ export class MatchService {
         .select([
           'user_match.id',
           'user_match.condition',
-          'user_match.reason',
           'user.name',
           'user.phone',
           'user.id',
@@ -115,14 +114,11 @@ export class MatchService {
         .leftJoin('match.user_matchs', 'user_match')
         .leftJoin('user_match.user', 'user')
         .where('match.id = :matchId', { matchId })
-        .andWhere('user_match.matchId = :id', { id: matchId })
         .getOne();
     } catch (err) {
       throw new InternalServerErrorException('database err');
     }
 
-    console.log(data);
-    data.vote = true;
     data.attend = [];
     data.absent = [];
     data.hold = [];
@@ -131,16 +127,27 @@ export class MatchService {
     data.user_matchs.forEach((el) => {
       switch (el.condition) {
         case '미응답':
-          if (el.user.id === user.id) data.vote = false;
+          if (el.user.id === user.id) {
+            data.vote = 'nonRes';
+          }
           data.nonRes.push(el);
           break;
         case '참석':
+          if (el.user.id === user.id) {
+            data.vote = 'attend';
+          }
           data.attend.push(el);
           break;
         case '불참':
+          if (el.user.id === user.id) {
+            data.vote = 'absent';
+          }
           data.absent.push(el);
           break;
         case '미정':
+          if (el.user.id === user.id) {
+            data.vote = 'hold';
+          }
           data.hold.push(el);
           break;
       }
@@ -245,7 +252,7 @@ export class MatchService {
     if (beforeCondi === afterCondi) {
       throw new NotFoundException(`이미 ${beforeCondi}으로 투표하셨습니다.`);
     }
-    if (match.condition === '경기 취소' || '경기 완료') {
+    if (match.condition === '경기 취소' || match.condition === '경기 완료') {
       throw new NotFoundException('해당 경기에 투표할 수 없습니다.');
     }
     await this.userMatchRepository
