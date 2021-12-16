@@ -128,7 +128,7 @@ export class MatchService {
       switch (el.condition) {
         case '미응답':
           if (el.user.id === user.id) {
-            data.vote = false;
+            data.vote = 'nonRes';
           }
           data.nonRes.push(el);
           break;
