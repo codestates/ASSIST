@@ -21,7 +21,9 @@ export default function DeadLineTimer({ deadLine }: DeadLineTimerProps) {
   const deadLineTime = new Date(timeArr[0], timeArr[1] - 1, timeArr[2], 19, 0, 0, 0);
   const timeLeft = Math.abs((deadLineTime.getTime() - currentTime.getTime()) / 1000);
 
-  currentTime.setSeconds(currentTime.getSeconds() + timeLeft);
+  if (timeLeft) {
+    currentTime.setSeconds(currentTime.getSeconds() + timeLeft);
+  }
 
   const { seconds, minutes, hours, days, start } = useTimer({
     expiryTimestamp: currentTime,
