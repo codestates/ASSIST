@@ -40,4 +40,5 @@ export const propsState = {
   findPassword: {
     phone: '',
   },
+  matchId: -1,
 };

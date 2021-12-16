@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 
 import MainTitle from '../../components/text/MainTitle';

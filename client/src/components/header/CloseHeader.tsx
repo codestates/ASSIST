@@ -33,14 +33,24 @@ const CloseButton = styled.TouchableOpacity`
 
 type ColseHeaderProps = {
   color?: string;
+  goHome?: boolean;
 };
 
-export default function CloseHeader({ color }: ColseHeaderProps) {
+export default function CloseHeader({ color, goHome }: ColseHeaderProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const getNavigation = () => {
+    if (goHome) {
+      navigation.navigate('Home');
+    } else {
+      navigation.goBack();
+    }
+  };
+  
   return (
     <Container color={color}>
       <CloseContainer>
-        <CloseButton onPress={() => navigation.goBack()}>
+        <CloseButton onPress={() => getNavigation()}>
           <MaterialIcons name="close" size={24} color={getColor(color)} />
         </CloseButton>
       </CloseContainer>

@@ -12,8 +12,8 @@ const ButtonContainer = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  border-color: ${colors.blue}
-  border-width: ${(props: ButtonProps) => (props.blueText ? '1.2px' : '0')};
+  border-color: ${(props: ButtonProps) => (props.blueText ? colors.blue : colors.lightGray)};
+  border-width: ${(props: ButtonProps) => (props.blueText || props.grayText ? '1.2px' : '0')};
 `;
 
 type ButtonProps = {
@@ -25,6 +25,7 @@ type ButtonProps = {
   buttonBgColor: string;
   disabled?: boolean;
   blueText?: boolean;
+  grayText?: boolean;
   children: React.ReactNode;
 };
 const CommonButton = ({
@@ -37,10 +38,12 @@ const CommonButton = ({
   height,
   disabled,
   blueText,
+  grayText,
 }: ButtonProps) => {
   return (
     <ButtonContainer
       blueText={blueText}
+      grayText={grayText}
       disabled={disabled}
       onPress={onPress}
       width={width}
