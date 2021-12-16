@@ -6,9 +6,8 @@ import ConfirmedMark from '../mark/ConfirmedMark';
 import VotedMark from '../mark/VotedMark';
 import GatheringMark from '../mark/GatheringMark';
 import Card from './Card';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { NextMatch } from '../../../@types/global/types';
+import useMatchVote from '../../hooks/useMatchVote';
 
 const TitleView = styled.View`
   flex-direction: row;
@@ -19,7 +18,7 @@ const TitleView = styled.View`
 
 const SubtitleView = styled.View`
   justify-content: space-between;
-  height: 70px;
+  height: 103px;
   margin-bottom: 35px;
 `;
 
@@ -29,7 +28,7 @@ type NextMatchCardProps = {
 };
 
 export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const matchVote = useMatchVote();
 
   const getMark = () => {
     if (conditions === '경기 확정') {
@@ -42,23 +41,33 @@ export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardPr
   };
 
   const getButton = () => {
-    if (conditions === '경기 확정' || conditions === '투표 완료') {
-      return <CommonModalButton text="자세히 보기  >" color="transparent" blueText />;
-    } else if (conditions === '인원 모집 중') {
+    if (conditions === '경기 확정') {
       return (
         <CommonModalButton
-          onPress={() => navigation.navigate('MatchVote')}
-          text="투표하기 >"
-          color="blue"
+          onPress={() => matchVote()}
+          text="자세히 보기  >"
+          color="transparent"
+          blueText
         />
       );
+    } else if (conditions === '투표 완료') {
+      return (
+        <CommonModalButton
+          onPress={() => matchVote()}
+          text="자세히 보기  >"
+          color="transparent"
+          blueText
+        />
+      );
+    } else if (conditions === '인원 모집 중') {
+      return <CommonModalButton onPress={() => matchVote()} text="투표하기 >" color="blue" />;
     }
   };
 
   return (
     <Card>
       <TitleView>
-        <Bold size={19}>🗓 다음 경기</Bold>
+        <Bold size={20}>🗓 다음 경기</Bold>
         {getMark()}
       </TitleView>
       <SubtitleView>
@@ -68,9 +77,8 @@ export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardPr
         <Bold size={17}>
           시작 {nextMatch?.startTime} → {nextMatch?.endTime} 종료
         </Bold>
-        <Regular size={14} gray>
-          {nextMatch?.address} {nextMatch?.address2}
-        </Regular>
+        <Regular gray>{nextMatch?.address}</Regular>
+        <Regular gray>{nextMatch?.address2}</Regular>
       </SubtitleView>
       {getButton()}
     </Card>

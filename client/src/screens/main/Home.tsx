@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearAll } from '../../store/actions/propsAction';
+import { addMatchId, clearAll } from '../../store/actions/propsAction';
 import CardScrollView from '../../components/view/CardScrollView';
 import AddOnsCard from '../../components/card/AddOnsCard';
 import AddTeamCard from '../../components/card/AddTeamCard';
@@ -27,7 +27,7 @@ export default function Home() {
       dispatch(clearAll());
       if (selectedTeam.id === -1) {
         getFirstTeam().catch((error) => console.log(error));
-      } else {
+      } else if (selectedTeam.id >= 0) {
         getTeamInfo().catch((error) => console.log(error));
       }
     });
@@ -46,6 +46,9 @@ export default function Home() {
       if (data.id >= 0) {
         const { id, name, leader } = data;
         dispatch(getSelectedTeam({ id, name, leader }));
+        if (data.nextMatch?.id) {
+          dispatch(addMatchId(data.nextMatch?.id));
+        }
         setNextMatch(data.nextMatch);
       }
     } catch (error) {
@@ -62,6 +65,9 @@ export default function Home() {
         },
       );
       console.log('change : ', data);
+      if (data.nextMatch?.id) {
+        dispatch(addMatchId(data.nextMatch?.id));
+      }
       setNextMatch(data.nextMatch);
     } catch (error) {
       console.log(error);

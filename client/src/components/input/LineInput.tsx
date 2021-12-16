@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Control, FieldValues, useController } from 'react-hook-form';
 import { Regular } from '../../theme/fonts';
 import { Ionicons } from '@expo/vector-icons';
-import { useWindowDimensions } from 'react-native';
+import { Platform, useWindowDimensions } from 'react-native';
 import ValidationTimer from './ValidationTimer';
 import getTextValues from '../../functions/getTextValues';
 
@@ -36,12 +36,14 @@ const Title = styled(Regular)`
 
 const TextInput = styled.TextInput`
   width: 100%;
-  padding: 5px 45px 5px 10px;
+  padding: 5px 0px 5px 10px;
   border-bottom-color: ${(props: { color: string }) => props.color};
   border-bottom-width: 2px;
   font-size: 18px;
   margin-top: 10px;
   color: ${colors.darkGray};
+  font-family: 'SpoqaHanSansNeo-Regular';
+  ${Platform.OS === 'web' && 'outline-width: 0px;'}
 `;
 
 const Message = styled.Text`
@@ -54,6 +56,7 @@ const ErrorMessage = styled(Message)`
 `;
 
 const ConditionsContainer = styled.View`
+  position: relative;
   flex-direction: row;
 `;
 
@@ -116,7 +119,11 @@ export default function LineInput({
   const isError = errorMessage.length > 0;
 
   const getFocus = () => setFocused(true);
-  const loseFocus = () => setFocused(false);
+  const loseFocus = () => {
+    setTimeout(() => {
+      setFocused(false);
+    });
+  };
 
   const getInputColor = (focused: boolean, errored?: boolean, line?: boolean) => {
     if (errored) {

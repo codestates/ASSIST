@@ -1,3 +1,5 @@
+import { VoteChoice } from '../../@types/global/types';
+
 export type RootStackParamList = {
   Home: undefined;
   AddOns_1: undefined;
@@ -67,6 +69,9 @@ export type RootStackParamList = {
   MatchVote_4: undefined;
   MatchVote_5: undefined;
   MatchVote_6: undefined;
+  VoteSelect: undefined | { vote: VoteChoice };
+  CancelSelect: undefined;
+  ConfirmSelect: undefined;
   MercenaryInvite: undefined;
   MercenaryInvite_1: undefined;
   MercenaryInvite_2: undefined;

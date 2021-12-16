@@ -1,8 +1,8 @@
 import {
   ADD_CREATETEAM,
-  ADD_FINDPASSWORD,
   ADD_GETSTARTED,
   ADD_JOINTEAM,
+  ADD_MATCH_ID,
   ADD_SCHEDULEMANAGE,
   CLEAR_ALL,
   PropsAction,
@@ -21,10 +21,10 @@ export default function propsReducer(state = propsState, action: PropsAction): t
       return Object.assign(state, {
         scheduleManage: { ...state.scheduleManage, ...action.payload },
       });
-    case ADD_FINDPASSWORD:
-      return Object.assign(state, { findPassword: { ...state.findPassword, ...action.payload } });
+    case ADD_MATCH_ID:
+      return Object.assign(state, { matchId: action.payload });
     case CLEAR_ALL:
-      return Object.assign({}, state);
+      return Object.assign({}, state, { matchId: -1 });
     default:
       return state;
   }

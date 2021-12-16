@@ -4,7 +4,7 @@ export const ADD_GETSTARTED = 'ADD_GETSTARTED';
 export const ADD_CREATETEAM = 'ADD_CREATETEAM';
 export const ADD_JOINTEAM = 'ADD_JOINTEAM';
 export const ADD_SCHEDULEMANAGE = 'ADD_SCHEDULEMANAGE';
-export const ADD_FINDPASSWORD = 'ADD_FINDPASSWORD';
+export const ADD_MATCH_ID = 'ADD_MATCH_ID';
 export const CLEAR_ALL = 'CLEAR_ALL';
 
 export type PropsAction =
@@ -12,7 +12,6 @@ export type PropsAction =
   | ReturnType<typeof addCreateTeam>
   | ReturnType<typeof addJoinTeam>
   | ReturnType<typeof addScheduleManage>
-  | ReturnType<typeof addFindPassword>
   | ReturnType<typeof clearAll>;
 
 export const addGetStarted = (props: object) => {
@@ -31,8 +30,8 @@ export const addScheduleManage = (props: object) => {
   return { type: ADD_SCHEDULEMANAGE, payload: props };
 };
 
-export const addFindPassword = (props: object) => {
-  return { type: ADD_FINDPASSWORD, payload: props };
+export const addMatchId = (matchId: number) => {
+  return { type: ADD_MATCH_ID, payload: matchId };
 };
 
 export const clearAll = () => {

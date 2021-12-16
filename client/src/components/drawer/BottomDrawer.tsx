@@ -5,7 +5,6 @@ import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { colors } from '../../theme/colors';
-import { StyleSheet } from 'react-native';
 import DismissKeyboard from '../view/DismissKeyboard';
 
 const Container = styled.KeyboardAvoidingView`
@@ -23,10 +22,6 @@ const AnimatedView = styled(Animated.View)`
   border-top-right-radius: 30px;
   background-color: ${colors.white};
 `;
-
-const BackgroundView = styled.Pressable({
-  ...StyleSheet.absoluteFillObject,
-});
 
 const DismissDrawer = styled.Pressable`
   flex: 1;
@@ -53,7 +48,6 @@ export default function BottomDrawer({ children }: BottomDrawerProps) {
 
   return (
     <Container behavior="padding">
-      {/* <BackgroundView onPress={() => navigation.goBack()} /> */}
       <DismissDrawer onPress={() => navigation.goBack()}>
         <DismissKeyboard>
           <AnimatedView
