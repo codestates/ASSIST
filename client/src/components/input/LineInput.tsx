@@ -5,7 +5,7 @@ import { Control, FieldValues, useController } from 'react-hook-form';
 import { Regular } from '../../theme/fonts';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform, useWindowDimensions } from 'react-native';
-import ValidationTimer from './ValidationTimer';
+import ValidationTimer from '../timer/ValidationTimer';
 import getTextValues from '../../functions/getTextValues';
 
 const getConditionColor = (condition: boolean, focused?: boolean) => {

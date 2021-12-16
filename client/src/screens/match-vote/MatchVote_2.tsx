@@ -13,6 +13,7 @@ import useMatchDetail from '../../hooks/useMatchDetail';
 import LoadingView from '../../components/view/LoadingView';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import DeadLineTimer from '../../components/timer/deadLineTimer';
 
 const MainTitleSpaceContents = styled.View`
   height: 35px;
@@ -43,7 +44,7 @@ const MatchInfoDetailStadium = styled(Regular)`
   color: ${colors.gray};
 `;
 
-const Vote = styled.View`
+const Vote = styled.TouchableOpacity`
   padding: 16px;
   background-color: ${colors.whiteSmoke};
   flex-direction: row;
@@ -84,7 +85,7 @@ export default function MatchVote_2() {
       );
     } else {
       return (
-        <Vote>
+        <Vote onPress={() => navigation.navigate('VoteSelect', { vote: 'attend' })}>
           <Regular gray>😍 참석</Regular>
           <Regular gray>{data?.attend.length}명</Regular>
         </Vote>
@@ -102,7 +103,7 @@ export default function MatchVote_2() {
       );
     } else {
       return (
-        <Vote>
+        <Vote onPress={() => navigation.navigate('VoteSelect', { vote: 'absent' })}>
           <Regular gray>😭 불참</Regular>
           <Regular gray>{data?.absent.length}명</Regular>
         </Vote>
@@ -120,7 +121,7 @@ export default function MatchVote_2() {
       );
     } else {
       return (
-        <Vote>
+        <Vote onPress={() => navigation.navigate('VoteSelect', { vote: 'hold' })}>
           <Regular gray>😱 미정</Regular>
           <Regular gray>{data?.hold.length}명</Regular>
         </Vote>
@@ -174,6 +175,7 @@ export default function MatchVote_2() {
             <Regular gray>{data?.nonRes.length}명</Regular>
           </VoteNonRes>
           <CardSpaceButton />
+          <DeadLineTimer deadLine={String(data?.deadline)} />
           {leader && (
             <CommonModalButton
               onPress={() => console.log('용병 구하기')}
