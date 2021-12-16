@@ -11,6 +11,7 @@ import CloseHeader from '../../components/header/CloseHeader';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import useMatchDetail from '../../hooks/useMatchDetail';
 import LoadingView from '../../components/view/LoadingView';
+import useGoHome from '../../hooks/useGoHome';
 
 const MainTitleSpaceContents = styled.View`
   height: 30px;
@@ -63,13 +64,10 @@ const DottedLine = styled.View`
 export default function MatchVote_5() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { isLoading, data } = useMatchDetail();
+  const goHome = useGoHome();
 
   const handleDetailVote = () => {
     navigation.navigate('MatchVote_6');
-  };
-
-  const handleHomeGoBack = () => {
-    navigation.navigate('Home');
   };
 
   const getAttendView = () => {
@@ -112,7 +110,7 @@ export default function MatchVote_5() {
     <LoadingView />
   ) : (
     <>
-      <CloseHeader goHome color={colors.blue} />
+      <CloseHeader color={colors.blue} />
       <ColoredScrollView isFinished isCard titleColor={colors.blue}>
         <MainTitle marginBottom="15px">
           <MainTitleText size={22}>경기 완료 ✅</MainTitleText>
@@ -148,7 +146,7 @@ export default function MatchVote_5() {
             height={55}
             color="transparent"
             text="돌아가기  >"
-            onPress={handleHomeGoBack}
+            onPress={() => goHome()}
           />
         </ContentContainer>
       </ColoredScrollView>

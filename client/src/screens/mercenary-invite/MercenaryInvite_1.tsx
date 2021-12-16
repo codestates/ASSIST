@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
-
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
@@ -9,6 +8,7 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import CloseHeader from '../../components/header/CloseHeader';
 import CommonModalButton from '../../components/button/CommonModalButton';
+import useGoHome from '../../hooks/useGoHome';
 
 const MainTitleSpaceSubTitle = styled.View`
   width: 100%;
@@ -46,6 +46,7 @@ const CardSubTitle = styled(Regular)`
 
 export default function MercenaryInvite_1() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const goHome = useGoHome();
 
   const onSubmit = (data: string) => {
     console.log(data);
@@ -53,10 +54,6 @@ export default function MercenaryInvite_1() {
 
   const onPress = () => {
     navigation.navigate('MercenaryInvite_2');
-  };
-
-  const handleHomeGoBack = () => {
-    navigation.navigate('Home');
   };
 
   return (
@@ -73,7 +70,7 @@ export default function MercenaryInvite_1() {
           <TitleSpaceButton />
           <CommonModalButton color="blue" text="용병 초대하기" onPress={onPress} />
           <ButtonSpaceButton />
-          <CommonModalButton color="transparent" text="돌아가기 >" onPress={handleHomeGoBack} />
+          <CommonModalButton color="transparent" text="돌아가기 >" onPress={() => goHome()} />
         </ContentContainer>
       </ColoredScrollView>
     </>

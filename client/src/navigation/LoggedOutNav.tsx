@@ -6,13 +6,11 @@ import GetStartedNav from './GetStartedNav';
 import { useDispatch } from 'react-redux';
 import axios, { AxiosResponse } from 'axios';
 import { getAccessToken, getUserInfo, UserInfoType } from '../store/actions/userAction';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from './RootStackParamList';
 import { ASSIST_SERVER_URL } from '@env';
+
 const LobbyStack = createStackNavigator();
 
 export default function LoggedOutNav() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -26,7 +24,6 @@ export default function LoggedOutNav() {
           .then(({ data }: AxiosResponse<UserInfoType>) => {
             dispatch(getUserInfo(data));
             dispatch(getAccessToken(String(token)));
-            // navigation.navigate('Home');
           })
           .catch((error) => console.log(error));
       };

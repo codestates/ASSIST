@@ -61,3 +61,5 @@ export type MatchInfo = {
   hold: VoteUser[];
   nonRes: VoteUser[];
 } | null;
+
+export type UserTeams = { id: number; name: string; leader: boolean }[];

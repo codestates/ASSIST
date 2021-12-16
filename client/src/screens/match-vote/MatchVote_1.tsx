@@ -57,7 +57,7 @@ export default function MatchVote_1() {
     <LoadingView />
   ) : (
     <>
-      <CloseHeader goHome color={colors.gray} />
+      <CloseHeader color={colors.gray} />
       <ColoredScrollView isCard={true} titleColor={colors.gray}>
         <MainTitle marginBottom="15px">
           <MainTitleText size={22}>인원 모집 중 💬</MainTitleText>

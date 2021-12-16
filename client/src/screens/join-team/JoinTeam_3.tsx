@@ -7,6 +7,7 @@ import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import useGoHome from '../../hooks/useGoHome';
 
 const Container = styled.View`
   width: 100%;
@@ -23,9 +24,10 @@ const TeamName = styled(Container)`
 
 export default function JoinTeam_6() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const goHome = useGoHome();
   const { name } = useSelector((state: RootState) => state.propsReducer.joinTeam);
   return (
-    <FinishPageView onPress={() => navigation.navigate('Home')}>
+    <FinishPageView onPress={() => goHome()}>
       <Container>
         <Bold size={20}>팀 가입이 완료</Bold>
         <Light size={20}>되었어요!</Light>
