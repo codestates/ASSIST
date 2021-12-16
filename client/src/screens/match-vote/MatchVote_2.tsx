@@ -13,7 +13,7 @@ import useMatchDetail from '../../hooks/useMatchDetail';
 import LoadingView from '../../components/view/LoadingView';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
-import DeadLineTimer from '../../components/timer/deadLineTimer';
+import DeadLineTimer from '../../components/timer/DeadLineTimer';
 
 const MainTitleSpaceContents = styled.View`
   height: 35px;
