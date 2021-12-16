@@ -13,6 +13,8 @@ import { RootState } from '../../store/reducers';
 import { ASSIST_SERVER_URL } from '@env';
 import axios, { AxiosResponse } from 'axios';
 import { getSelectedTeam, SelectedTeamType } from '../../store/actions/userAction';
+import { UserTeams } from '../../../@types/global/types';
+import useGoHome from '../../hooks/useGoHome';
 
 const TitleContainer = styled.View`
   margin: 15px 0px;
@@ -54,13 +56,12 @@ const TextContainer = styled.View`
   align-items: center;
 `;
 
-type UserTeams = Array<{ id: number; name: string; leader: boolean }>;
-
 export default function TeamSelect() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const [teams, setTeams] = useState<UserTeams>([]);
+  const goHome = useGoHome();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -82,12 +83,12 @@ export default function TeamSelect() {
 
   const goToTeam = (team: SelectedTeamType) => {
     dispatch(getSelectedTeam(team));
-    navigation.navigate('Home');
+    goHome();
   };
 
   const createOrJoin = () => {
     dispatch(getSelectedTeam({ id: -2, name: '', leader: false }));
-    navigation.navigate('Home');
+    goHome();
   };
 
   const ListTeams = (teams: UserTeams) => {

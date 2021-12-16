@@ -132,7 +132,7 @@ export default function MatchVote_2() {
     <LoadingView />
   ) : (
     <>
-      <CloseHeader goHome color={colors.lightGray} />
+      <CloseHeader color={colors.lightGray} />
       <ColoredScrollView isCard={true} titleColor={colors.lightGray}>
         <MainTitle marginBottom="15px">
           <Bold size={22}>투표 완료 👍</Bold>

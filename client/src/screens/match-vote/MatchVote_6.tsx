@@ -1,15 +1,12 @@
 import React from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
-
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
-import { RootStackParamList } from '../../navigation/RootStackParamList';
-import ColoredScrollView from '../../components/view/ColoredScrollView';
 import CloseHeader from '../../components/header/CloseHeader';
 import VotePercentCard from '../../components/card/VotePercentCard';
 import VoteStatusCard from '../../components/card/VoteStatueCard';
+import ColoredScrollView from '../../components/view/ColoredScrollView';
 
 const PercentBarSpace = styled.View`
   width: 1%;
@@ -67,15 +64,13 @@ const VotePercentContents = styled.View`
 const VoteStatusCardContainer = styled.View``;
 
 export default function MatchVote_6() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   const onSubmit = (data: string) => {
     console.log(data);
   };
 
   return (
     <>
-      <CloseHeader color={colors.whiteSmoke} />
+      <CloseHeader goBack color={colors.whiteSmoke} />
       <ColoredScrollView titleColor={colors.whiteSmoke}>
         <MainTitle marginBottom="15px">
           <Bold size={22}>참석 투표 현황</Bold>

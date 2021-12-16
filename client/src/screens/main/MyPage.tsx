@@ -13,6 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearAll } from '../../store/actions/propsAction';
 import { RootState } from '../../store/reducers';
 import useRequestSms from '../../hooks/useRequestSms';
+import { useToast } from 'react-native-toast-notifications';
+import { ASSIST_SERVER_URL } from '@env';
+import axios, { AxiosResponse } from 'axios';
+import { UserTeams } from '../../../@types/global/types';
 
 const PhoneContainer = styled.View`
   flex-direction: row;
@@ -53,7 +57,8 @@ export default function MyPage() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
-  const { phone, name } = useSelector((state: RootState) => state.userReducer);
+  const { phone, name, provider, token } = useSelector((state: RootState) => state.userReducer);
+  const toast = useToast();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -72,6 +77,9 @@ export default function MyPage() {
   };
 
   const goToChangePassword = async () => {
+    if (provider === 'kakao') {
+      return toast.show('카카오 계정은 재설정 할 수 없습니다.', { type: 'danger' });
+    }
     try {
       await requestSms();
       navigation.navigate('ChangePassword', { screenName: 'MyPage_Main', phone });
@@ -80,12 +88,26 @@ export default function MyPage() {
     }
   };
 
-  const checkCanDelete = () => {
-    // 소속된 팀이 있는지 확인
-    // 있으면, 에러 모달
-    // showErrorModal();
-    // 없으면, 탈퇴 진행
-    navigation.navigate('DeleteAccount_1');
+  const checkCanDelete = async () => {
+    try {
+      const { data }: AxiosResponse<UserTeams> = await axios.get(`${ASSIST_SERVER_URL}/user/team`, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      if (data.length === 0) {
+        navigation.navigate('DeleteAccount_1');
+      } else {
+        showErrorModal();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const changePassword = () => {
+    if (provider === 'kakao') {
+      return toast.show('카카오 계정은 변경 할 수 없습니다.', { type: 'danger' });
+    }
+    navigation.navigate('NewPhone');
   };
 
   return (
@@ -112,7 +134,7 @@ export default function MyPage() {
         <>
           <PhoneContainer>
             <Regular>{phone}</Regular>
-            <ChangeButton onPress={() => navigation.navigate('NewPhone')}>
+            <ChangeButton onPress={() => changePassword()}>
               <Regular size={14} white>
                 변경하기
               </Regular>

@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 import { MaterialIcons } from '@expo/vector-icons';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import useGoHome from '../../hooks/useGoHome';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 const getColor = (color?: string) => {
   const { blue, red, darkGray, gray, lightBlue } = colors;
@@ -33,20 +34,20 @@ const CloseButton = styled.TouchableOpacity`
 
 type ColseHeaderProps = {
   color?: string;
-  goHome?: boolean;
+  goBack?: boolean;
 };
 
-export default function CloseHeader({ color, goHome }: ColseHeaderProps) {
+export default function CloseHeader({ color, goBack }: ColseHeaderProps) {
+  const goHome = useGoHome();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   const getNavigation = () => {
-    if (goHome) {
-      navigation.navigate('Home');
-    } else {
+    if (goBack) {
       navigation.goBack();
+    } else {
+      goHome();
     }
   };
-  
+
   return (
     <Container color={color}>
       <CloseContainer>

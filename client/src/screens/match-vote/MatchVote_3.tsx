@@ -112,7 +112,7 @@ export default function MatchVote_3() {
     <LoadingView />
   ) : (
     <>
-      <CloseHeader goHome color={colors.lightBlue} />
+      <CloseHeader color={colors.lightBlue} />
       <ColoredScrollView isCard={true} titleColor={colors.lightBlue}>
         <MainTitle marginBottom="15px">
           <MainTitleText>경기 확정 🎉🎉</MainTitleText>

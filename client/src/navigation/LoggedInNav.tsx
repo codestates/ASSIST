@@ -18,11 +18,6 @@ import BankSelect from '../screens/drawer-select/BankSelect';
 
 const HomeStack = createStackNavigator();
 
-// 로그인 시, role에 따라 온보딩 페이지를 보여줄지 말지 결정
-// 팀이 있으면, 첫번째 팀 페이지가 보이게 함
-// 팀이 없다면, 팀 추가 페이지
-// const getFirstScreen = () => {};
-
 export default function LoggedInNav() {
   return (
     <HomeStack.Navigator>
