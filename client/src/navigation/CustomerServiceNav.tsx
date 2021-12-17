@@ -12,7 +12,7 @@ export default function CustomerServiceNav() {
       <CustomerService.Screen
         name="CustomerService_1"
         options={{
-          header: () => <CloseHeader color={colors.whiteSmoke} />,
+          header: () => <CloseHeader goBack color={colors.whiteSmoke} />,
         }}
         component={CustomerService_1}
       />

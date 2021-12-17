@@ -14,7 +14,7 @@ export default function MyProfileNav() {
       <MyProfile.Screen
         name="MyProfile_1"
         options={{
-          header: () => <CloseHeader color={colors.whiteSmoke} />,
+          header: () => <CloseHeader goBack color={colors.whiteSmoke} />,
         }}
         component={MyProfile_1}
       />

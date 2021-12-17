@@ -27,15 +27,12 @@ const TeamName = styled(Bold)`
 
 export default function SelectContainer() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
   return (
     <Container>
-      {
-        <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
-          <TeamName>팀 선택</TeamName>
-          <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
-        </TeamSelector>
-      }
+      <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
+        <TeamName>팀 선택</TeamName>
+        <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
+      </TeamSelector>
       <TeamSelector>
         <TeamName style={{ color: colors.lightGray }}>용병활동</TeamName>
       </TeamSelector>

@@ -74,7 +74,7 @@ export default function LandingPage_4() {
             <TitleSpaceTitle />
             <Line>
               <Bold>
-                경기 일정을 등록<Light>해 보세요.</Light>
+                경기 일정을 등록 <Light>해 보세요.</Light>
               </Bold>
             </Line>
             <Bold>
