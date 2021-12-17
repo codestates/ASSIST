@@ -4,8 +4,9 @@ export type RootStackParamList = {
   Create: undefined;
   Team: undefined | { teamId: string };
   Guest: undefined;
-  User: undefined;
+  User: undefined | { teamId: string };
   Match: undefined;
+  Landing: undefined;
   AddOns_1: undefined;
   AddOns_2: undefined;
   AddOns_3: undefined | { bank: string };

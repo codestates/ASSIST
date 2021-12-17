@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
 import Home from '../screens/main/Home';
 import LoggedInHeader from '../components/header/LoggedInHeader';
 import TeamSelect from '../screens/drawer-select/TeamSelect';
@@ -17,10 +17,12 @@ import AddOns_3 from '../screens/add-ons/AddOns_3';
 import BankSelect from '../screens/drawer-select/BankSelect';
 import SelectTeamHeader from '../components/header/SelectTeamHeader';
 import CreateOrJoin from '../screens/main/CreateOrJoin';
+import { RootStackParamList } from './RootStackParamList';
 
 const HomeStack = createStackNavigator();
+type UserProps = StackScreenProps<RootStackParamList, 'User'>;
 
-export default function LoggedInNav() {
+export default function LoggedInNav({ route }: UserProps) {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -28,6 +30,7 @@ export default function LoggedInNav() {
         options={{
           header: () => <LoggedInHeader />,
         }}
+        initialParams={{ teamId: route.params?.teamId }}
         component={Home}
       />
       <HomeStack.Screen
