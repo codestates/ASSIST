@@ -24,17 +24,18 @@ export default function Home({ route }: TeamProps) {
   const { token, selectedTeam, id } = useSelector((state: RootState) => state.userReducer);
   const teamId = Number(route.params?.teamId);
   const [nextMatch, setNextMatch] = useState<NextMatch>(null);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(clearAll());
-      if (selectedTeam.id < 0) {
+      if (selectedTeam.id === -1) {
         getFirstTeam().catch((error) => console.log(error));
-      } else {
+      } else if (selectedTeam.id > 0) {
         getTeamInfo(teamId).catch((error) => console.log(error));
       }
     });
     return unsubscribe;
-  }, [navigation, dispatch]);
+  }, [navigation]);
 
   const getFirstTeam = async () => {
     const { data }: AxiosResponse<FirstTeam> = await axios.get(
@@ -43,11 +44,12 @@ export default function Home({ route }: TeamProps) {
         headers: { authorization: `Bearer ${token}` },
       },
     );
-    if (!data) {
-      dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
+    if (data.id === -1) {
       return navigation.replace('CreateOrJoin');
     } else {
-      return navigation.replace('Team', { teamId: String(data.id) });
+      dispatch(getSelectedTeam({ id: data.id, name: data.name, leader: data.leader }));
+      setNextMatch(data.nextMatch);
+      return navigation.setParams({ teamId: String(data.id) });
     }
   };
 
@@ -64,9 +66,6 @@ export default function Home({ route }: TeamProps) {
   };
 
   const getMatchCard = (nextMatch: NextMatch) => {
-    if (selectedTeam.id < 0) {
-      return navigation.replace('CreateOrJoin');
-    }
     if (!nextMatch) {
       return <NoMatchCard isLeader={selectedTeam.leader} />;
     }
