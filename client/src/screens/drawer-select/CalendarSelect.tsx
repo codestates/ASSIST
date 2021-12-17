@@ -50,6 +50,7 @@ export default function CalendarSelect({ route }: CalendarSelectProps) {
   return (
     <BottomDrawer>
       <Calendar
+        style={{ height: '100%' }}
         markingType={'dot'}
         onDayPress={(day) => {
           navigation.navigate({

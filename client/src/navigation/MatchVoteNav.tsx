@@ -8,7 +8,7 @@ import VoteSelect from '../screens/drawer-select/VoteSelect';
 import MatchVote_4 from '../screens/match-vote/MatchVote_4';
 import CancelSelect from '../screens/drawer-select/CancelSelect';
 import ConfirmSelect from '../screens/drawer-select/ConfirmSelect';
-import MatchVote_Main from '../screens/match-vote/MatchVote_Main';
+import MatchVote_Main from '../screens/match-vote/MatchVote_main';
 import { RootStackParamList } from './RootStackParamList';
 
 const MatchVote = createStackNavigator();

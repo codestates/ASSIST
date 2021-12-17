@@ -5,6 +5,8 @@ export const ADD_CREATETEAM = 'ADD_CREATETEAM';
 export const ADD_JOINTEAM = 'ADD_JOINTEAM';
 export const ADD_SCHEDULEMANAGE = 'ADD_SCHEDULEMANAGE';
 export const ADD_MATCH_ID = 'ADD_MATCH_ID';
+export const ADD_TEAMMEMBERS = 'ADD_TEAMMEMBERS';
+export const MOD_LEADERID = 'MOD_LEADERID';
 export const CLEAR_ALL = 'CLEAR_ALL';
 
 export type PropsAction =
@@ -12,6 +14,7 @@ export type PropsAction =
   | ReturnType<typeof addCreateTeam>
   | ReturnType<typeof addJoinTeam>
   | ReturnType<typeof addScheduleManage>
+  | ReturnType<typeof addTeamMembers>
   | ReturnType<typeof clearAll>;
 
 export const addGetStarted = (props: object) => {
@@ -32,6 +35,14 @@ export const addScheduleManage = (props: object) => {
 
 export const addMatchId = (matchId: number) => {
   return { type: ADD_MATCH_ID, payload: matchId };
+};
+
+export const addTeamMembers = (props: object) => {
+  return { type: ADD_TEAMMEMBERS, payload: props };
+};
+
+export const modifyLeaderId = (props: object) => {
+  return { type: MOD_LEADERID, payload: props };
 };
 
 export const clearAll = () => {

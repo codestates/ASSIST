@@ -1709,6 +1709,11 @@
     "@types/react" "*"
     "csstype" "^3.0.2"
 
+"@types/xdate@^0.8.32":
+  "integrity" "sha512-giM6hmU4ZCCAQj8BVSMNMA8hQwvKuWewLIe7r+G5NtGvehqW9jXdF/V6CzzkQYgHsk+67/udxql3RdfR8zqSNA=="
+  "resolved" "https://registry.npmjs.org/@types/xdate/-/xdate-0.8.32.tgz"
+  "version" "0.8.32"
+
 "@types/yargs-parser@*":
   "integrity" "sha512-7tFImggNeNBVMsn0vLrpn1H1uPrUBdnARPTpZoitY37ZrdJREzf7I16tMrlK3hen349gr1NYh8CmZQa7CTG6Aw=="
   "resolved" "https://registry.npmjs.org/@types/yargs-parser/-/yargs-parser-20.2.1.tgz"
@@ -5960,10 +5965,10 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   "version" "17.0.2"
 
-"react-native-calendars@^1.1270.0":
-  "integrity" "sha512-SVjQJpequuJoTSBUcQ1MKP98kZ0sSzy8Qywx1J5OM0mWXWxO+cgANIkb4maQkSLF2gBxUmVQExkGL7VduavmUA=="
-  "resolved" "https://registry.npmjs.org/react-native-calendars/-/react-native-calendars-1.1270.0.tgz"
-  "version" "1.1270.0"
+"react-native-calendars@^1.1274.0":
+  "integrity" "sha512-Dt+0Juscm3+bllriT4xYSYAb0bG8+z4/w7yQoydyqEotjB0UA+XZx4WBWVkJ10jm7H8PO1UmLlboJEaIq5s/sw=="
+  "resolved" "https://registry.npmjs.org/react-native-calendars/-/react-native-calendars-1.1274.0.tgz"
+  "version" "1.1274.0"
   dependencies:
     "hoist-non-react-statics" "^3.3.1"
     "immutable" "^4.0.0-rc.12"
