@@ -68,6 +68,7 @@ export class NaverSensService {
     axios
       .post(url, body, options)
       .then(async (res) => {
+        console.log(`${res.data.messages.length} 개의 메세지`);
         console.log(`알람톡 보내기 성공`);
       })
       .catch((err) => {

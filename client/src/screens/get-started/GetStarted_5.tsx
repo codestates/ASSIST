@@ -29,7 +29,7 @@ type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_5'>;
 
 export default function GetStarted_5({ route }: GetStartedProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  console.log(ASSIST_SERVER_URL);
   const {
     control,
     getValues,

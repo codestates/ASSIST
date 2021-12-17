@@ -29,10 +29,7 @@ export class MatchController {
     return this.matchService.createTeam(createMatchDto, req.user);
   }
   @Get('/:id')
-  getMatchDetail(
-    @Param('id', ParseIntPipe) matchId: number,
-    @Req() req: Request,
-  ) {
+  getMatchDetail(@Param('id', ParseIntPipe) matchId: number, @Req() req: Request) {
     return this.matchService.getMatchDetail(matchId, req.user);
   }
 

@@ -42,18 +42,38 @@ enum voteCondition {
   absent = '불참',
   hold = '미정',
 }
-export class M008dto extends M001dto {
+export class M008dto {
+  team: string;
+  startTime: string;
+  endTime: string;
+  address: string;
+  address2: string;
+  date: string;
   name: string;
+  leader: string;
   before: voteCondition;
   after: voteCondition;
 }
 
-export class M009dto extends M001dto {
+export class M009dto {
+  team: string;
+  startTime: string;
+  endTime: string;
+  address: string;
+  address2: string;
+  date: string;
   name: string;
   reason: string;
+  to: string;
 }
 
-export class M010dto extends M001dto {
+export class M010dto {
+  team: string;
+  startTime: string;
+  endTime: string;
+  address: string;
+  address2: string;
+  date: string;
   need: number;
   money: number;
 }
@@ -70,7 +90,13 @@ export class T002dto {
   name?: string;
 }
 
-export class T003dto extends T002dto {
+export class T003dto {
+  team: string;
+  leader: string;
+}
+
+export class T004dto {
+  team: string;
   leader: string;
 }
 

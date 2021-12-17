@@ -8,7 +8,7 @@ const Container = styled.View`
   height: 20px;
   justify-content: center;
   align-items: center;
-  background-color: #006dad20;
+  background-color: #cce2ef;
 `;
 
 export default function ConfirmedMark() {

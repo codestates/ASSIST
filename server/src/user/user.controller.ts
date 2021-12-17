@@ -24,10 +24,13 @@ import { User } from './user.entity';
 import { UpdateDto } from './dto/update-dto';
 import { PatchUser } from './interface/res.patchUser';
 import { FindpwDto } from './dto/findpw-dto';
+import { KakaoAlimService } from 'src/kakaoalim/kakaoalim.service';
+import { KaKaoDto } from './dto/kakao-dto';
+import axios from 'axios';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private kakaoAlimService: KakaoAlimService) {}
 
   @Post('/signup')
   signUp(@Body() createUserDto: CreateUserDto): Promise<object> {
@@ -96,7 +99,13 @@ export class UserController {
   @UseGuards(AuthGuard())
   async deleteUser(@Req() req: Request) {
     const userInfo = req.user;
-    return this.userService.deleteUser(userInfo);
+    await this.userService.deleteUser(userInfo);
+    if (userInfo.provider === 'kakao') {
+      const kakaoId = userInfo.password;
+      await this.kakaoAlimService.sendU001(userInfo);
+      await this.userService.deleteKakaoLink(kakaoId);
+    }
+    return { message: 'ok' };
   }
 
   @Delete('/team/:id')
@@ -109,20 +118,34 @@ export class UserController {
   @Get('/kakao')
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuth(@Req() req) {
-    console.log(req);
+    console.log('들어와진다');
     return req;
   }
 
   @Get('/kakao/callback')
-  @Redirect('http://localhost:3000', 302)
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuthCallback(@Req() req, @Res() res) {
+    console.log('콜백들어온다');
     const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
-    return { url: `${process.env.HOMEPAGE_URL}/accessToken=${accessToken}` };
+    res.redirect(`${process.env.HOMEPAGE_URL}/?accessToken=${accessToken}`);
   }
 
-  @Get('test')
-  async test() {
-    return this.userService.sendKakaoAlarm('01097784742');
+  @Get('/kakao/callback2')
+  @UseGuards(AuthGuard('kakao'))
+  async kakaoAuthCallback2(@Req() req, @Res() res) {
+    console.log('콜백들어온다');
+    const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
+
+    console.log(`${process.env.HOMEPAGE_URL_LOCAL}/`);
+    res.redirect(`${process.env.HOMEPAGE_URL_LOCAL}/?accessToken=${accessToken}`);
+  }
+
+  @Post('kakao/mobile')
+  async kakaoAuthMobile(@Body('accessToken') kakaoToken: KaKaoDto) {
+    const user = axios.get('https://kapi.kakao.com/v2/user/me', {
+      headers: { Authorization: `Bearer ${kakaoToken}` },
+      withCredentials: true,
+    });
+    return await this.userService.kakaoAuthCallback(user);
   }
 }

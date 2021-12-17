@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoggedOutHeader from '../components/header/LoggedOutHeader';
 import Lobby from '../screens/main/Lobby';
 import GetStartedNav from './GetStartedNav';
+import { useDispatch } from 'react-redux';
+import axios, { AxiosResponse } from 'axios';
+import { getAccessToken, getUserInfo, UserInfoType } from '../store/actions/userAction';
+import { ASSIST_SERVER_URL } from '@env';
 
 const LobbyStack = createStackNavigator();
 
 export default function LoggedOutNav() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const token = url.searchParams.get('accessToken');
+    if (token) {
+      const requestUserInfo = () => {
+        axios
+          .get(`${ASSIST_SERVER_URL}/user`, {
+            headers: { authorization: `Bearer ${String(token)}` },
+          })
+          .then(({ data }: AxiosResponse<UserInfoType>) => {
+            dispatch(getUserInfo(data));
+            dispatch(getAccessToken(String(token)));
+          })
+          .catch((error) => console.log(error));
+      };
+      requestUserInfo();
+    }
+  }, []);
+
   return (
     <LobbyStack.Navigator>
       <LobbyStack.Screen

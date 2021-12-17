@@ -5,7 +5,7 @@ import LoggedInHeader from '../components/header/LoggedInHeader';
 import TeamSelect from '../screens/drawer-select/TeamSelect';
 
 import CreateTeamNav from './CreateTeamNav';
-import LendingPageNav from './LendingPageNav';
+import LandingPageNav from './LandingPageNav';
 import JoinTeamNav from './JoinTeamNav';
 import ScheduleManageNav from './ScheduleManageNav';
 import MyPageNav from './MyPageNav';
@@ -14,24 +14,29 @@ import MercenaryInvite from './MercenaryInviteNav';
 import AddOns_1 from '../screens/add-ons/AddOns_1';
 import AddOns_2 from '../screens/add-ons/AddOns_2';
 import AddOns_3 from '../screens/add-ons/AddOns_3';
+import AddOns_4 from '../screens/add-ons/AddOns_4';
 import BankSelect from '../screens/drawer-select/BankSelect';
+import SelectTeamHeader from '../components/header/SelectTeamHeader';
+import CreateOrJoin from '../screens/main/CreateOrJoin';
 
 const HomeStack = createStackNavigator();
-
-// 로그인 시, role에 따라 온보딩 페이지를 보여줄지 말지 결정
-// 팀이 있으면, 첫번째 팀 페이지가 보이게 함
-// 팀이 없다면, 팀 추가 페이지
-// const getFirstScreen = () => {};
 
 export default function LoggedInNav() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Home"
+        name="Team"
         options={{
           header: () => <LoggedInHeader />,
         }}
         component={Home}
+      />
+      <HomeStack.Screen
+        name="CreateOrJoin"
+        options={{
+          header: () => <SelectTeamHeader />,
+        }}
+        component={CreateOrJoin}
       />
       <HomeStack.Screen
         name="MyPage"
@@ -51,8 +56,8 @@ export default function LoggedInNav() {
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="LendingPage"
-        component={LendingPageNav}
+        name="LandingPage"
+        component={LandingPageNav}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen name="JoinTeam" component={JoinTeamNav} options={{ headerShown: false }} />
@@ -74,6 +79,8 @@ export default function LoggedInNav() {
       <HomeStack.Screen name="AddOns_1" component={AddOns_1} options={{ headerShown: false }} />
       <HomeStack.Screen name="AddOns_2" component={AddOns_2} options={{ headerShown: false }} />
       <HomeStack.Screen name="AddOns_3" component={AddOns_3} options={{ headerShown: false }} />
+      <HomeStack.Screen name="AddOns_4" component={AddOns_4} options={{ headerShown: false }} />
+
       <HomeStack.Screen
         name="BankSelect"
         component={BankSelect}

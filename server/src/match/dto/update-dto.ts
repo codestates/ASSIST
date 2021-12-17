@@ -1,10 +1,4 @@
-import {
-  IsString,
-  IsNumber,
-  IsNotEmpty,
-  IsOptional,
-  IsEnum,
-} from 'class-validator';
+import { IsOptional, IsEnum } from 'class-validator';
 
 export enum condition {
   cancel = '경기 취소',
@@ -14,4 +8,6 @@ export enum condition {
 export class UpdateMatchDto {
   @IsEnum(condition)
   condition: condition;
+  @IsOptional()
+  reason: string;
 }

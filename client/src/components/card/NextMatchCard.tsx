@@ -6,7 +6,9 @@ import ConfirmedMark from '../mark/ConfirmedMark';
 import VotedMark from '../mark/VotedMark';
 import GatheringMark from '../mark/GatheringMark';
 import Card from './Card';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NextMatch } from '../../../@types/global/types';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 
 const TitleView = styled.View`
@@ -18,17 +20,16 @@ const TitleView = styled.View`
 
 const SubtitleView = styled.View`
   justify-content: space-between;
-  height: 70px;
+  height: 103px;
   margin-bottom: 35px;
 `;
 
 type NextMatchCardProps = {
   conditions: '경기 확정' | '인원 모집 중' | '투표 완료';
+  nextMatch: NextMatch;
 };
 
-export default function NextMatchCard({ conditions }: NextMatchCardProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardProps) {
   const getMark = () => {
     if (conditions === '경기 확정') {
       return <ConfirmedMark />;
@@ -39,32 +40,47 @@ export default function NextMatchCard({ conditions }: NextMatchCardProps) {
     }
   };
 
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const handleMatchVote = () => {
+    navigation.navigate('MatchVote', { matchId: nextMatch?.id });
+  };
+
   const getButton = () => {
-    if (conditions === '경기 확정' || conditions === '투표 완료') {
-      return <CommonModalButton text="자세히 보기  >" color="transparent" blueText />;
-    } else if (conditions === '인원 모집 중') {
-      return (
-        <CommonModalButton
-          onPress={() => navigation.navigate('MatchVote')}
-          text="투표하기 >"
-          color="blue"
-        />
-      );
+    let text = '자세히 보기  >';
+    let color: 'transparent' | 'blue' = 'transparent';
+    let blueText = true;
+
+    if (conditions === '인원 모집 중') {
+      text = '투표하기 >';
+      color = 'blue';
+      blueText = false;
     }
+    return (
+      <CommonModalButton
+        onPress={() => handleMatchVote()}
+        text={text}
+        color={color}
+        blueText={blueText}
+      />
+    );
   };
 
   return (
     <Card>
       <TitleView>
-        <Bold size={19}>🗓 다음 경기</Bold>
+        <Bold size={20}>🗓 다음 경기</Bold>
         {getMark()}
       </TitleView>
       <SubtitleView>
-        <Regular size={17}>2021-08-18 (수)</Regular>
-        <Bold size={17}>시작 18:00 → 20:00 종료</Bold>
-        <Regular size={14} gray>
-          서울특별시 용산구 용산대로 12번길 3, 4층
+        <Regular size={17}>
+          {nextMatch?.date} ({nextMatch?.day})
         </Regular>
+        <Bold size={17}>
+          시작 {nextMatch?.startTime} → {nextMatch?.endTime} 종료
+        </Bold>
+        <Regular gray>{nextMatch?.address}</Regular>
+        <Regular gray>{nextMatch?.address2}</Regular>
       </SubtitleView>
       {getButton()}
     </Card>

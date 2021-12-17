@@ -1,7 +1,12 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
+import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { RootState } from '../../store/reducers';
 import { colors } from '../../theme/colors';
+import SkipButton from '../button/SkipButton';
 
 const Container = styled.ScrollView`
   background-color: ${(props: { isCard?: boolean }) =>
@@ -9,7 +14,7 @@ const Container = styled.ScrollView`
 `;
 
 const TitleContainer = styled.View`
-  padding: 70px 20px 0px 20px;
+  padding: 20px 20px 0px 20px;
   background-color: ${(props: { titleColor: string }) => props.titleColor};
 `;
 
@@ -37,6 +42,10 @@ const Space = styled.View`
   z-index: 1;
 `;
 
+const BottomSpace = styled.View`
+  height: 15px;
+`;
+
 type CardContainerProps = {
   width: number;
   fake?: boolean;
@@ -46,7 +55,7 @@ const CardContainer = styled.View`
   z-index: 2;
   padding: ${(props: CardContainerProps) => (props.fake ? '0px' : '0px 35px 35px 35px')};
   width: ${(props: CardContainerProps) => props.width - 40}px;
-  height: ${(props: CardContainerProps) => (props.fake ? '30px' : 'auto')};
+  height: ${(props: CardContainerProps) => (props.fake ? '40px' : 'auto')};
   background-color: ${colors.white};
   border-top-left-radius: ${(props: CardContainerProps) => (props.fake ? '15px' : '0px')};
   border-top-right-radius: ${(props: CardContainerProps) => (props.fake ? '15px' : '0px')};
@@ -61,16 +70,23 @@ type ColoredScrollViewProps = {
   titleColor: string;
   isCard?: boolean;
   isMyPage?: boolean;
+  isFinished?: boolean;
 };
 
 export default function ColoredScrollView({
   children,
   titleColor,
   isCard,
+  isFinished,
 }: ColoredScrollViewProps) {
   const { width } = useWindowDimensions();
+  const {
+    selectedTeam: { leader },
+  } = useSelector((state: RootState) => state.userReducer);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
-    <Container isCard={isCard} bounces={false}>
+    <Container isCard={isCard} bounces={false} showsVerticalScrollIndicator={false}>
       <TitleContainer titleColor={titleColor}>{children[0]}</TitleContainer>
       {!isCard ? (
         <ContentContainer>{children[1]}</ContentContainer>
@@ -86,6 +102,17 @@ export default function ColoredScrollView({
             <CardContainer width={width}>{children[1]}</CardContainer>
             <Space />
           </CardView>
+        </>
+      )}
+      <BottomSpace />
+      {isCard && leader && !isFinished && (
+        <>
+          <SkipButton
+            color={colors.whiteSmoke}
+            text="경기 취소 하기  >"
+            onPress={() => navigation.navigate('CancelSelect')}
+          />
+          <BottomSpace />
         </>
       )}
     </Container>

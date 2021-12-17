@@ -39,7 +39,6 @@ export default function ValidationTimer({
 }: ValidationTimerProps) {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 120);
-
   const { seconds, minutes, start, restart } = useTimer({
     expiryTimestamp,
     autoStart: false,

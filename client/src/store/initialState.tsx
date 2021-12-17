@@ -36,7 +36,14 @@ export const propsState = {
     address: '',
     address2: '',
     deadline: '',
+  },
   findPassword: {
     phone: '',
+  },
+  matchId: -1,
+  teamMembers: [{ name: '', phone: '' }],
+
+  newLeader: {
+    nowLeaderId: 0,
   },
 };

@@ -66,6 +66,9 @@ export class UserService {
   }
   async sendAuthNum(phone: string) {
     const number = String(Math.floor(Math.random() * 1000000));
+    if (number.length !== 6) {
+      return this.sendAuthNum(phone);
+    }
     await this.sendSMS(phone, number);
 
     return await this.smsRepository.createSms({ phone, number });
@@ -240,11 +243,6 @@ export class UserService {
   }
 
   async deleteUser(userInfo: User): Promise<Object> {
-    if (userInfo.provider === 'kakao') {
-      const kakaoId = userInfo.password;
-      await this.deleteKakaoLink(kakaoId);
-    }
-
     const { id } = userInfo;
     await this.userRepository.delete({ id });
     return { message: 'ok' };
@@ -299,7 +297,7 @@ export class UserService {
         const name = user.profile._json.kakao_account.profile.nickname;
         const phone = '0' + user.profile._json.kakao_account.phone_number.split(' ')[1];
         const password = user.profile._json.id;
-        const gender = '남';
+        const gender = '남성';
         return await this.signUp({
           email,
           name,
@@ -331,32 +329,5 @@ export class UserService {
       },
     };
     await axios.post(url, data, options);
-  }
-
-  async sendKakaoAlarm(data): Promise<void> {
-    const url = `https://sens.apigw.ntruss.com/alimtalk/v2/services/${process.env.KAKAOBIZ_SERVICEID}/messages`;
-    const body = {
-      templateCode: 'T001',
-      plusFriendId: '@assist',
-      messages: data,
-    };
-
-    const options = {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'x-ncp-iam-access-key': process.env.NCP_ACCESS,
-        'x-ncp-apigw-timestamp': Date.now().toString(),
-        'x-ncp-apigw-signature-v2': this.makeSignature('biz'),
-      },
-    };
-    return axios
-      .post(url, body, options)
-      .then(async (res) => {
-        console.log(`알람톡 보내기 성공`);
-      })
-      .catch((err) => {
-        console.log(err.response);
-        throw new InternalServerErrorException('알람톡 보내기 실패');
-      });
   }
 }

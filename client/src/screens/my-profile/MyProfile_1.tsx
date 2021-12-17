@@ -50,6 +50,8 @@ export default function MyProfile_1({ route }: MyProfileProps) {
     resolver: yupResolver(schema),
   });
 
+  console.log(control);
+
   const editProfile = useEditProfile({
     name: String(getValues('name')),
     gender: route.params?.gender,
