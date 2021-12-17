@@ -49,7 +49,7 @@ export default function Home({ route }: TeamProps) {
     } else {
       dispatch(getSelectedTeam({ id: data.id, name: data.name, leader: data.leader }));
       setNextMatch(data.nextMatch);
-      return navigation.setParams({ teamId: String(data.id) });
+      return navigation.replace('Team', { teamId: String(data.id) });
     }
   };
 

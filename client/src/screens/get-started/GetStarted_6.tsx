@@ -7,13 +7,13 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { ASSIST_SERVER_URL } from '@env';
 import { useDispatch } from 'react-redux';
 import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/userAction';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_6'>;
 
 export default function GetStarted_6({ route }: GetStartedProps) {
   const dispatch = useDispatch();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const requestUserInfo = () => {
     axios
       .get(`${ASSIST_SERVER_URL}/user`, {
