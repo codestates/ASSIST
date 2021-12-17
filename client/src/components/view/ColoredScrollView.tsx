@@ -86,7 +86,7 @@ export default function ColoredScrollView({
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <Container isCard={isCard} bounces={false}>
+    <Container isCard={isCard} bounces={false} showsVerticalScrollIndicator={false}>
       <TitleContainer titleColor={titleColor}>{children[0]}</TitleContainer>
       {!isCard ? (
         <ContentContainer>{children[1]}</ContentContainer>
