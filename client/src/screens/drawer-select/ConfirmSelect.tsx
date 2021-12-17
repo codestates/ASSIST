@@ -1,4 +1,5 @@
 import { ASSIST_SERVER_URL } from '@env';
+import { StackScreenProps } from '@react-navigation/stack';
 import axios from 'axios';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -6,6 +7,7 @@ import styled from 'styled-components/native';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import BottomDrawer from '../../components/drawer/BottomDrawer';
 import useMatchVote from '../../hooks/useMatchVote';
+import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { RootState } from '../../store/reducers';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
@@ -28,15 +30,16 @@ const ButtonSpace = styled.View`
   height: 20px;
 `;
 
-export default function ConfirmSelect() {
-  const { matchId } = useSelector((state: RootState) => state.propsReducer);
+type ConfirmSelectProps = StackScreenProps<RootStackParamList, 'ConfirmSelect'>;
+
+export default function ConfirmSelect({ route }: ConfirmSelectProps) {
   const { token } = useSelector((state: RootState) => state.userReducer);
-  const matchVote = useMatchVote();
+  const matchVote = useMatchVote({ matchId: route.params?.matchId });
 
   const confirmMatch = async () => {
     try {
       await axios.patch(
-        `${ASSIST_SERVER_URL}/match/${matchId}`,
+        `${ASSIST_SERVER_URL}/match/${route.params?.matchId || -1}`,
         { condition: '경기 확정' },
         { headers: { authorization: `Bearer ${token}` } },
       );

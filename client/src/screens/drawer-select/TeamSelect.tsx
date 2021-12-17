@@ -5,16 +5,16 @@ import BottomDrawer from '../../components/drawer/BottomDrawer';
 import { colors } from '../../theme/colors';
 import { Bold, Light, Regular } from '../../theme/fonts';
 import { MaterialIcons } from '@expo/vector-icons';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import CaptainMark from '../../components/mark/CaptainMark';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { ASSIST_SERVER_URL } from '@env';
 import axios, { AxiosResponse } from 'axios';
-import { getSelectedTeam, SelectedTeamType } from '../../store/actions/userAction';
-import { UserTeams } from '../../../@types/global/types';
-import useGoHome from '../../hooks/useGoHome';
+import { getSelectedTeam } from '../../store/actions/userAction';
+import { UserTeam, UserTeams } from '../../../@types/global/types';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const TitleContainer = styled.View`
   margin: 15px 0px;
@@ -57,12 +57,10 @@ const TextContainer = styled.View`
 `;
 
 export default function TeamSelect() {
-  // const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const [teams, setTeams] = useState<UserTeams>([]);
-  const goHome = useGoHome();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -82,13 +80,14 @@ export default function TeamSelect() {
     }
   };
 
-  const goToTeam = (teamId: any) => {
-    navigation.replace('Team', { teamId });
+  const goToTeam = (team: UserTeam) => {
+    dispatch(getSelectedTeam(team));
+    navigation.replace('Team', { teamId: String(team.id) });
   };
 
   const createOrJoin = () => {
-    // dispatch(getSelectedTeam({ id: -2, name: '', leader: false }));
-    navigation.replace('CreateTeam', { screen: 'CreateTeam_2' });
+    dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
+    navigation.replace('CreateOrJoin');
   };
 
   const ListTeams = (teams: UserTeams) => {
@@ -100,7 +99,7 @@ export default function TeamSelect() {
       );
     } else {
       return teams.map((team) => (
-        <TeamContainer key={team.id} onPress={() => goToTeam(team.id)}>
+        <TeamContainer key={team.id} onPress={() => goToTeam(team)}>
           <Team>{team.name}</Team>
           <IconContainer>
             {team.leader && <CaptainMark />}
@@ -123,6 +122,13 @@ export default function TeamSelect() {
       {ListTeams(teams)}
       <TeamContainer onPress={() => createOrJoin()}>
         <NewTeam>+ 새로운 소속팀</NewTeam>
+        <IconContainer>
+          {selectedTeam.id === -1 && (
+            <Check>
+              <MaterialIcons name="check" size={20} color={colors.blue} />
+            </Check>
+          )}
+        </IconContainer>
       </TeamContainer>
     </BottomDrawer>
   );

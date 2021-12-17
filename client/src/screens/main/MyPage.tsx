@@ -66,6 +66,7 @@ export default function MyPage() {
     });
     return unsubscribe;
   }, [navigation, dispatch]);
+
   const requestSms = useRequestSms({ phone });
 
   const showErrorModal = () => {

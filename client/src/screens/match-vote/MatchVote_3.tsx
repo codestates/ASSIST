@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
@@ -8,10 +8,8 @@ import { Bold, Regular } from '../../theme/fonts';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import CloseHeader from '../../components/header/CloseHeader';
-import useMatchDetail from '../../hooks/useMatchDetail';
-import LoadingView from '../../components/view/LoadingView';
 import CommonModalButton from '../../components/button/CommonModalButton';
-import { any } from 'sequelize/types/lib/operators';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const MainTitleSpaceContents = styled.View`
   height: 35px;
@@ -65,76 +63,52 @@ const Space = styled.View`
   height: 5px;
 `;
 
-export default function MatchVote_3({ route }: any) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [isLoadiog, setIsLoading] = useState(true);
-  const [data, setData] = useState({
-    vote: '',
-    attend: [],
-    absent: [],
-    date: '',
-    startTime: '',
-    endTime: '',
-    address: '',
-    address2: '',
-    day: '',
-  });
-  // const { isLoading, data } = useMatchDetail(route.params?.matchId);
+type MatchVoteProps = StackScreenProps<RootStackParamList, 'MatchVote_3'>;
 
-  useEffect(() => {
-    if (route.params) {
-      console.log('여기');
-      setData(route.params.data);
-    }
-    setIsLoading(false);
-    return () => {
-      setIsLoading(true);
-    };
-  }, []);
+export default function MatchVote_3({ route }: MatchVoteProps) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleDetailVote = () => {
     navigation.navigate('MatchVote_6');
   };
 
   const getAttendView = () => {
-    if (data?.vote === 'attend') {
+    if (route.params?.data?.vote === 'attend') {
       return (
         <VoteSelected>
           <Bold white>😍 참석</Bold>
-          <Bold white>{data.attend.length}명</Bold>
+          <Bold white>{route.params?.data?.attend.length}명</Bold>
         </VoteSelected>
       );
     } else {
       return (
         <Vote>
           <Regular gray>😍 참석</Regular>
-          <Regular gray>{data?.attend.length}명</Regular>
+          <Regular gray>{route.params?.data?.attend.length}명</Regular>
         </Vote>
       );
     }
   };
 
   const getAbsentView = () => {
-    if (data?.vote === 'absent') {
+    if (route.params?.data?.vote === 'absent') {
       return (
         <VoteSelected>
           <Bold white>😭 불참</Bold>
-          <Bold white>{data.absent.length}명</Bold>
+          <Bold white>{route.params?.data?.absent.length}명</Bold>
         </VoteSelected>
       );
     } else {
       return (
         <Vote>
           <Regular gray>😭 불참</Regular>
-          <Regular gray>{data?.absent.length}명</Regular>
+          <Regular gray>{route.params?.data?.absent.length}명</Regular>
         </Vote>
       );
     }
   };
 
-  return isLoadiog ? (
-    <LoadingView />
-  ) : (
+  return (
     <>
       <CloseHeader color={colors.lightBlue} />
       <ColoredScrollView isCard={true} titleColor={colors.lightBlue}>
@@ -145,16 +119,17 @@ export default function MatchVote_3({ route }: any) {
           <Bold size={20}>경기 정보</Bold>
           <MainTitleSpaceContents />
           <Regular size={17}>
-            {data?.date}({data?.day})
+            {route.params?.data?.date}({route.params?.data?.day})
           </Regular>
           <TextSpaceText />
           <Bold size={17}>
-            시작 {data?.startTime} <AntDesign name="arrowright" size={17} /> {data?.endTime} 종료
+            시작 {route.params?.data?.startTime} <AntDesign name="arrowright" size={17} />{' '}
+            {route.params?.data?.endTime} 종료
           </Bold>
           <TextSpaceText />
-          <MatchInfoDetailStadium>{data?.address}</MatchInfoDetailStadium>
+          <MatchInfoDetailStadium>{route.params?.data?.address}</MatchInfoDetailStadium>
           <TextSpaceText />
-          <MatchInfoDetailStadium>{data?.address2}</MatchInfoDetailStadium>
+          <MatchInfoDetailStadium>{route.params?.data?.address2}</MatchInfoDetailStadium>
           <CardSpaceButton />
           <CommonModalButton
             onPress={() => console.log('용병 구하기')}

@@ -1,55 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React, { useEffect, useState } from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
-import styled from 'styled-components/native';
-import MainTitle from '../../components/text/MainTitle';
-import { colors } from '../../theme/colors';
-import { Bold, Regular } from '../../theme/fonts';
+import React, { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import ColoredScrollView from '../../components/view/ColoredScrollView';
-import CloseHeader from '../../components/header/CloseHeader';
-import useNextMatch from '../../hooks/useNextMatch';
 import LoadingView from '../../components/view/LoadingView';
 import useMatchDetail from '../../hooks/useMatchDetail';
-import axios from 'axios';
-import { ASSIST_SERVER_URL } from '@env';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducers';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import { MatchInfo } from '../../../@types/global/types';
 
-export default function MatchVote_main({ route }: any) {
-  const navigation = useNavigation<any>();
-  const [isloading, setLoading] = useState(true);
-  const { token } = useSelector((state: RootState) => state.userReducer);
+type MatchVoteProps = StackScreenProps<RootStackParamList, 'MatchVote_Main'>;
 
-  const [data, setData] = useState();
+export default function MatchVote_Main({ route }: MatchVoteProps) {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const { isLoading, data } = useMatchDetail({ matchId: route.params?.matchId });
 
   useEffect(() => {
-    let test = async () => {
-      if (route.params) {
-        console.log('실행');
-        const { data } = await axios.get(`${ASSIST_SERVER_URL}/match/${route.params.matchId}`, {
-          headers: { authorization: `Bearer ${token}` },
-        });
-        setData(data);
-        console.log(data);
-      }
-    };
-    test();
-  }, []);
-
-  useEffect(() => {
-    if (data) {
+    if (!isLoading) {
       getMatchVoteScreen(data);
     }
-  }, [data]);
+  }, [isLoading]);
 
-  const getMatchVoteScreen = (data: any) => {
-    console.log('이곳데이터', data);
+  const getMatchVoteScreen = (data: MatchInfo) => {
     if (data?.condition === '경기 확정') {
+      // 경기 확정
       navigation.replace('MatchVote_3', { data });
-    }
-    if (data?.condition === '인원 모집 중') {
+    } else if (data?.condition === '인원 모집 중') {
       if (data?.vote) {
         // 투표 완료
         navigation.replace('MatchVote_2', { data });
@@ -57,13 +32,12 @@ export default function MatchVote_main({ route }: any) {
         // 인원 모집 중
         navigation.replace('MatchVote_1', { data });
       }
-    }
-    if (data === null) {
+    } else if (data?.condition === '경기 취소') {
       // 경기 취소
       navigation.replace('MatchVote_4', { data });
     }
     return null;
   };
 
-  return isloading ? <LoadingView /> : null;
+  return <LoadingView />;
 }

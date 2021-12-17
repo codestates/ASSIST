@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
@@ -9,9 +9,8 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import CloseHeader from '../../components/header/CloseHeader';
 import CommonModalButton from '../../components/button/CommonModalButton';
-import useMatchDetail from '../../hooks/useMatchDetail';
-import LoadingView from '../../components/view/LoadingView';
 import useGoHome from '../../hooks/useGoHome';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const MainTitleSpaceContents = styled.View`
   height: 30px;
@@ -61,80 +60,53 @@ const DottedLine = styled.View`
   border: 1.2px dotted ${colors.lightGray};
 `;
 
-export default function MatchVote_4({ route }: any) {
+type MatchVoteProps = StackScreenProps<RootStackParamList, 'MatchVote_4'>;
+
+export default function MatchVote_4({ route }: MatchVoteProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const goHome = useGoHome();
-  // const { isLoading, data } = useMatchDetail(route.params?.matchId);
-
-  const [data, setData] = useState({
-    vote: '',
-    attend: [],
-    absent: [],
-    hold: [],
-    nonRes: [],
-    date: '',
-    startTime: '',
-    endTime: '',
-    address: '',
-    address2: '',
-    day: '',
-  });
-
-  useEffect(() => {
-    if (route.params) {
-      setData(route.params.data);
-    }
-    setIsLoading(false);
-    return () => {
-      setIsLoading(true);
-    };
-  }, []);
-
-  const [isLoading, setIsLoading] = useState(true);
 
   const handleDetailVote = () => {
     navigation.navigate('MatchVote_6');
   };
 
   const getAttendView = () => {
-    if (data?.vote === 'attend') {
+    if (route.params?.data?.vote === 'attend') {
       return (
         <VoteSelected>
           <Bold white>😍 참석</Bold>
-          <Bold white>{data.attend.length}명</Bold>
+          <Bold white>{route.params?.data.attend.length}명</Bold>
         </VoteSelected>
       );
     } else {
       return (
         <Vote>
           <Regular gray>😍 참석</Regular>
-          <Regular gray>{data?.attend.length}명</Regular>
+          <Regular gray>{route.params?.data?.attend.length}명</Regular>
         </Vote>
       );
     }
   };
 
   const getAbsentView = () => {
-    if (data?.vote === 'absent') {
+    if (route.params?.data?.vote === 'absent') {
       return (
         <VoteSelected>
           <Bold white>😭 불참</Bold>
-          <Bold white>{data.absent.length}명</Bold>
+          <Bold white>{route.params?.data.absent.length}명</Bold>
         </VoteSelected>
       );
     } else {
       return (
         <Vote>
           <Regular gray>😭 불참</Regular>
-          <Regular gray>{data?.absent.length}명</Regular>
+          <Regular gray>{route.params?.data?.absent.length}명</Regular>
         </Vote>
       );
     }
   };
 
-  return isLoading ? (
-    <LoadingView />
-  ) : (
+  return (
     <>
       <CloseHeader color={colors.red} />
       <ColoredScrollView isFinished isCard titleColor={colors.red}>
@@ -147,16 +119,17 @@ export default function MatchVote_4({ route }: any) {
           </Bold>
           <MainTitleSpaceContents />
           <Regular gray size={17}>
-            {data?.date}({data?.day})
+            {route.params?.data?.date}({route.params?.data?.day})
           </Regular>
           <TextSpaceText />
           <Bold gray size={17}>
-            시작 {data?.startTime} <AntDesign name="arrowright" size={17} /> {data?.endTime} 종료
+            시작 {route.params?.data?.startTime} <AntDesign name="arrowright" size={17} />{' '}
+            {route.params?.data?.endTime} 종료
           </Bold>
           <TextSpaceText />
-          <MatchInfoDetailStadium>{data?.address}</MatchInfoDetailStadium>
+          <MatchInfoDetailStadium>{route.params?.data?.address}</MatchInfoDetailStadium>
           <TextSpaceText />
-          <MatchInfoDetailStadium>{data?.address2}</MatchInfoDetailStadium>
+          <MatchInfoDetailStadium>{route.params?.data?.address2}</MatchInfoDetailStadium>
           <DottedLine />
           {getAttendView()}
           <ButtonSpace />

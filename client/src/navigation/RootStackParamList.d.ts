@@ -1,13 +1,11 @@
-import { VoteChoice } from '../../@types/global/types';
+import { MatchInfo, VoteChoice } from '../../@types/global/types';
 
 export type RootStackParamList = {
   Create: undefined;
-  Team: any;
+  Team: undefined | { teamId: string };
   Guest: undefined;
   User: undefined;
-  Home: undefined;
   Match: undefined;
-
   AddOns_1: undefined;
   AddOns_2: undefined;
   AddOns_3: undefined | { bank: string };
@@ -69,17 +67,18 @@ export type RootStackParamList = {
   NewPhone_2: undefined | { phone: string };
   MyProfile: undefined;
   MyProfile_1: undefined | { gender: string };
-  MatchVote: undefined;
-  MatchVote_main: undefined;
-  MatchVote_1: undefined;
-  MatchVote_2: undefined;
-  MatchVote_3: undefined;
-  MatchVote_4: undefined;
-  MatchVote_5: undefined;
+  MatchVote: undefined | { matchId?: number };
+  MatchVote_Main: undefined | { matchId?: number };
+  MatchVote_1: undefined | { data: MatchInfo };
+  MatchVote_2: undefined | { data: MatchInfo };
+  MatchVote_3: undefined | { data: MatchInfo };
+  MatchVote_4: undefined | { data: MatchInfo };
+  MatchVote_5: undefined | { data: MatchInfo };
   MatchVote_6: undefined;
-  VoteSelect: undefined | { vote: VoteChoice };
-  CancelSelect: undefined;
-  ConfirmSelect: undefined;
+  VoteSelect: undefined | { vote: VoteChoice; matchId?: number };
+  CancelSelect: undefined | { matchId?: number };
+  ConfirmSelect: undefined | { matchId?: number };
+  CreateOrJoin: undefined;
   MercenaryInvite: undefined;
   MercenaryInvite_1: undefined;
   MercenaryInvite_2: undefined;
