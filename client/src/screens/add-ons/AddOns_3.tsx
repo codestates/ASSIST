@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,14 +16,32 @@ import NextButton from '../../components/button/NextButton';
 import LineInput from '../../components/input/LineInput';
 import LineSelect from '../../components/input/LineSelect';
 import * as yup from 'yup';
+import useTeamInfo from '../../hooks/useTeamInfo';
+import LoadingView from '../../components/view/LoadingView';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
+import { ASSIST_SERVER_URL } from '@env';
+import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
+import CommonModalButton from '../../components/button/CommonModalButton';
 
 const InputSpaceInput = styled.View`
   width: 100%;
   height: 35px;
 `;
 
+const Space = styled.View`
+  width: 100%;
+  height: 16px;
+`;
+
 const ContentContainer = styled.View`
   width: 100%;
+`;
+
+const Line = styled.View`
+  margin-top: 13px;
+  margin-bottom: 35px;
 `;
 
 const schema = yup.object({
@@ -31,7 +50,7 @@ const schema = yup.object({
     .matches(/^(0?[1-9]|[12][0-9]|3[01])$/)
     .required(),
   money: yup.string().required(),
-  teamName: yup.string().required(),
+  name: yup.string().required(),
   bankAccount: yup
     .string()
     .matches(/^^[0-9]+(-[0-9]+)+$$/)
@@ -42,18 +61,35 @@ type AddOnsProps = StackScreenProps<RootStackParamList, 'AddOns_3'>;
 
 export default function AddOns_3({ route }: AddOnsProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
+  const { isLoading, data } = useTeamInfo();
+
+  const [isPressed, setIsPressed] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   const {
     control,
     handleSubmit,
     formState: { isValid },
+    getValues,
+    setValue,
   } = useForm({
     mode: 'onChange',
+    defaultValues: { teamInfo: { name: '', date: 0, money: '', bankAccount: '' } },
     resolver: yupResolver(schema),
   });
 
-  const [isPressed, setIsPressed] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  useEffect(() => {
+    if (data !== undefined) {
+      setValue('teamInfo', {
+        name: data.name,
+        date: data.paymentDay,
+        money: data.dues,
+        bankAccount: data.accountNumber,
+      });
+    }
+  }, [data, setValue]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -69,22 +105,70 @@ export default function AddOns_3({ route }: AddOnsProps) {
     console.log(data);
   };
 
+  const handleModifyTeamInfo = async () => {
+    const modifyTeamInfo = getValues([
+      'teamInfo.name',
+      'teamInfo.date',
+      'teamInfo.money',
+      'teamInfo.bankAccount',
+    ]);
+    try {
+      await axios.patch(
+        `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
+        { headers: { authorization: `Bearer ${token}` } },
+        {
+          name: modifyTeamInfo[0],
+          paymentDay: modifyTeamInfo[1],
+          dues: modifyTeamInfo[2],
+          accountNumber: modifyTeamInfo[3],
+          accountBank: route.params?.bank,
+        },
+      );
+      setModalVisible(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const goToNext = () => {
     setIsPressed(true);
     navigation.navigate('BankSelect', { name: 'AddOns_3' });
   };
 
-  return (
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  return isLoading ? (
+    <LoadingView />
+  ) : (
     <>
+      <CommonModal visible={modalVisible} setVisible={handleCloseModal}>
+        <CommonModalTitle>
+          <Bold size={17}>정보 수정</Bold>
+          <Line>
+            <Regular gray size={13}>
+              팀 정보를 수정 하시겠습니까?
+            </Regular>
+          </Line>
+        </CommonModalTitle>
+        <CommonModalButton color="blue" text="수정하기" onPress={handleModifyTeamInfo} />
+        <Space />
+        <CommonModalButton color="whiteSmoke" text="이전 화면으로 >" onPress={handleCloseModal} />
+      </CommonModal>
       <CloseHeader color={colors.whiteSmoke} />
       <ColoredScrollView titleColor={colors.whiteSmoke}>
         <MainTitle marginBottom="15px">
           <Bold size={22}>팀 정보</Bold>
-          <Regular size={17}>FC 살쾡이</Regular>
+          <Regular size={17}>{data?.name}</Regular>
         </MainTitle>
         <ContentContainer>
           <LineInput
-            name="teamName"
+            name="teamInfo.name"
             control={control}
             title="팀 이름"
             placeholder="팀 이름을 입력 해 주세요"
@@ -93,7 +177,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
           />
           <InputSpaceInput />
           <LineInput
-            name="date"
+            name="teamInfo.date"
             type="date"
             control={control}
             title="팀 회비 납부일"
@@ -113,7 +197,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
           />
           <InputSpaceInput />
           <LineInput
-            name="money"
+            name="teamInfo.money"
             type="money"
             control={control}
             title="월 회비 금액"
@@ -125,12 +209,12 @@ export default function AddOns_3({ route }: AddOnsProps) {
           <LineSelect
             title="은행"
             isPressed={isPressed}
-            selected={route.params?.bank}
+            selected={route.params?.bank || data?.accountBank}
             onPress={() => goToNext()}
           />
           <InputSpaceInput />
           <LineInput
-            name="bankAccount"
+            name="teamInfo.bankAccount"
             control={control}
             title="계좌번호"
             placeholder="계좌번호를 입력해주세요"
@@ -147,11 +231,9 @@ export default function AddOns_3({ route }: AddOnsProps) {
         </ContentContainer>
       </ColoredScrollView>
       <NextButton
-        disabled={!isValid || route.params?.bank === undefined || Boolean(errorMessage)}
+        disabled={!selectedTeam.leader || Boolean(errorMessage)}
         text="팀 정보 수정하기 >"
-        onPress={() => {
-          console.log('팀 정보');
-        }}
+        onPress={handleOpenModal}
       />
     </>
   );

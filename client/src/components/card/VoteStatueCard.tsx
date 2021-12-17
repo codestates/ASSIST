@@ -1,4 +1,5 @@
 import React from 'react';
+import { Linking, Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { Bold, Regular } from '../../theme/fonts';
 
@@ -23,7 +24,7 @@ const VoteStatusMembersContainer = styled.View`
   flex-wrap: wrap;
 `;
 
-const VoteStatusMember = styled.View`
+const VoteStatusMember = styled.TouchableOpacity`
   width: 22%;
   padding-vertical: 6px;
   margin: 8px 8px 8px 0;
@@ -33,10 +34,19 @@ type VoteStatusCardProps = {
   title: string;
   person: number;
   name: string;
+  call: string;
 };
 
 export default function VoteStatusCard(props: VoteStatusCardProps) {
-  const { title, person, name } = props;
+  const { title, person, name, call } = props;
+
+  const handlePhoneCall = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`tel://${call}`).catch((err) => console.log(err));
+    } else {
+      Linking.openURL(`tel:${call}`).catch((err) => console.log(err));
+    }
+  };
 
   return (
     <VoteStatusContainer>
@@ -46,7 +56,7 @@ export default function VoteStatusCard(props: VoteStatusCardProps) {
         <Regular size={20}>{person} 명</Regular>
       </VoteStatusTitle>
       <VoteStatusMembersContainer>
-        <VoteStatusMember>
+        <VoteStatusMember onPress={handlePhoneCall}>
           <Regular size={17}>{name}</Regular>
         </VoteStatusMember>
       </VoteStatusMembersContainer>

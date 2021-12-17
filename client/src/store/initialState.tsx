@@ -41,4 +41,9 @@ export const propsState = {
     phone: '',
   },
   matchId: -1,
+  teamMembers: [{ name: '', phone: '' }],
+
+  newLeader: {
+    nowLeaderId: 0,
+  },
 };

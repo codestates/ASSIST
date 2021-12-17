@@ -14,6 +14,7 @@ import MercenaryInvite from './MercenaryInviteNav';
 import AddOns_1 from '../screens/add-ons/AddOns_1';
 import AddOns_2 from '../screens/add-ons/AddOns_2';
 import AddOns_3 from '../screens/add-ons/AddOns_3';
+import AddOns_4 from '../screens/add-ons/AddOns_4';
 import BankSelect from '../screens/drawer-select/BankSelect';
 import SelectTeamHeader from '../components/header/SelectTeamHeader';
 import CreateOrJoin from '../screens/main/CreateOrJoin';
@@ -78,6 +79,8 @@ export default function LoggedInNav() {
       <HomeStack.Screen name="AddOns_1" component={AddOns_1} options={{ headerShown: false }} />
       <HomeStack.Screen name="AddOns_2" component={AddOns_2} options={{ headerShown: false }} />
       <HomeStack.Screen name="AddOns_3" component={AddOns_3} options={{ headerShown: false }} />
+      <HomeStack.Screen name="AddOns_4" component={AddOns_4} options={{ headerShown: false }} />
+
       <HomeStack.Screen
         name="BankSelect"
         component={BankSelect}
