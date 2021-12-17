@@ -7,8 +7,9 @@ import VotedMark from '../mark/VotedMark';
 import GatheringMark from '../mark/GatheringMark';
 import Card from './Card';
 import { NextMatch } from '../../../@types/global/types';
-import useMatchVote from '../../hooks/useMatchVote';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigation/RootStackParamList';
 
 const TitleView = styled.View`
   flex-direction: row;
@@ -26,12 +27,9 @@ const SubtitleView = styled.View`
 type NextMatchCardProps = {
   conditions: '경기 확정' | '인원 모집 중' | '투표 완료';
   nextMatch: NextMatch;
-  teamId: string | number;
 };
 
-export default function NextMatchCard({ teamId, conditions, nextMatch }: NextMatchCardProps) {
-  const matchVote = useMatchVote();
-
+export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardProps) {
   const getMark = () => {
     if (conditions === '경기 확정') {
       return <ConfirmedMark />;
@@ -42,7 +40,7 @@ export default function NextMatchCard({ teamId, conditions, nextMatch }: NextMat
     }
   };
 
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const handleMatchVote = () => {
     navigation.navigate('MatchVote', { matchId: nextMatch?.id });

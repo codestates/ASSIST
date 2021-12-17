@@ -1,11 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import {
-  NavigationContainer,
-  NavigationProp,
-  useLinkTo,
-  useNavigation,
-} from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import { RootState } from './src/store/reducers';
 import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
@@ -30,7 +25,7 @@ export default function Navigation() {
             MatchVote: {
               path: 'MatchVote/:matchId',
               screens: {
-                MatchVote_main: 'MatchVote_main',
+                MatchVote_Main: 'MatchVote_Main',
               },
             },
           },
@@ -43,11 +38,6 @@ export default function Navigation() {
     },
   };
 
-  const linking2: any = {
-    prefixes: [prefix],
-  };
-
-  console.log(prefix);
   const { token, role } = useSelector((state: RootState) => state.userReducer);
 
   const rootNavigater = createStackNavigator();
@@ -55,15 +45,15 @@ export default function Navigation() {
   const getNavigator = () => {
     if (token.length > 0) {
       if (role.length === 0) {
-        return <LandingPageNav />;
+        return <rootNavigater.Screen name="Landing" component={LandingPageNav} />;
       } else if (role === 'tips') {
         // 팁 보여주기
         return;
       } else if (role === 'complete') {
-        return <LoggedInNav />;
+        return <rootNavigater.Screen name="User" component={LoggedInNav} />;
       }
     } else {
-      return <LoggedOutNav />;
+      return <rootNavigater.Screen name="Guest" component={LoggedOutNav} />;
     }
   };
 
@@ -72,11 +62,8 @@ export default function Navigation() {
       <rootNavigater.Navigator
         screenOptions={{
           headerShown: false,
-        }}
-        initialRouteName={'User'}>
-        {/* <rootNavigater.Screen name="Landing" component={LandingPageNav} /> */}
-        <rootNavigater.Screen name="User" component={LoggedInNav} />
-        <rootNavigater.Screen name="Guest" component={LoggedOutNav} />
+        }}>
+        {getNavigator()}
       </rootNavigater.Navigator>
     </NavigationContainer>
   );

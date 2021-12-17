@@ -15,6 +15,8 @@ import AddOns_1 from '../screens/add-ons/AddOns_1';
 import AddOns_2 from '../screens/add-ons/AddOns_2';
 import AddOns_3 from '../screens/add-ons/AddOns_3';
 import BankSelect from '../screens/drawer-select/BankSelect';
+import SelectTeamHeader from '../components/header/SelectTeamHeader';
+import CreateOrJoin from '../screens/main/CreateOrJoin';
 
 const HomeStack = createStackNavigator();
 
@@ -27,6 +29,13 @@ export default function LoggedInNav() {
           header: () => <LoggedInHeader />,
         }}
         component={Home}
+      />
+      <HomeStack.Screen
+        name="CreateOrJoin"
+        options={{
+          header: () => <SelectTeamHeader />,
+        }}
+        component={CreateOrJoin}
       />
       <HomeStack.Screen
         name="MyPage"

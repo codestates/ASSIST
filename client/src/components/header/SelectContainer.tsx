@@ -5,8 +5,6 @@ import { colors } from '../../theme/colors';
 import { Bold } from '../../theme/fonts';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducers';
 
 const Container = styled.View`
   flex-direction: row;
@@ -27,15 +25,14 @@ const TeamName = styled(Bold)`
   margin-right: 2px;
 `;
 
-export default function BottomContainer() {
+export default function SelectContainer() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { name } = useSelector((state: RootState) => state.userReducer.selectedTeam);
 
   return (
     <Container>
       {
         <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
-          <TeamName>{name}</TeamName>
+          <TeamName>팀 선택</TeamName>
           <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
         </TeamSelector>
       }

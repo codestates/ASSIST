@@ -6,19 +6,21 @@ import { useSelector } from 'react-redux';
 import { MatchInfo } from '../../@types/global/types';
 import { RootState } from '../store/reducers';
 
-export default function useMatchDetail(matchId: any) {
+type useMatchDetailProps = {
+  matchId?: number;
+};
+
+export default function useMatchDetail({ matchId }: useMatchDetailProps) {
   const { token } = useSelector((state: RootState) => state.userReducer);
-  const { id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
-  const [data, setData] = useState<MatchInfo>(null);
+  const [data, setData] = useState<MatchInfo>(undefined);
   const [isLoading, setIsLoading] = useState(false);
-  // const { matchId } = useSelector((state: RootState) => state.propsReducer);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const { data }: AxiosResponse<MatchInfo> = await axios.get(
-          `${ASSIST_SERVER_URL}/match/${matchId}`,
+          `${ASSIST_SERVER_URL}/match/${matchId || -1}`,
           {
             headers: { authorization: `Bearer ${token}` },
           },

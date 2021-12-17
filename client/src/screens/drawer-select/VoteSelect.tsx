@@ -29,14 +29,13 @@ const Wrapper = styled.View`
 type VoteSelectProps = StackScreenProps<RootStackParamList, 'VoteSelect'>;
 
 export default function VoteSelect({ route }: VoteSelectProps) {
-  const { matchId } = useSelector((state: RootState) => state.propsReducer);
   const { token } = useSelector((state: RootState) => state.userReducer);
-  const matchVote = useMatchVote();
+  const matchVote = useMatchVote({ matchId: route.params?.matchId });
 
   const voteMatch = async (vote: '참석' | '불참' | '미정') => {
     try {
       await axios.patch(
-        `${ASSIST_SERVER_URL}/match/${matchId}/vote`,
+        `${ASSIST_SERVER_URL}/match/${route.params?.matchId || -1}/vote`,
         { vote },
         { headers: { authorization: `Bearer ${token}` } },
       );

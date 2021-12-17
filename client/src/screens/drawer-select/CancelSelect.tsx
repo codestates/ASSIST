@@ -14,6 +14,8 @@ import * as yup from 'yup';
 import { useController, useForm } from 'react-hook-form';
 import { Keyboard, Platform } from 'react-native';
 import useMatchVote from '../../hooks/useMatchVote';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigation/RootStackParamList';
 
 type VoteButton = {
   isPressed: boolean;
@@ -90,13 +92,14 @@ const schema = yup.object({
   reason: yup.string().required(),
 });
 
-export default function CancelSelect() {
-  const { matchId } = useSelector((state: RootState) => state.propsReducer);
+type CancelSelectProps = StackScreenProps<RootStackParamList, 'CancelSelect'>;
+
+export default function CancelSelect({ route }: CancelSelectProps) {
   const { token } = useSelector((state: RootState) => state.userReducer);
   const [isNotEnough, setIsNotEnough] = useState(false);
   const [isBadWeather, setIsBadWeather] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const matchVote = useMatchVote();
+  const matchVote = useMatchVote({ matchId: route.params?.matchId });
 
   const {
     control,
@@ -165,7 +168,7 @@ export default function CancelSelect() {
   const cancelMatch = async () => {
     try {
       await axios.patch(
-        `${ASSIST_SERVER_URL}/match/${matchId}`,
+        `${ASSIST_SERVER_URL}/match/${route.params?.matchId || -1}`,
         { condition: '경기 취소', reason: getReason() },
         { headers: { authorization: `Bearer ${token}` } },
       );
