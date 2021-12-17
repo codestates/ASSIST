@@ -15,87 +15,76 @@ import { ASSIST_SERVER_URL } from '@env';
 import { RootState } from '../../store/reducers';
 import { FirstTeam, NextMatch, TeamInfo } from '../../../@types/global/types';
 import { getSelectedTeam } from '../../store/actions/userAction';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-export default function Home() {
+export default function Home({ route }: any) {
   const dispatch = useDispatch();
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
+
+  const teamId = Number(route.params?.teamId);
+  const navigation = useNavigation<any>();
+  const { token, selectedTeam, id } = useSelector((state: RootState) => state.userReducer);
   const [nextMatch, setNextMatch] = useState<NextMatch>(null);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      dispatch(clearAll());
-      if (selectedTeam.id === -1) {
-        getFirstTeam().catch((error) => console.log(error));
-      } else if (selectedTeam.id >= 0) {
-        getTeamInfo().catch((error) => console.log(error));
-      }
-    });
-    return unsubscribe;
-  }, [navigation, selectedTeam.id]);
+    if (!token) {
+      navigation.navigate('Guest');
+    }
+    console.log(navigation.getState());
+  }, []);
 
-  const getFirstTeam = async () => {
-    try {
-      const { data }: AxiosResponse<FirstTeam> = await axios.get(
-        `${ASSIST_SERVER_URL}/user/firstteam`,
-        {
-          headers: { authorization: `Bearer ${token}` },
-        },
-      );
-      console.log('first : ', data);
-      if (data.id >= 0) {
-        const { id, name, leader } = data;
-        dispatch(getSelectedTeam({ id, name, leader }));
-        if (data.nextMatch?.id) {
-          dispatch(addMatchId(data.nextMatch?.id));
-        }
-        setNextMatch(data.nextMatch);
+  useEffect(() => {
+    const check = async () => {
+      try {
+        await getTeamInfo(teamId);
+      } catch (err: any) {
+        await handleReplace();
       }
-    } catch (error) {
-      console.log(error);
+    };
+    check();
+  }, []);
+
+  const handleReplace = async () => {
+    const { data }: AxiosResponse<any> = await axios.get(`${ASSIST_SERVER_URL}/user/team`, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    if (!data.length) {
+      dispatch(getSelectedTeam({ id: -2, name: '', leader: false }));
+      return navigation.replace('CreateTeam');
+    } else {
+      let selectId = selectedTeam.id > 0 ? selectedTeam.id : data[0].id;
+      return navigation.replace('Team', { teamId: selectId });
     }
   };
 
-  const getTeamInfo = async () => {
+  const getTeamInfo = async (teamId: number) => {
     try {
       const { data }: AxiosResponse<TeamInfo> = await axios.get(
-        `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
+        `${ASSIST_SERVER_URL}/team/${teamId}`,
         {
           headers: { authorization: `Bearer ${token}` },
         },
       );
-      console.log('change : ', data);
-      if (data.nextMatch?.id) {
-        dispatch(addMatchId(data.nextMatch?.id));
-      }
+      const { name, leaderId } = data;
+      dispatch(getSelectedTeam({ id: teamId, name, leader: leaderId === Number(id) }));
       setNextMatch(data.nextMatch);
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
   const getMatchCard = (nextMatch: NextMatch) => {
     if (selectedTeam.id < 0) {
       return <AddTeamCard />;
-    } else {
-      if (!nextMatch) {
-        if (selectedTeam.leader) {
-          return <NoMatchCard isLeader />;
-        } else {
-          return <NoMatchCard />;
-        }
-      } else {
-        if (nextMatch.condition === '경기 확정') {
-          return <NextMatchCard nextMatch={nextMatch} conditions="경기 확정" />;
-        } else if (nextMatch.condition === '인원 모집 중') {
-          if (nextMatch.vote) {
-            return <NextMatchCard nextMatch={nextMatch} conditions="투표 완료" />;
-          } else {
-            return <NextMatchCard nextMatch={nextMatch} conditions="인원 모집 중" />;
-          }
-        }
-      }
     }
+    if (!nextMatch) {
+      return <NoMatchCard isLeader={selectedTeam.leader} />;
+    }
+    let conditions: '인원 모집 중' | '경기 확정' | '투표 완료' = nextMatch.condition;
+    if (nextMatch.condition === '인원 모집 중' && nextMatch.vote) {
+      conditions = '투표 완료';
+    }
+    return <NextMatchCard teamId={selectedTeam.id} nextMatch={nextMatch} conditions={conditions} />;
   };
 
   return (

@@ -6,12 +6,12 @@ import { useSelector } from 'react-redux';
 import { MatchInfo } from '../../@types/global/types';
 import { RootState } from '../store/reducers';
 
-export default function useMatchDetail() {
+export default function useMatchDetail(matchId: any) {
   const { token } = useSelector((state: RootState) => state.userReducer);
   const { id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
   const [data, setData] = useState<MatchInfo>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { matchId } = useSelector((state: RootState) => state.propsReducer);
+  // const { matchId } = useSelector((state: RootState) => state.propsReducer);
 
   useEffect(() => {
     const fetchData = async () => {

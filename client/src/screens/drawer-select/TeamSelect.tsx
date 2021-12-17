@@ -57,7 +57,8 @@ const TextContainer = styled.View`
 `;
 
 export default function TeamSelect() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  // const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<any>();
   const dispatch = useDispatch();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const [teams, setTeams] = useState<UserTeams>([]);
@@ -81,14 +82,13 @@ export default function TeamSelect() {
     }
   };
 
-  const goToTeam = (team: SelectedTeamType) => {
-    dispatch(getSelectedTeam(team));
-    goHome();
+  const goToTeam = (teamId: any) => {
+    navigation.replace('Team', { teamId });
   };
 
   const createOrJoin = () => {
-    dispatch(getSelectedTeam({ id: -2, name: '', leader: false }));
-    goHome();
+    // dispatch(getSelectedTeam({ id: -2, name: '', leader: false }));
+    navigation.replace('CreateTeam', { screen: 'CreateTeam_2' });
   };
 
   const ListTeams = (teams: UserTeams) => {
@@ -100,7 +100,7 @@ export default function TeamSelect() {
       );
     } else {
       return teams.map((team) => (
-        <TeamContainer key={team.id} onPress={() => goToTeam(team)}>
+        <TeamContainer key={team.id} onPress={() => goToTeam(team.id)}>
           <Team>{team.name}</Team>
           <IconContainer>
             {team.leader && <CaptainMark />}

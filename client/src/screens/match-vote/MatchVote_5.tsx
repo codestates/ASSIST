@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
@@ -61,10 +61,39 @@ const DottedLine = styled.View`
   border: 1.2px dotted ${colors.lightGray};
 `;
 
-export default function MatchVote_5() {
+export default function MatchVote_5({ route }: any) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+<<<<<<< HEAD
   const { isLoading, data } = useMatchDetail();
   const goHome = useGoHome();
+=======
+
+  const [data, setData] = useState({
+    vote: '',
+    attend: [],
+    absent: [],
+    hold: [],
+    nonRes: [],
+    date: '',
+    startTime: '',
+    endTime: '',
+    address: '',
+    address2: '',
+    day: '',
+  });
+
+  useEffect(() => {
+    if (route.params) {
+      setData(route.params.data);
+    }
+    setIsLoading(false);
+    return () => {
+      setIsLoading(true);
+    };
+  }, []);
+
+  const [isLoading, setIsLoading] = useState(true);
+>>>>>>> 2dbf3ba72f12a09a1bdd4d86562058c8ec0b6ad0
 
   const handleDetailVote = () => {
     navigation.navigate('MatchVote_6');
