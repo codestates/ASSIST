@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
@@ -14,6 +14,7 @@ import LoadingView from '../../components/view/LoadingView';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import DeadLineTimer from '../../components/timer/DeadLineTimer';
+
 
 const MainTitleSpaceContents = styled.View`
   height: 35px;
@@ -66,10 +67,35 @@ const DottedLine = styled.View`
   border: 1.2px dotted ${colors.lightGray};
 `;
 
-export default function MatchVote_2() {
+export default function MatchVote_2({ route }: any) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { isLoading, data } = useMatchDetail();
   const { leader } = useSelector((state: RootState) => state.userReducer.selectedTeam);
+
+  const [data, setData] = useState({
+    vote: '',
+    attend: [],
+    absent: [],
+    hold: [],
+    nonRes: [],
+    date: '',
+    startTime: '',
+    endTime: '',
+    address: '',
+    address2: '',
+    day: '',
+  });
+
+  useEffect(() => {
+    if (route.params) {
+      setData(route.params.data);
+    }
+    setIsLoading(false);
+    return () => {
+      setIsLoading(true);
+    };
+  }, []);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleDetailVote = () => {
     navigation.navigate('MatchVote_6');

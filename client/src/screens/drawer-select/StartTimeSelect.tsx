@@ -21,7 +21,7 @@ const ButtonTitle = styled(Light)`
 `;
 
 export default function StartTimeSelect() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<any>();
 
   const [hours, setHours] = React.useState(0);
   const [minutes, setMinutes] = React.useState(0);

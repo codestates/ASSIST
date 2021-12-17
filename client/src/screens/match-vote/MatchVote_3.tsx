@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
@@ -11,6 +11,7 @@ import CloseHeader from '../../components/header/CloseHeader';
 import useMatchDetail from '../../hooks/useMatchDetail';
 import LoadingView from '../../components/view/LoadingView';
 import CommonModalButton from '../../components/button/CommonModalButton';
+import { any } from 'sequelize/types/lib/operators';
 
 const MainTitleSpaceContents = styled.View`
   height: 35px;
@@ -64,9 +65,32 @@ const Space = styled.View`
   height: 5px;
 `;
 
-export default function MatchVote_3() {
+export default function MatchVote_3({ route }: any) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { isLoading, data } = useMatchDetail();
+  const [isLoadiog, setIsLoading] = useState(true);
+  const [data, setData] = useState({
+    vote: '',
+    attend: [],
+    absent: [],
+    date: '',
+    startTime: '',
+    endTime: '',
+    address: '',
+    address2: '',
+    day: '',
+  });
+  // const { isLoading, data } = useMatchDetail(route.params?.matchId);
+
+  useEffect(() => {
+    if (route.params) {
+      console.log('여기');
+      setData(route.params.data);
+    }
+    setIsLoading(false);
+    return () => {
+      setIsLoading(true);
+    };
+  }, []);
 
   const handleDetailVote = () => {
     navigation.navigate('MatchVote_6');
@@ -108,7 +132,7 @@ export default function MatchVote_3() {
     }
   };
 
-  return isLoading ? (
+  return isLoadiog ? (
     <LoadingView />
   ) : (
     <>

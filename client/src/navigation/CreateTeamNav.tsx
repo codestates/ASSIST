@@ -8,12 +8,21 @@ import CreateTeam_4 from '../screens/create-team/CreateTeam_4';
 import BankSelect from '../screens/drawer-select/BankSelect';
 import CreateTeam_6 from '../screens/create-team/CreateTeam_6';
 import CreateTeam_5 from '../screens/create-team/CreateTeam_5';
+import CreateTeam_main from '../screens/create-team/CreateTeam_main';
+import LoggedInHeader from '../components/header/LoggedInHeader';
 
 const CreateTeam = createStackNavigator();
 
 export default function CreateTeamNav() {
   return (
     <CreateTeam.Navigator>
+      <CreateTeam.Screen
+        name="CreateTeam_main"
+        options={{
+          header: () => <LoggedInHeader />,
+        }}
+        component={CreateTeam_main}
+      />
       <CreateTeam.Screen
         name="CreateTeam_1"
         options={{

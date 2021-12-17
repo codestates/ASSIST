@@ -33,17 +33,12 @@ export default function BottomContainer() {
 
   return (
     <Container>
-      {id >= 0 ? (
+      {
         <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
-          <TeamName>{name}</TeamName>
+          <TeamName>{id >= 0 ? name : '팀 선택'}</TeamName>
           <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
         </TeamSelector>
-      ) : (
-        <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
-          <TeamName>팀 선택</TeamName>
-          <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
-        </TeamSelector>
-      )}
+      }
       <TeamSelector>
         <TeamName style={{ color: colors.lightGray }}>용병활동</TeamName>
       </TeamSelector>

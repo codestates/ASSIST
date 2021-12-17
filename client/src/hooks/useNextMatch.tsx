@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux';
 import { TeamInfo, NextMatch } from '../../@types/global/types';
 import { RootState } from '../store/reducers';
 
-export default function useNextMatch() {
+export default function useNextMatch(teamId: any) {
   const { token } = useSelector((state: RootState) => state.userReducer);
-  const { id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
+  // const { id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
   const [data, setData] = useState<NextMatch>(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,7 +18,7 @@ export default function useNextMatch() {
       try {
         const {
           data: { nextMatch },
-        }: AxiosResponse<TeamInfo> = await axios.get(`${ASSIST_SERVER_URL}/team/${id}`, {
+        }: AxiosResponse<TeamInfo> = await axios.get(`${ASSIST_SERVER_URL}/team/${teamId}`, {
           headers: { authorization: `Bearer ${token}` },
         });
         setData(nextMatch);

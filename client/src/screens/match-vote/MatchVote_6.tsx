@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
@@ -7,6 +8,7 @@ import CloseHeader from '../../components/header/CloseHeader';
 import VotePercentCard from '../../components/card/VotePercentCard';
 import VoteStatusCard from '../../components/card/VoteStatueCard';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
+import { RootStackParamList } from '../../navigation/RootStackParamList';
 
 const PercentBarSpace = styled.View`
   width: 1%;
@@ -63,7 +65,35 @@ const VotePercentContents = styled.View`
 
 const VoteStatusCardContainer = styled.View``;
 
-export default function MatchVote_6() {
+export default function MatchVote_6({ route }: any) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const [data, setData] = useState({
+    vote: '',
+    attend: [],
+    absent: [],
+    hold: [],
+    nonRes: [],
+    date: '',
+    startTime: '',
+    endTime: '',
+    address: '',
+    address2: '',
+    day: '',
+  });
+
+  useEffect(() => {
+    if (route.params) {
+      setData(route.params.data);
+    }
+    setIsLoading(false);
+    return () => {
+      setIsLoading(true);
+    };
+  }, []);
+
+  const [isLoading, setIsLoading] = useState(true);
+
   const onSubmit = (data: string) => {
     console.log(data);
   };

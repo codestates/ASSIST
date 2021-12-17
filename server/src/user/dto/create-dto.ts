@@ -6,7 +6,13 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
+  IsEnum,
 } from 'class-validator';
+
+enum GenderEnum {
+  man = '남성',
+  woman = '여성',
+}
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -22,6 +28,7 @@ export class CreateUserDto {
   @IsString()
   phone: string;
   @IsNotEmpty()
+  @IsEnum(GenderEnum)
   gender: string;
   @IsOptional()
   @IsString()
