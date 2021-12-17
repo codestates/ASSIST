@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import MatchVote_1 from '../screens/match-vote/MatchVote_1';
 import MatchVote_2 from '../screens/match-vote/MatchVote_2';
@@ -12,67 +12,52 @@ import MatchVote_4 from '../screens/match-vote/MatchVote_4';
 import MatchVote_5 from '../screens/match-vote/MatchVote_5';
 import CancelSelect from '../screens/drawer-select/CancelSelect';
 import ConfirmSelect from '../screens/drawer-select/ConfirmSelect';
+import { any } from 'sequelize/types/lib/operators';
+import MatchVote_main from '../screens/match-vote/MatchVote_main';
+import { teal100 } from 'react-native-paper/lib/typescript/styles/colors';
 
 const MatchVote = createStackNavigator();
 
-export default function MatchVoteNav() {
-  const { isLoading, data } = useNextMatch();
-
-  const getMatchVoteScreen = () => {
-    if (data?.condition === '경기 확정') {
-      // 경기 확정
-      return (
-        <MatchVote.Screen
-          name="MatchVote_3"
-          options={{
-            headerShown: false,
-          }}
-          component={MatchVote_3}
-        />
-      );
-    } else if (data?.condition === '인원 모집 중') {
-      if (data?.vote) {
-        // 투표 완료
-        return (
-          <MatchVote.Screen
-            name="MatchVote_2"
-            options={{
-              headerShown: false,
-            }}
-            component={MatchVote_2}
-          />
-        );
-      } else {
-        // 인원 모집 중
-        return (
-          <MatchVote.Screen
-            name="MatchVote_1"
-            options={{
-              headerShown: false,
-            }}
-            component={MatchVote_1}
-          />
-        );
-      }
-    } else if (data === null) {
-      // 경기 취소
-      return (
-        <MatchVote.Screen
-          name="MatchVote_4"
-          options={{
-            headerShown: false,
-          }}
-          component={MatchVote_4}
-        />
-      );
-    }
-  };
-
-  return isLoading ? (
-    <LoadingView />
-  ) : (
+export default function MatchVoteNav({ navigation, route }: any) {
+  return (
     <MatchVote.Navigator>
-      {getMatchVoteScreen()}
+      <MatchVote.Screen
+        name="MatchVote_main"
+        options={{
+          headerShown: false,
+        }}
+        component={MatchVote_main}
+        initialParams={{ matchId: route.params?.matchId }}
+      />
+      <MatchVote.Screen
+        name="MatchVote_1"
+        options={{
+          headerShown: false,
+        }}
+        component={MatchVote_1}
+      />
+      <MatchVote.Screen
+        name="MatchVote_2"
+        options={{
+          headerShown: false,
+        }}
+        component={MatchVote_2}
+      />
+      <MatchVote.Screen
+        name="MatchVote_3"
+        options={{
+          headerShown: false,
+        }}
+        component={MatchVote_3}
+      />
+      <MatchVote.Screen
+        name="MatchVote_4"
+        options={{
+          headerShown: false,
+        }}
+        component={MatchVote_4}
+      />
+      {/* {getMatchVoteScreen()} */}
       {/* <MatchVote.Screen
         name="MatchVote_5"
         options={{

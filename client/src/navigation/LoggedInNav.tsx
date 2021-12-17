@@ -27,7 +27,7 @@ export default function LoggedInNav() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Home"
+        name="Team"
         options={{
           header: () => <LoggedInHeader />,
         }}

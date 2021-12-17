@@ -92,6 +92,13 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
       });
       dispatch(getUserInfo(data));
       dispatch(getAccessToken(accessToken));
+      navigation.reset({
+        routes: [
+          {
+            name: 'User',
+          },
+        ],
+      });
     } catch (error) {
       console.log(error);
       showErrorModal();

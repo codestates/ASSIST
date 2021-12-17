@@ -297,7 +297,7 @@ export class UserService {
         const name = user.profile._json.kakao_account.profile.nickname;
         const phone = '0' + user.profile._json.kakao_account.phone_number.split(' ')[1];
         const password = user.profile._json.id;
-        const gender = '남';
+        const gender = '남성';
         return await this.signUp({
           email,
           name,

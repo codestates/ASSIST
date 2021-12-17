@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
@@ -11,6 +11,7 @@ import ColoredScrollView from '../../components/view/ColoredScrollView';
 import CloseHeader from '../../components/header/CloseHeader';
 import useNextMatch from '../../hooks/useNextMatch';
 import LoadingView from '../../components/view/LoadingView';
+import useMatchDetail from '../../hooks/useMatchDetail';
 
 const MainTitleSpaceContents = styled.View`
   width: 100%;
@@ -50,9 +51,36 @@ const Vote = styled.TouchableOpacity`
   border: 1px solid ${colors.lightGray};
 `;
 
-export default function MatchVote_1() {
+export default function MatchVote_1({ route }: any) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { isLoading, data } = useNextMatch();
+
+  const [data, setData] = useState({
+    vote: '',
+    attend: [],
+    absent: [],
+    hold: [],
+    nonRes: [],
+    date: '',
+    startTime: '',
+    endTime: '',
+    address: '',
+    address2: '',
+    day: '',
+  });
+
+  useEffect(() => {
+    if (route.params) {
+      setData(route.params.data);
+    }
+    setIsLoading(false);
+    return () => {
+      setIsLoading(true);
+    };
+  }, []);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  // const { isLoading, data } = useMatchDetail(route.params?.matchId);
   return isLoading ? (
     <LoadingView />
   ) : (

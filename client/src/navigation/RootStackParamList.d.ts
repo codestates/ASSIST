@@ -1,7 +1,13 @@
 import { VoteChoice } from '../../@types/global/types';
 
 export type RootStackParamList = {
+  Create: undefined;
+  Team: any;
+  Guest: undefined;
+  User: undefined;
   Home: undefined;
+  Match: undefined;
+
   AddOns_1: undefined;
   AddOns_2: undefined;
   AddOns_3: undefined | { bank: string };
@@ -16,6 +22,7 @@ export type RootStackParamList = {
   CreateTeam_5: undefined | { inviteCode: string };
   CreateTeam_6: undefined;
   BankSelect: { name: keyof RootStackParamList };
+  landing: undefined;
   LandingPage: undefined;
   LandingPage_1: undefined;
   LandingPage_2: undefined;
@@ -63,6 +70,7 @@ export type RootStackParamList = {
   MyProfile: undefined;
   MyProfile_1: undefined | { gender: string };
   MatchVote: undefined;
+  MatchVote_main: undefined;
   MatchVote_1: undefined;
   MatchVote_2: undefined;
   MatchVote_3: undefined;

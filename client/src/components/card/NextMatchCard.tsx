@@ -8,6 +8,7 @@ import GatheringMark from '../mark/GatheringMark';
 import Card from './Card';
 import { NextMatch } from '../../../@types/global/types';
 import useMatchVote from '../../hooks/useMatchVote';
+import { useNavigation } from '@react-navigation/native';
 
 const TitleView = styled.View`
   flex-direction: row;
@@ -25,9 +26,10 @@ const SubtitleView = styled.View`
 type NextMatchCardProps = {
   conditions: '경기 확정' | '인원 모집 중' | '투표 완료';
   nextMatch: NextMatch;
+  teamId: string | number;
 };
 
-export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardProps) {
+export default function NextMatchCard({ teamId, conditions, nextMatch }: NextMatchCardProps) {
   const matchVote = useMatchVote();
 
   const getMark = () => {
@@ -40,28 +42,30 @@ export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardPr
     }
   };
 
+  const navigation = useNavigation<any>();
+
+  const handleMatchVote = () => {
+    navigation.navigate('MatchVote', { matchId: nextMatch?.id });
+  };
+
   const getButton = () => {
-    if (conditions === '경기 확정') {
-      return (
-        <CommonModalButton
-          onPress={() => matchVote()}
-          text="자세히 보기  >"
-          color="transparent"
-          blueText
-        />
-      );
-    } else if (conditions === '투표 완료') {
-      return (
-        <CommonModalButton
-          onPress={() => matchVote()}
-          text="자세히 보기  >"
-          color="transparent"
-          blueText
-        />
-      );
-    } else if (conditions === '인원 모집 중') {
-      return <CommonModalButton onPress={() => matchVote()} text="투표하기 >" color="blue" />;
+    let text = '자세히 보기  >';
+    let color: 'transparent' | 'blue' = 'transparent';
+    let blueText = true;
+
+    if (conditions === '인원 모집 중') {
+      text = '투표하기 >';
+      color = 'blue';
+      blueText = false;
     }
+    return (
+      <CommonModalButton
+        onPress={() => handleMatchVote()}
+        text={text}
+        color={color}
+        blueText={blueText}
+      />
+    );
   };
 
   return (

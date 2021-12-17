@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 
@@ -66,8 +66,34 @@ const VotePercentContents = styled.View`
 
 const VoteStatusCardContainer = styled.View``;
 
-export default function MatchVote_6() {
+export default function MatchVote_6({ route }: any) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const [data, setData] = useState({
+    vote: '',
+    attend: [],
+    absent: [],
+    hold: [],
+    nonRes: [],
+    date: '',
+    startTime: '',
+    endTime: '',
+    address: '',
+    address2: '',
+    day: '',
+  });
+
+  useEffect(() => {
+    if (route.params) {
+      setData(route.params.data);
+    }
+    setIsLoading(false);
+    return () => {
+      setIsLoading(true);
+    };
+  }, []);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const onSubmit = (data: string) => {
     console.log(data);
