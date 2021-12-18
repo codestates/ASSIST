@@ -5,6 +5,7 @@ import { Bold, Regular } from '../../theme/fonts';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import { useDispatch } from 'react-redux';
 import { logOutUser } from '../../store/actions/userAction';
+import useReset from '../../hooks/useReset';
 
 const TitleContainer = styled.View`
   margin: 15px 0px;
@@ -20,9 +21,11 @@ const Wrapper = styled.View`
 
 export default function LogOutSelect() {
   const dispatch = useDispatch();
+  const reset = useReset({ screenName: 'Guest' });
 
   const handleLogout = () => {
     dispatch(logOutUser());
+    reset();
   };
 
   return (
@@ -39,6 +42,7 @@ export default function LogOutSelect() {
           text="로그아웃  >"
           onPress={() => {
             handleLogout();
+            reset();
           }}
         />
       </Wrapper>

@@ -3,7 +3,7 @@ import { ASSIST_SERVER_URL } from '@env';
 import axios, { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { TeamInfo, NextMatch } from '../../@types/global/types';
+import { NextMatch, TeamInfo } from '../../@types/global/types';
 import { RootState } from '../store/reducers';
 
 type useNextMatchProps = {
