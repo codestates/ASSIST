@@ -12,7 +12,7 @@ import * as yup from 'yup';
 import styled from 'styled-components/native';
 import LineSelect from '../../components/input/LineSelect';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
@@ -29,7 +29,6 @@ type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_5'>;
 
 export default function GetStarted_5({ route }: GetStartedProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  console.log(ASSIST_SERVER_URL);
   const {
     control,
     getValues,

@@ -26,4 +26,5 @@ export const imagesToLoad = [
   require('./images/Landing_5.png'),
   require('./images/Landing_6.png'),
   require('./images/Landing_7.png'),
+  require('./images/NotFound.png'),
 ];
