@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 
@@ -10,6 +10,8 @@ import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light, Regular } from '../../theme/fonts';
 import SubTitle from '../../components/text/SubTitle';
 import CounterButton from '../../components/button/CounterButton';
+import { RootState } from '../../store/reducers';
+import { addScheduleManage } from '../../store/actions/propsAction';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -40,8 +42,14 @@ const CounterRightTitle = styled.View`
 export default function ScheduleManage_3() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
+  const { date } = useSelector((state: RootState) => state.propsReducer.scheduleManage);
+  const matchDate = new Date(date);
+  const year = matchDate.getFullYear();
+  const month = matchDate.getMonth();
+  const day = matchDate.getDate();
 
   const [isPressed, setIsPressed] = useState(false);
+  const [counter, setCounter] = useState(1);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -53,7 +61,16 @@ export default function ScheduleManage_3() {
   }, [navigation, isPressed]);
 
   const onPress = () => {
+    dispatch(
+      addScheduleManage({
+        deadline: new Date(year, month, day + 1 - counter).toISOString().slice(0, 10),
+      }),
+    );
     navigation.navigate('ScheduleManage_4');
+  };
+
+  const getCounter = (counter: number) => {
+    setCounter(counter);
   };
 
   return (
@@ -73,7 +90,7 @@ export default function ScheduleManage_3() {
           <CounterLeftTitle>
             <Regular>경기 시작</Regular>
           </CounterLeftTitle>
-          <CounterButton text=" 일전" type="day" />
+          <CounterButton counter={counter} getCounter={getCounter} text=" 일전" type="day" />
           <CounterRightTitle>
             <Regular>마감</Regular>
           </CounterRightTitle>

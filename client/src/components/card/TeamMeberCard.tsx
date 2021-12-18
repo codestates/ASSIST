@@ -105,22 +105,22 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
 
   useEffect(() => {
     getTeamMember().catch((err) => console.log(err));
+
+    const getTeamInfo = async () => {
+      try {
+        const { data }: AxiosResponse<TeamInfo> = await axios.get(
+          `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
+          {
+            headers: { authorization: `Bearer ${token}` },
+          },
+        );
+        setTeamInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     getTeamInfo().catch((err) => console.log(err));
   }, []);
-
-  const getTeamInfo = async () => {
-    try {
-      const { data }: AxiosResponse<TeamInfo> = await axios.get(
-        `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
-        {
-          headers: { authorization: `Bearer ${token}` },
-        },
-      );
-      setTeamInfo(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const getTeamMember = async () => {
     try {
