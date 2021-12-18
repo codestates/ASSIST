@@ -47,9 +47,17 @@ const MatchInfoDetailStadium = styled(Regular)`
   color: ${colors.gray};
 `;
 
-const Vote = styled.View`
+const Vote = styled.TouchableOpacity`
   padding: 16px;
   background-color: ${colors.whiteSmoke};
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const VoteDark = styled(Vote)`
+  padding: 16px;
+  background-color: ${colors.gray};
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -72,6 +80,11 @@ export default function MatchVote_3({ route }: MatchVoteProps) {
     navigation.navigate('MatchVote_6');
   };
 
+  const totalAbsent =
+    (route.params?.data?.absent.length || 0) +
+    (route.params?.data?.nonRes.length || 0) +
+    (route.params?.data?.hold.length || 0);
+
   const getAttendView = () => {
     if (route.params?.data?.vote === 'attend') {
       return (
@@ -82,7 +95,10 @@ export default function MatchVote_3({ route }: MatchVoteProps) {
       );
     } else {
       return (
-        <Vote>
+        <Vote
+          onPress={() =>
+            navigation.navigate('VoteSelect', { vote: 'attend', matchId: route.params?.data?.id })
+          }>
           <Regular gray>😍 참석</Regular>
           <Regular gray>{route.params?.data?.attend.length}명</Regular>
         </Vote>
@@ -95,15 +111,29 @@ export default function MatchVote_3({ route }: MatchVoteProps) {
       return (
         <VoteSelected>
           <Bold white>😭 불참</Bold>
-          <Bold white>{route.params?.data?.absent.length}명</Bold>
+          <Bold white>{totalAbsent}명</Bold>
         </VoteSelected>
       );
-    } else {
+    } else if (route.params?.data?.vote === 'attend') {
       return (
-        <Vote>
+        <Vote
+          onPress={() =>
+            navigation.navigate('VoteSelect', { vote: 'absent', matchId: route.params?.data?.id })
+          }>
           <Regular gray>😭 불참</Regular>
-          <Regular gray>{route.params?.data?.absent.length}명</Regular>
+          <Regular gray>{totalAbsent}명</Regular>
         </Vote>
+      );
+    } else {
+      // 미응답 혹은 미정일 경우, 불참으로 간주
+      return (
+        <VoteDark
+          onPress={() =>
+            navigation.navigate('VoteSelect', { vote: 'absent', matchId: route.params?.data?.id })
+          }>
+          <Regular white>😭 불참</Regular>
+          <Regular white>{totalAbsent}명</Regular>
+        </VoteDark>
       );
     }
   };
