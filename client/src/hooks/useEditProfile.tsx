@@ -14,17 +14,9 @@ type editProfileProps = {
   password?: string;
   name?: string;
   gender?: string;
-  noNavigate?: boolean;
 };
 
-export default function useEditProfile({
-  phone,
-  role,
-  password,
-  name,
-  gender,
-  noNavigate,
-}: editProfileProps) {
+export default function useEditProfile({ phone, role, password, name, gender }: editProfileProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token } = useSelector((state: RootState) => state.userReducer);
   const toast = useToast();
@@ -48,9 +40,6 @@ export default function useEditProfile({
             toast.show('비밀번호가 변경되었습니다.');
           } else if (gender || name) {
             toast.show('프로필 수정이 완료되었습니다.');
-          }
-          if (!noNavigate) {
-            navigation.navigate('MyPage_Main');
           }
         },
       )

@@ -6,6 +6,7 @@ import NextButton from '../../components/button/NextButton';
 import { Bold, Light } from '../../theme/fonts';
 import { useDispatch } from 'react-redux';
 import { logOutUser } from '../../store/actions/userAction';
+import useReset from '../../hooks/useReset';
 
 const Container = styled.View`
   flex: 1;
@@ -28,6 +29,13 @@ const TextContainer = styled.View`
 
 export default function DeleteAccount_2() {
   const dispatch = useDispatch();
+  const reset = useReset({ screenName: 'Guest' });
+
+  const logUserOut = () => {
+    dispatch(logOutUser());
+    reset();
+  };
+
   return (
     <>
       <NextPageView>
@@ -46,7 +54,7 @@ export default function DeleteAccount_2() {
           </MainTitle>
         </Container>
       </NextPageView>
-      <NextButton text="어시스트 홈페이지로 이동  >" onPress={() => dispatch(logOutUser())} />
+      <NextButton text="어시스트 홈페이지로 이동  >" onPress={() => logUserOut()} />
     </>
   );
 }

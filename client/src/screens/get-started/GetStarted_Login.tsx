@@ -20,6 +20,7 @@ import { ASSIST_SERVER_URL } from '@env';
 import { useDispatch } from 'react-redux';
 import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/userAction';
 import useRequestSms from '../../hooks/useRequestSms';
+import useReset from '../../hooks/useReset';
 
 const schema = yup.object({
   password: yup.string().required(),
@@ -50,6 +51,8 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
   const requestSms = useRequestSms({ phone: route.params?.phone });
+  const resetUser = useReset({ screenName: 'User' });
+  const resetLanding = useReset({ screenName: 'Landing' });
 
   const setError = () => setErrorMessage(' ');
   const clearError = () => setErrorMessage('');
@@ -92,13 +95,13 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
       });
       dispatch(getUserInfo(data));
       dispatch(getAccessToken(accessToken));
-      navigation.reset({
-        routes: [
-          {
-            name: 'User',
-          },
-        ],
-      });
+      if (data.role === 'complete') {
+        resetUser();
+      } else if (data.role === 'tips') {
+        // 팁으로 넘어가기
+      } else {
+        resetLanding();
+      }
     } catch (error) {
       console.log(error);
       showErrorModal();
