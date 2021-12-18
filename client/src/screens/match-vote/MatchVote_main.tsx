@@ -35,6 +35,8 @@ export default function MatchVote_Main({ route }: MatchVoteProps) {
     } else if (data?.condition === '경기 취소') {
       // 경기 취소
       navigation.replace('MatchVote_4', { data });
+    } else if (data?.condition === '경기 완료') {
+      navigation.replace('MatchVote_5', { data });
     }
     return null;
   };

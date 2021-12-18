@@ -10,6 +10,7 @@ import CancelSelect from '../screens/drawer-select/CancelSelect';
 import ConfirmSelect from '../screens/drawer-select/ConfirmSelect';
 import MatchVote_Main from '../screens/match-vote/MatchVote_main';
 import { RootStackParamList } from './RootStackParamList';
+import MatchVote_5 from '../screens/match-vote/MatchVote_5';
 
 const MatchVote = createStackNavigator();
 type MatchVoteProps = StackScreenProps<RootStackParamList, 'MatchVote'>;
@@ -52,6 +53,13 @@ export default function MatchVoteNav({ route }: MatchVoteProps) {
           headerShown: false,
         }}
         component={MatchVote_4}
+      />
+      <MatchVote.Screen
+        name="MatchVote_5"
+        options={{
+          headerShown: false,
+        }}
+        component={MatchVote_5}
       />
       <MatchVote.Screen
         name="VoteSelect"
