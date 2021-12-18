@@ -160,7 +160,7 @@ export default function AddOns_1() {
   };
 
   const handleDetailVote = (id: number) => {
-    navigation.navigate('MatchVote', { screen: 'MatchVote_6', params: { id: id } });
+    navigation.navigate('MatchVote', { matchId: id });
   };
 
   return (

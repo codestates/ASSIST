@@ -1,6 +1,7 @@
 import { MatchInfo, VoteChoice } from '../../@types/global/types';
 
 export type RootStackParamList = {
+  NotFound: undefined;
   Create: undefined;
   Team: undefined | { teamId: string };
   Guest: undefined;
