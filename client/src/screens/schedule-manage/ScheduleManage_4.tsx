@@ -46,12 +46,10 @@ const MatchInfoContents = styled.View`
 `;
 
 export default function ScheduleManage_4() {
-  console.log(ASSIST_SERVER_URL);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const { scheduleManage } = useSelector((state: RootState) => state.propsReducer);
-  const { token } = useSelector((state: RootState) => state.userReducer);
-
+  const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const [isPressed, setIsPressed] = useState(false);
 
   useEffect(() => {
@@ -69,7 +67,7 @@ export default function ScheduleManage_4() {
     axios
       .post(
         `${ASSIST_SERVER_URL}/match`,
-        { ...scheduleManage, teamId: 430 },
+        { ...scheduleManage, teamId: selectedTeam.id },
         {
           headers: { authorization: `Bearer ${token}` },
         },

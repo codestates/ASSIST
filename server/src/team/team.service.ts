@@ -160,15 +160,12 @@ export class TeamService {
   }
 
   async getMember(id: number): Promise<IgetMember> {
-    let { users, leaderId } = await this.teamRepository.findOne({
-      where: { id },
-      relations: ['users', 'leaderId'],
-    });
-    console.log(leaderId);
-    users.forEach((user) => {
-      delete user.password;
-    });
-    return { count: users.length, users, leaderId: leaderId.id };
+    let users: any = await getManager().query(
+      `SELECT u.id,u.email,u.name,u.phone,u.gender,provider,role,leaderId FROM user_team as ut join user as u on u.id = ut.userId 
+      join team on team.id = ut.teamId where teamId = ${id} order by case when leaderId = u.id then 1 end desc, binary(u.name)`,
+    );
+
+    return { count: users.length, users, leaderId: users[0].leaderId };
   }
 
   async kickMember(id: number, userId: number, user: User) {
