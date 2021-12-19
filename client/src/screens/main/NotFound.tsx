@@ -2,12 +2,12 @@ import React from 'react';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { Bold, Light } from '../../theme/fonts';
-import NotFoundImage from '../../assets/images/NotFound.png';
 import { colors } from '../../theme/colors';
 import KakaoButton from '../../components/button/KakaoButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import useReset from '../../hooks/useReset';
+import NotFoundImage from '../../assets/images/NotFound.png';
 
 const Container = styled.View`
   flex: 1;
@@ -24,7 +24,7 @@ const ButtonContainer = styled.View`
 
 const Image = styled.Image`
   width: ${Dimensions.get('window').width}px;
-  height: 85%;
+  height: ${Dimensions.get('window').height * 0.8}px;
 `;
 
 const Wrapper = styled.View`

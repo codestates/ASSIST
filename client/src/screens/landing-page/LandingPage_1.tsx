@@ -8,10 +8,10 @@ import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
 import Landing_1 from '../../assets/images/Landing_1.png';
-import { useWindowDimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 
 const TitleContainer = styled.View`
-  flex: 3;
+  flex: 1;
   flex-direction: row;
   justify-content: space-between;
 `;
@@ -21,7 +21,7 @@ const TitleLeftButtonSpace = styled.View`
 `;
 
 const Title = styled.View`
-  flex: 6;
+  /* flex: 6; */
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -34,8 +34,9 @@ const TitleRightButton = styled.TouchableOpacity`
 `;
 
 const LandingImage = styled.Image`
-  width: ${(props: { width: number }) => props.width}px;
+  width: 100%;
   height: 100%;
+  flex: 1;
 `;
 
 const LandingCopyRight = styled(Light)`
@@ -61,7 +62,6 @@ const FlexWrapper = styled.View`
 
 export default function LandingPage_1() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { width } = useWindowDimensions();
   return (
     <LandingPageView>
       <MainTitle>
@@ -78,7 +78,7 @@ export default function LandingPage_1() {
         </TitleContainer>
       </MainTitle>
       <FlexWrapper>
-        <LandingImage resizeMode={'contain'} width={width} source={Landing_1} />
+        <LandingImage resizeMode={'contain'} source={Landing_1} />
       </FlexWrapper>
       <LandingCopyRight>Illustration by Storyset</LandingCopyRight>
     </LandingPageView>

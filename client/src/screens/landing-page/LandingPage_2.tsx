@@ -8,7 +8,7 @@ import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
 import Landing_2 from '../../assets/images/Landing_2.png';
-import { useWindowDimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 
 const TitleContainer = styled.View`
   flex: 3;
@@ -36,8 +36,9 @@ const TitleRightButton = styled.TouchableOpacity`
 `;
 
 const LandingImage = styled.Image`
-  width: ${(props: { width: number }) => props.width}px;
+  width: 100%;
   height: 100%;
+  flex: 1;
 `;
 
 const LandingCopyRight = styled(Light)`
@@ -64,7 +65,6 @@ const FlexWrapper = styled.View`
 
 export default function LandingPage_2() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { width } = useWindowDimensions();
   return (
     <LandingPageView>
       <MainTitle>
@@ -83,7 +83,7 @@ export default function LandingPage_2() {
         </TitleContainer>
       </MainTitle>
       <FlexWrapper>
-        <LandingImage resizeMode={'contain'} width={width} source={Landing_2} />
+        <LandingImage resizeMode={'contain'} source={Landing_2} />
       </FlexWrapper>
       <LandingCopyRight>Illustration by Storyset</LandingCopyRight>
     </LandingPageView>
