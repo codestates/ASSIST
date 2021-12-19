@@ -190,7 +190,6 @@ export default function AddOns_1() {
           ) : (
             lastMatch.lastMatchs?.map((el) => (
               <>
-                {console.log(el)}
                 <Card key={el.id} margin={16}>
                   <CardTitleContainer>
                     {getConditionMark(el.condition)}
