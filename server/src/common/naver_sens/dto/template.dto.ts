@@ -1,4 +1,5 @@
 export class M001dto {
+  matchId: number;
   team: string;
   startTime: string;
   endTime: string;
@@ -7,6 +8,7 @@ export class M001dto {
   date: string;
 }
 export class M002dto {
+  matchId: number;
   name: string;
   team: string;
   date: string;
@@ -79,6 +81,7 @@ export class M010dto {
 }
 
 export class T001dto {
+  teamId: number;
   team: string;
   leader: string;
   code: string;
@@ -86,21 +89,42 @@ export class T001dto {
 }
 
 export class T002dto {
+  teamId: number;
   team: string;
   name?: string;
 }
 
 export class T003dto {
+  teamId: number;
   team: string;
   leader: string;
 }
 
 export class T004dto {
+  teamId: number;
   team: string;
   leader: string;
 }
 
-export class T009dto extends T002dto {
+export class T005dto {
+  team: string;
+  name?: string;
+}
+
+export class T006dto {
+  teamId: number;
+  team: string;
+  name: string;
+}
+
+export class T007dto {
+  teamId: number;
+  team: string;
+  name: string;
+}
+export class T009dto {
+  teamId: number;
+  team: string;
   date: string;
   bank: string;
   accountNumber: string;

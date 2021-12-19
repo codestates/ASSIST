@@ -20,9 +20,13 @@ import { PatchUser } from './interface/res.patchUser';
 import { FindpwDto } from './dto/findpw-dto';
 import { MatchRepository } from 'src/match/match.repository';
 import { TeamRepository } from 'src/team/team.repository';
+import { MakeT } from 'src/common/naver_sens/make_T_template';
+import { NaverSensService } from 'src/common/naver_sens/sens.service';
 
 @Injectable()
 export class UserService {
+  makeT = new MakeT();
+  naverSensService = new NaverSensService();
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
@@ -251,11 +255,24 @@ export class UserService {
     return { message: 'ok' };
   }
   async quitTeam(id: number, userInfo: User): Promise<object> {
-    const user = await this.userRepository.findOne({ id: userInfo.id }, { relations: ['teams'] });
+    const user = await this.userRepository.findOne(
+      { id: userInfo.id },
+      { relations: ['teams', 'teams.leaderId'] },
+    );
 
-    user.teams = user.teams.filter((el) => el.id !== id);
+    const index = user.teams.findIndex((el) => el.id === id);
+    if (index === -1) {
+      throw new NotFoundException('해당 팀에 유저가 가입되어 있지 않습니다.');
+    }
+    const deleteTeam = user.teams.splice(index, 1)[0];
 
+    let form = this.makeT.T006(user.leaderId.phone, {
+      teamId: deleteTeam.id,
+      team: deleteTeam.name,
+      name: user.name,
+    });
     await this.userRepository.save(user);
+    this.naverSensService.sendKakaoAlarm('T006', [form]);
     return { message: '완료 되었습니다.' };
   }
 

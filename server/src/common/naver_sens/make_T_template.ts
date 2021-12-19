@@ -1,4 +1,13 @@
-import { T001dto, T002dto, T003dto, T004dto, T009dto } from './dto/template.dto';
+import {
+  T001dto,
+  T002dto,
+  T003dto,
+  T004dto,
+  T005dto,
+  T006dto,
+  T007dto,
+  T009dto,
+} from './dto/template.dto';
 import getHangleDate from './utlls/get_hangle_date';
 
 export class MakeT {
@@ -24,7 +33,17 @@ export class MakeT {
               2. 팀 회비 납부 전날 알려드려요.
               3. 그 외에 팀과 관련된 소식을 알려드려요.`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '팀 정보 보기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   T002(to: string, data: T002dto) {
@@ -39,7 +58,17 @@ export class MakeT {
            ◼︎ 가입 일자
            - ${getHangleDate()}`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '팀 구성원 확인하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   T003(to: string, data: T003dto) {
@@ -53,7 +82,17 @@ export class MakeT {
       
       ** 앞으로 어시스트를 통한 일정 생성, 팀원강퇴 등은 새로운 주장님만 가능합니다.`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '팀 구성원 확인하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   T004(to: string, data: T004dto) {
@@ -66,10 +105,21 @@ export class MakeT {
       - ${data.leader} 님
       
       ** 주장에 임명된 이유는 이전 주장님께 문의 해 주세요.`;
-    return { to, content };
+
+    const buttons = [
+      {
+        type: 'WL',
+        name: '팀 정보 확인하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
-  T005(to: string, data: T002dto) {
+  T005(to: string, data: T005dto) {
     const content = `아래 팀이 삭제 되어 팀에서 탈퇴 되었습니다.
 
       ◼︎ 팀 이름
@@ -80,10 +130,20 @@ export class MakeT {
       
       ** 팀 삭제 사유는 해당 팀 주장님께 문의 해 주세요.
       ** 어시스트 서비스에서 탈퇴된 것이 아니므로, 다른 팀의 활동은 가능합니다.`;
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '어시스트 홈페이지로',
+        linkMobile: `${process.env.HOMEPAGE_URL}`,
+        linkPc: `${process.env.HOMEPAGE_URL}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
-  T006(to: string, data: T002dto) {
+  T006(to: string, data: T006dto) {
     const content = `아래 팀원이 팀을 나갔습니다.
 
       ◼︎ 팀 이름
@@ -97,10 +157,20 @@ export class MakeT {
       
       ** 팀을 나간 이유는 팀원에게 직접 문의 해 주세요.`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '팀 구성원 확인하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
-  T007(to: string, data: T002dto) {
+  T007(to: string, data: T007dto) {
     const content = `아래 팀원을 강퇴하였습니다.
 
       ◼︎ 팀 이름
@@ -112,10 +182,20 @@ export class MakeT {
       ◼︎ 강퇴 일자
       - ${getHangleDate()}`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '팀 구성원 확인하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
-  T008(to: string, data: T002dto) {
+  T008(to: string, data: T005dto) {
     const content = `아래 팀에서 강퇴되었습니다.
 
       ◼︎ 팀 이름
@@ -126,7 +206,17 @@ export class MakeT {
       
       ** 정확한 강퇴 사유는 해당 팀 주장님께 문의 해 주세요.`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '어시스트 홈페이지로',
+        linkMobile: `${process.env.HOMEPAGE_URL}`,
+        linkPc: `${process.env.HOMEPAGE_URL}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   T009(to: string, data: T009dto) {
@@ -144,6 +234,16 @@ export class MakeT {
       
       ** 정확한 납부 금액은 팀 주장 또는 총무님께 문의 해 주세요.`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '팀 상세정보 확인하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 }

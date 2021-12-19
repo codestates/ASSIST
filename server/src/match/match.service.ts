@@ -23,6 +23,8 @@ import { KakaoAlimService } from 'src/kakaoalim/kakaoalim.service';
 
 @Injectable()
 export class MatchService {
+  makeM = new MakeM();
+  naverSensService = new NaverSensService();
   kakaoAlimService = new KakaoAlimService();
   constructor(
     @InjectRepository(MatchRepository)
@@ -77,12 +79,10 @@ export class MatchService {
 
     this.userMatchRepository.createQueryBuilder().insert().into(User_match).values(data).execute();
 
-    const naverSensService = new NaverSensService();
-    const makeM = new MakeM();
-
     const arr: AlimtalkDto[] = [];
     users.forEach((user) => {
-      const { content } = makeM.M001({
+      const message = this.makeM.M001(user.phone, {
+        matchId: match.id,
         team: name,
         startTime,
         date,
@@ -90,10 +90,10 @@ export class MatchService {
         address,
         address2,
       });
-      arr.push({ to: user.phone, content });
+      arr.push(message);
     });
 
-    naverSensService.sendKakaoAlarm('M001', arr);
+    this.naverSensService.sendKakaoAlarm('M001', arr);
 
     return { id: match.id };
   }
