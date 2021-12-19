@@ -7,7 +7,7 @@ import NextPageView from '../../components/view/NextPageView';
 import { colors } from '../../theme/colors';
 
 const Container = styled.View`
-  flex: 1;
+  height: 100%;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -26,7 +26,7 @@ type FinishPageViewProps = {
 export default function FinishPageView({ children, buttonText, onPress }: FinishPageViewProps) {
   return (
     <>
-      <NextPageView>
+      <NextPageView isFinish>
         <Container>
           <CheckMark>
             <MaterialIcons name="check-circle" size={150} color={colors.blue} />
