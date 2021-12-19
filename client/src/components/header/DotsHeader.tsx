@@ -1,5 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -45,15 +46,25 @@ type DotsHeaderProps = {
   current: number;
   total: number;
   isLanding?: boolean;
+  reset?: keyof RootStackParamList;
 };
 
-export default function DotsHeader({ current, total, isLanding }: DotsHeaderProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+export default function DotsHeader({ reset, current, total, isLanding }: DotsHeaderProps) {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const getNavigation = () => {
+    if (reset) {
+      navigation.reset({ routes: [{ name: reset }] });
+    } else {
+      navigation.goBack();
+    }
+  };
+
   return (
     <HeaderContainer>
       <Wrapper isLanding={isLanding}>
         {isLanding || (
-          <ReturnButton onPress={() => navigation.goBack()}>
+          <ReturnButton onPress={() => getNavigation()}>
             <MaterialIcons name="keyboard-arrow-left" size={19} color={colors.gray} />
             <ReturnText>이전</ReturnText>
           </ReturnButton>

@@ -16,6 +16,7 @@ import { RootState } from '../../store/reducers';
 import useEditProfile from '../../hooks/useEditProfile';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import useReset from '../../hooks/useReset';
 
 const ContentContainer = styled.View`
   padding: 30px 15px;
@@ -38,6 +39,7 @@ type MyProfileProps = StackScreenProps<RootStackParamList, 'MyProfile_1'>;
 export default function MyProfile_1({ route }: MyProfileProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { name, gender, email } = useSelector((state: RootState) => state.userReducer);
+  const reset = useReset({ screenName: 'MyPage_Main' });
 
   const {
     control,
@@ -49,8 +51,6 @@ export default function MyProfile_1({ route }: MyProfileProps) {
     defaultValues: { name },
     resolver: yupResolver(schema),
   });
-
-  console.log(control);
 
   const editProfile = useEditProfile({
     name: String(getValues('name')),
@@ -90,6 +90,7 @@ export default function MyProfile_1({ route }: MyProfileProps) {
 
   const finishEditing = async () => {
     await editProfile();
+    reset();
   };
 
   return (

@@ -51,7 +51,6 @@ const MatchInfoContents = styled.View`
 `;
 
 export default function ScheduleManage_4() {
-  console.log(ASSIST_SERVER_URL);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const { scheduleManage } = useSelector((state: RootState) => state.propsReducer);

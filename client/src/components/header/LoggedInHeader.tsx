@@ -4,13 +4,17 @@ import TopContainer from './TopContainer';
 import BottomContainer from './BottomContainer';
 import Menu from '../button/Menu';
 
-export default function LoggedInHeader() {
+type LoggedInHeaderProps = {
+  isNewTeam?: boolean;
+};
+
+export default function LoggedInHeader({ isNewTeam }: LoggedInHeaderProps) {
   return (
     <HeaderContainer>
       <TopContainer>
         <Menu />
       </TopContainer>
-      <BottomContainer />
+      <BottomContainer isNewTeam={isNewTeam} />
     </HeaderContainer>
   );
 }

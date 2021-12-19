@@ -1,7 +1,5 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { RootState } from './src/store/reducers';
 import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
 import LandingPageNav from './src/navigation/LandingPageNav';
@@ -40,24 +38,7 @@ export default function Navigation() {
     },
   };
 
-  const { token, role } = useSelector((state: RootState) => state.userReducer);
-
   const rootNavigator = createStackNavigator();
-
-  const getNavigator = () => {
-    if (token.length > 0) {
-      if (role.length === 0) {
-        return <rootNavigator.Screen name="Landing" component={LandingPageNav} />;
-      } else if (role === 'tips') {
-        // 팁 보여주기
-        return;
-      } else if (role === 'complete') {
-        return <rootNavigator.Screen name="User" component={LoggedInNav} />;
-      }
-    } else {
-      return <rootNavigator.Screen name="Guest" component={LoggedOutNav} />;
-    }
-  };
 
   return (
     <NavigationContainer linking={linking}>
@@ -65,7 +46,9 @@ export default function Navigation() {
         screenOptions={{
           headerShown: false,
         }}>
-        {getNavigator()}
+        <rootNavigator.Screen name="Guest" component={LoggedOutNav} />
+        <rootNavigator.Screen name="Landing" component={LandingPageNav} />
+        <rootNavigator.Screen name="User" component={LoggedInNav} />
         <rootNavigator.Screen name="NotFound" component={NotFound} />
       </rootNavigator.Navigator>
     </NavigationContainer>

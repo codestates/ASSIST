@@ -49,9 +49,7 @@ export default function AddOns_2() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { name, leader, id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
   const { token } = useSelector((state: RootState) => state.userReducer);
-  const { nowLeaderId } = useSelector((state: RootState) => ({
-    nowLeaderId: state.propsReducer.newLeader,
-  }));
+  const { nowLeaderId } = useSelector((state: RootState) => state.propsReducer.newLeader);
   const toast = useToast();
   const goHome = useGoHome();
   const { isLoading, data } = useTeamInfo();
@@ -74,7 +72,6 @@ export default function AddOns_2() {
     try {
       await axios.patch(
         `${ASSIST_SERVER_URL}/team/${id}`,
-        { headers: { authorization: `Bearer ${token}` } },
         {
           name: data?.name,
           leaderId: `${nowLeaderId}`,
@@ -82,6 +79,7 @@ export default function AddOns_2() {
           accountNumber: data?.accountNumber,
           accountBank: data?.accountBank,
         },
+        { headers: { authorization: `Bearer ${token}` } },
       );
       goHome();
       toast.show('주장 위임이 완료 되었습니다.');

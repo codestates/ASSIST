@@ -40,7 +40,7 @@ export default function GetStartedNav() {
       <GetStartedStack.Screen
         name="GetStarted_4"
         options={{
-          header: () => <DotsHeader current={3} total={4} />,
+          header: () => <DotsHeader reset="GetStarted_2" current={3} total={4} />,
         }}
         component={GetStarted_4}
       />

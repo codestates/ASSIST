@@ -19,6 +19,7 @@ import { User } from './user.entity';
 import { PatchUser } from './interface/res.patchUser';
 import { FindpwDto } from './dto/findpw-dto';
 import { MatchRepository } from 'src/match/match.repository';
+import { TeamRepository } from 'src/team/team.repository';
 
 @Injectable()
 export class UserService {
@@ -29,6 +30,8 @@ export class UserService {
     private jwtService: JwtService,
     @InjectRepository(MatchRepository)
     private matchRepository: MatchRepository,
+    @InjectRepository(TeamRepository)
+    private teamRepository: TeamRepository,
   ) {}
 
   async sendSMS(phone: string, content: string): Promise<void> {
@@ -248,11 +251,11 @@ export class UserService {
     return { message: 'ok' };
   }
   async quitTeam(id: number, userInfo: User): Promise<object> {
-    if (userInfo.teams) {
-      userInfo.teams = userInfo.teams.filter((el) => el.id !== id);
-    }
-    await this.userRepository.save(userInfo);
+    const user = await this.userRepository.findOne({ id: userInfo.id }, { relations: ['teams'] });
 
+    user.teams = user.teams.filter((el) => el.id !== id);
+
+    await this.userRepository.save(user);
     return { message: '완료 되었습니다.' };
   }
 

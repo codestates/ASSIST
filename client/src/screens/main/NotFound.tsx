@@ -5,10 +5,9 @@ import { Bold, Light } from '../../theme/fonts';
 import NotFoundImage from '../../assets/images/NotFound.png';
 import { colors } from '../../theme/colors';
 import KakaoButton from '../../components/button/KakaoButton';
-import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import useReset from '../../hooks/useReset';
 
 const Container = styled.View`
   flex: 1;
@@ -43,23 +42,23 @@ const CopyRight = styled(Light)`
 `;
 
 export default function NotFound() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const {
     token,
     role,
     selectedTeam: { id },
   } = useSelector((state: RootState) => state.userReducer);
+  const resetGuest = useReset({ screenName: 'Guest' });
+  const resetLanding = useReset({ screenName: 'Landing' });
+  const resetUser = useReset({ screenName: 'User', params: { teamId: id } });
 
   const getNavigation = () => {
     if (token.length === 0) {
-      navigation.dispatch(CommonActions.reset({ index: 1, routes: [{ name: 'Guest' }] }));
+      resetGuest();
     } else {
       if (role.length === 0) {
-        navigation.dispatch(CommonActions.reset({ index: 1, routes: [{ name: 'Landing' }] }));
+        resetLanding();
       } else {
-        navigation.dispatch(
-          CommonActions.reset({ index: 1, routes: [{ name: 'User', params: { teamId: id } }] }),
-        );
+        resetUser();
       }
     }
   };
