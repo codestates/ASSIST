@@ -12,6 +12,10 @@ import KakaoButton from '../../components/button/KakaoButton';
 import * as Clipboard from 'expo-clipboard';
 import { useToast } from 'react-native-toast-notifications';
 import { StackScreenProps } from '@react-navigation/stack';
+import useTeamCode from '../../hooks/useTeamCode';
+import LoadingView from '../../components/view/LoadingView';
+import useInviteKakao from '../../hooks/useKakaoInvite';
+import useInviteSms from '../../hooks/useSmsInvite';
 
 const CodeContainer = styled.TouchableOpacity`
   width: 100%;
@@ -40,16 +44,30 @@ const ButtonContainer = styled.View`
 type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_5'>;
 
 export default function CreateTeam_5({ route }: CreateTeamProps) {
+  const { data, isLoading } = useTeamCode({ inviteCode: route.params?.inviteCode || '' });
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const inviteCode = String(route.params?.inviteCode);
   const toast = useToast();
+  const inviteKakao = useInviteKakao({
+    teamName: data?.name,
+    inviteCode: data?.inviteCode,
+    leader: data?.leaderName,
+  });
+  console.log(data);
+  const inviteSms = useInviteSms({
+    teamName: data?.name,
+    inviteCode: data?.inviteCode,
+    leader: data?.leaderName,
+  });
 
   const copyToClipboard = () => {
     Clipboard.setString(inviteCode);
     toast.show('클립보드에 복사되었습니다.');
   };
 
-  return (
+  return isLoading ? (
+    <LoadingView />
+  ) : (
     <>
       <NextPageView>
         <MainTitle>
@@ -64,15 +82,11 @@ export default function CreateTeam_5({ route }: CreateTeamProps) {
           </FlexBox>
         </CodeContainer>
         <ButtonContainer>
-          <KakaoButton
-            text="카카오톡으로 초대하기  >"
-            isKakao
-            onPress={() => console.log('kakaotalk')}
-          />
+          <KakaoButton text="카카오톡으로 초대하기  >" isKakao onPress={() => inviteKakao()} />
           <KakaoButton
             text="문자메시지로 초대하기  >"
             isKakao={false}
-            onPress={() => console.log('sms')}
+            onPress={() => inviteSms()}
           />
         </ButtonContainer>
       </NextPageView>

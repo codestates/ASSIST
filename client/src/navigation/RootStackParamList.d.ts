@@ -34,7 +34,7 @@ export type RootStackParamList = {
   LandingPage_7: undefined;
   LandingPage_8: undefined;
   JoinTeam: undefined;
-  JoinTeam_1: undefined | { reset: boolean };
+  JoinTeam_1: undefined | { reset: boolean; inviteCode: string };
   JoinTeam_2: undefined;
   JoinTeam_3: undefined;
   GetStarted: undefined;

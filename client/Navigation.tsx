@@ -27,6 +27,12 @@ export default function Navigation() {
                 MatchVote_Main: 'MatchVote_Main',
               },
             },
+            JoinTeam: {
+              path: 'JoinTeam',
+              screens: {
+                JoinTeam_1: 'JoinTeam_1/:inviteCode',
+              },
+            },
           },
         },
         Guest: {

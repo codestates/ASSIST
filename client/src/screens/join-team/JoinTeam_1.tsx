@@ -44,6 +44,7 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
+    defaultValues: { inviteCode: route.params?.inviteCode || '' },
   });
   const { token } = useSelector((state: RootState) => state.userReducer);
   const dispatch = useDispatch();
