@@ -12,8 +12,9 @@ export default function JoinTeamNav() {
     <JoinTeam.Navigator>
       <JoinTeam.Screen
         name="JoinTeam_1"
+        initialParams={{ inviteCode: '' }}
         options={{
-          header: () => <DotsHeader current={1} total={2} />,
+          header: () => <DotsHeader reset="CreateOrJoin" current={1} total={2} />,
         }}
         component={JoinTeam_1}
       />
