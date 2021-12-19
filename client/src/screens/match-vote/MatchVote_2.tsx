@@ -185,15 +185,18 @@ export default function MatchVote_2({ route }: MatchVoteProps) {
           <CardSpaceButton />
           <DeadLineTimer deadLine={String(route.params?.data?.deadline)} />
           {leader && (
-            <CommonModalButton
-              onPress={() => console.log('용병 구하기')}
-              height={55}
-              text="용병 구하기  >"
-              color="transparent"
-              blueText
-            />
+            <>
+              <CommonModalButton
+                onPress={() => navigation.navigate('MercenaryInvite')}
+                height={55}
+                text="용병 구하기  >"
+                color="transparent"
+                blueText
+              />
+              <Space />
+            </>
           )}
-          <Space />
+
           <CommonModalButton
             height={55}
             color="transparent"

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Platform } from 'react-native';
+import { Platform, Dimensions, Modal } from 'react-native';
 import Postcode from '@actbase/react-daum-postcode';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 
-const Container = styled.Modal`
+const Container = styled(Modal)`
   width: 100%;
   height: 100%;
 `;
@@ -41,7 +41,7 @@ export default function StadiumSelect({ route }: StadiumSelectProps) {
         />
       ) : (
         <Postcode
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: Dimensions.get('window').width, height: 400 }}
           jsOptions={{ animation: true, hideMapBtn: true }}
           onSelected={(data) => onSelected(data.address)}
           onError={onError}

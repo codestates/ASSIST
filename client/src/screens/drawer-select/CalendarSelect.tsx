@@ -45,8 +45,6 @@ type CalendarSelectProps = StackScreenProps<RootStackParamList, 'CalendarSelect'
 export default function CalendarSelect({ route }: CalendarSelectProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const [markedDates, setMarkedDates] = useState('');
-
   return (
     <BottomDrawer>
       <Calendar
@@ -59,6 +57,7 @@ export default function CalendarSelect({ route }: CalendarSelectProps) {
             merge: true,
           });
         }}
+        minDate={String(new Date())}
         firstDay={1}
         onPressArrowLeft={(subtractMonth) => subtractMonth()}
         onPressArrowRight={(addMonth) => addMonth()}

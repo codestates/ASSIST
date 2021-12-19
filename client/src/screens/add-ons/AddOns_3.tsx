@@ -230,11 +230,13 @@ export default function AddOns_3({ route }: AddOnsProps) {
           <InputSpaceInput />
         </ContentContainer>
       </ColoredScrollView>
-      <NextButton
-        disabled={!selectedTeam.leader || Boolean(errorMessage)}
-        text="팀 정보 수정하기 >"
-        onPress={handleOpenModal}
-      />
+      {selectedTeam.leader && (
+        <NextButton
+          disabled={Boolean(errorMessage)}
+          text="팀 정보 수정하기 >"
+          onPress={handleOpenModal}
+        />
+      )}
     </>
   );
 }

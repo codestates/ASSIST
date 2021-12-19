@@ -12,6 +12,9 @@ import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light, Regular } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
 import SubTitle from '../../components/text/SubTitle';
+import useNextMatch from '../../hooks/useNextMatch';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -60,6 +63,9 @@ const MecenaryAttendContainer = styled.View`
 
 export default function MercenaryInvite_4() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { selectedTeam } = useSelector((state: RootState) => state.userReducer);
+  const { money } = useSelector((state: RootState) => state.propsReducer.mercenaryInvite);
+  const { data } = useNextMatch({ teamId: selectedTeam?.id });
 
   return (
     <>
@@ -77,20 +83,24 @@ export default function MercenaryInvite_4() {
         <Container>
           <MatchInfoContainer>
             <MatchInfoTitle>
-              <Bold size={20}>FC 살쾡이</Bold>
+              <Bold size={20}>{selectedTeam?.name}</Bold>
             </MatchInfoTitle>
             <ContentsSpaceContents />
             <MatchInfoContents>
-              <Regular size={20}>2021-08-18(수)</Regular>
+              <Regular size={20}>
+                {data?.date}
+                {data?.day}
+              </Regular>
               <Bold size={20}>
-                시작 18:00 <AntDesign name="arrowright" size={20} /> 20:00 종료
+                시작 {data?.startTime} <AntDesign name="arrowright" size={20} /> {data?.endTime}{' '}
+                종료
               </Bold>
-              <Regular size={16}>서울 동대문구 천호대로 133</Regular>
-              <Regular size={16}>홈플러스 동대문점 옥상층 HM풋살파크</Regular>
+              <Regular size={16}>{data?.address}</Regular>
+              <Regular size={16}>{data?.address2}</Regular>
             </MatchInfoContents>
             <ContentSpaceButton />
             <MecenaryAttendContainer>
-              <Bold size={16}>참가비 : 15,000원</Bold>
+              <Bold size={16}>참가비 : {money}원</Bold>
             </MecenaryAttendContainer>
           </MatchInfoContainer>
         </Container>

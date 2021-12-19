@@ -11,13 +11,14 @@ import * as config from 'config';
 import { KakaoStrategy } from './kakao.strategy';
 import { MatchRepository } from 'src/match/match.repository';
 import { KakaoAlimService } from 'src/kakaoalim/kakaoalim.service';
+import { TeamRepository } from 'src/team/team.repository';
 
 const jwtConfig = config.get('jwt');
 
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    TypeOrmModule.forFeature([UserRepository, SmsRepository, MatchRepository]),
+    TypeOrmModule.forFeature([UserRepository, SmsRepository, MatchRepository, TeamRepository]),
     JwtModule.register({
       secret: process.env.ACCESS_SECRET || jwtConfig.ACCESS_SECRET,
       // signOptions: {

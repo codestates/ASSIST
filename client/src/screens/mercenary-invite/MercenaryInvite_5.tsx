@@ -1,10 +1,11 @@
 import React from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 
-import { RootStackParamList } from '../../navigation/RootStackParamList';
 import FinishPageView from '../../components/view/FinishPageView';
 import { Bold, Light, Regular } from '../../theme/fonts';
+import useGoHome from '../../hooks/useGoHome';
+import { addMercenaryMember } from '../../store/actions/propsAction';
+import { useDispatch } from 'react-redux';
 
 const Container = styled.View`
   width: 100%;
@@ -15,9 +16,14 @@ const Container = styled.View`
 `;
 
 export default function MercenaryInvite_5() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
+  const goHome = useGoHome();
+  const onPress = () => {
+    dispatch(addMercenaryMember({ needNumber: 0, money: 0 }));
+    goHome();
+  };
   return (
-    <FinishPageView buttonText="홈으로 >" onPress={() => navigation.navigate('MercenaryInvite_1')}>
+    <FinishPageView buttonText="홈으로 >" onPress={onPress}>
       <Container>
         <Bold size={20}>
           용병 구인 신청이 완료 <Light size={20}>되었어요!</Light>

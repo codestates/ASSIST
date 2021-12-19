@@ -6,6 +6,7 @@ export const ADD_JOINTEAM = 'ADD_JOINTEAM';
 export const ADD_SCHEDULEMANAGE = 'ADD_SCHEDULEMANAGE';
 export const ADD_MATCH_ID = 'ADD_MATCH_ID';
 export const ADD_TEAMMEMBERS = 'ADD_TEAMMEMBERS';
+export const ADD_MERCENARYMEMBER = 'ADD_MERCENARYMEMBER';
 export const MOD_LEADERID = 'MOD_LEADERID';
 export const CLEAR_ALL = 'CLEAR_ALL';
 
@@ -39,6 +40,10 @@ export const addMatchId = (matchId: number) => {
 
 export const addTeamMembers = (props: object) => {
   return { type: ADD_TEAMMEMBERS, payload: props };
+};
+
+export const addMercenaryMember = (props: object) => {
+  return { type: ADD_MERCENARYMEMBER, payload: props };
 };
 
 export const modifyLeaderId = (props: object) => {

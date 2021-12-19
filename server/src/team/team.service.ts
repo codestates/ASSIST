@@ -63,6 +63,7 @@ export class TeamService {
     }
 
     let info = {
+      teamId: team.id,
       team: team.name,
       code: team.inviteCode,
       name: user.name,
@@ -71,6 +72,7 @@ export class TeamService {
     };
 
     let info2 = {
+      teamId: team.id,
       team: team.name,
       name: team.leaderId.name,
       to: team.leaderId.phone,
@@ -84,8 +86,16 @@ export class TeamService {
   }
 
   async checkCode(code: string): Promise<Team> {
-    const found = await this.teamRepository.findOne({ inviteCode: code });
+    const found: any = await this.teamRepository.findOne(
+      { inviteCode: code },
+      { relations: ['leaderId'] },
+    );
+
     if (!found) throw new NotFoundException('잘못된 코드입니다.');
+
+    found.leaderName = found.leaderId.name;
+    found.leaderId = found.leaderId.id;
+
     return found;
   }
   async getDetail(id: number, user: User): Promise<any> {
@@ -126,8 +136,16 @@ export class TeamService {
     let returnData = await this.teamRepository.patchTeam(found, updateTeamDto);
 
     if (leader) {
-      let form1 = this.makeT.T003(user.phone, { team: found.name, leader: leader.name });
-      let form2 = this.makeT.T004(leader.phone, { team: found.name, leader: user.name });
+      let form1 = this.makeT.T003(user.phone, {
+        teamId: found.id,
+        team: found.name,
+        leader: leader.name,
+      });
+      let form2 = this.makeT.T004(leader.phone, {
+        teamId: found.id,
+        team: found.name,
+        leader: user.name,
+      });
       await this.naverSensService.sendKakaoAlarm('T003', [form1]);
       await this.naverSensService.sendKakaoAlarm('T004', [form2]);
     }
@@ -146,13 +164,11 @@ export class TeamService {
     let arr = [];
     for (let member of team.users) {
       if (member.id === user.id) continue;
-      let form1 = this.makeT.T005(member.phone, { team: team.name });
-      arr.push(form1);
+      let form = this.makeT.T005(member.phone, { team: team.name });
+      arr.push(form);
     }
-    let form2 = this.makeT.T006(user.phone, { team: team.name });
 
     this.naverSensService.sendKakaoAlarm('T005', arr);
-    this.naverSensService.sendKakaoAlarm('T006', [form2]);
 
     await this.teamRepository.delete({ id });
 
@@ -160,15 +176,12 @@ export class TeamService {
   }
 
   async getMember(id: number): Promise<IgetMember> {
-    let { users, leaderId } = await this.teamRepository.findOne({
-      where: { id },
-      relations: ['users', 'leaderId'],
-    });
-    console.log(leaderId);
-    users.forEach((user) => {
-      delete user.password;
-    });
-    return { count: users.length, users, leaderId: leaderId.id };
+    let users: any = await getManager().query(
+      `SELECT u.id,u.email,u.name,u.phone,u.gender,provider,role,leaderId FROM user_team as ut join user as u on u.id = ut.userId 
+      join team on team.id = ut.teamId where teamId = ${id} order by case when leaderId = u.id then 1 end desc, binary(u.name)`,
+    );
+
+    return { count: users.length, users, leaderId: users[0].leaderId };
   }
 
   async kickMember(id: number, userId: number, user: User) {
@@ -190,7 +203,11 @@ export class TeamService {
     let kickUser = team.users.splice(index, 1)[0];
     await this.teamRepository.save(team);
 
-    let form1 = this.makeT.T007(user.phone, { team: team.name, name: kickUser.name });
+    let form1 = this.makeT.T007(user.phone, {
+      teamId: team.id,
+      team: team.name,
+      name: kickUser.name,
+    });
     let form2 = this.makeT.T008(kickUser.phone, { team: team.name });
 
     this.naverSensService.sendKakaoAlarm('T007', [form1]);

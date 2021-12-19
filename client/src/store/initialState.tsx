@@ -46,4 +46,9 @@ export const propsState = {
   newLeader: {
     nowLeaderId: 0,
   },
+
+  mercenaryInvite: {
+    needNumber: 0,
+    money: '',
+  },
 };

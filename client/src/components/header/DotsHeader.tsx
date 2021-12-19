@@ -55,6 +55,7 @@ export default function DotsHeader({ reset, goHome, current, total, isLanding }:
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const navigateToHome = useGoHome();
 
+
   const getNavigation = () => {
     if (reset) {
       navigation.reset({ routes: [{ name: reset }] });
