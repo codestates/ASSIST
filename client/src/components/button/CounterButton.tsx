@@ -40,13 +40,11 @@ type CounterButtonProps = {
 function CounterButton(props: CounterButtonProps) {
   const { text, type, counter, getCounter } = props;
 
-  const [money, setMoney] = useState(0);
-
   const handleDecrement = () => {
     if (type === 'person' || type === 'day') {
       getCounter(counter - 1 < 1 ? 1 : counter - 1);
     } else if (type === 'money') {
-      setMoney((currentNumber) => (currentNumber - 1000 < 0 ? 0 : currentNumber - 1000));
+      getCounter(counter - 1000 < 0 ? 0 : counter - 1000);
     }
   };
 
@@ -54,7 +52,7 @@ function CounterButton(props: CounterButtonProps) {
     if (type === 'person' || type === 'day') {
       getCounter(counter + 1);
     } else if (type === 'money') {
-      setMoney((currentNumber) => currentNumber + 1000);
+      getCounter(counter + 1000);
     }
   };
 
@@ -65,7 +63,7 @@ function CounterButton(props: CounterButtonProps) {
           <AntDesign name="minus" />
         </OperationButton>
         <TitleContainer>
-          <Bold size={17}>{type === 'person' || type === 'day' ? counter : money}</Bold>
+          <Bold size={17}>{counter}</Bold>
           <Bold size={17}>{text}</Bold>
         </TitleContainer>
         <OperationButton onPress={handleIncrement}>
