@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import KakaoButton from '../../components/button/KakaoButton';
 import MainTitle from '../../components/text/MainTitle';
@@ -13,10 +13,11 @@ import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
 import { useDispatch } from 'react-redux';
 import { addGetStarted } from '../../store/actions/propsAction';
-import { getAccessToken } from '../../store/actions/userAction';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import * as Linking from 'expo-linking';
+import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/userAction';
+import useReset from '../../hooks/useReset';
 
 type showType = {
   show: boolean;
@@ -55,6 +56,7 @@ export default function GetStarted_1() {
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
+  const reset = useReset({ screenName: 'User' });
 
   const [show, setshow] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -79,6 +81,14 @@ export default function GetStarted_1() {
       .catch((error) => console.log(error));
   };
 
+  const loginKakao = async () => {
+    try {
+      await Linking.openURL(`${ASSIST_SERVER_URL}/user/kakao`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <>
@@ -94,9 +104,8 @@ export default function GetStarted_1() {
           <KakaoButton
             text="카카오로 1초만에 시작하기"
             isKakao
-            onPress={() => {
-              Linking.openURL(`${ASSIST_SERVER_URL}/user/kakao`);
-              // window.location.href = 'http://localhost/user/kakao';
+            onPress={async () => {
+              await loginKakao();
             }}
           />
           <KakaoButton

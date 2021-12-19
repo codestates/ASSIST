@@ -22,7 +22,7 @@ export default function FindPasswordNav({ route }: FindPasswordProps) {
       <FindPasswordStack.Screen
         name="FindPassword_2"
         options={{
-          header: () => <DotsHeader current={2} total={2} />,
+          header: () => <DotsHeader reset="MyPage_Main" current={2} total={2} />,
         }}
         initialParams={{ screenName: route.params?.screenName, email: route.params?.email }}
         component={FindPassword_2}

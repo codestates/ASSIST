@@ -81,7 +81,7 @@ export default function AddOns_2() {
         },
         { headers: { authorization: `Bearer ${token}` } },
       );
-      goHome;
+      goHome();
       toast.show('주장 위임이 완료 되었습니다.');
     } catch (err) {
       console.log(err);
