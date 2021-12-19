@@ -6,6 +6,7 @@ import { colors } from '../../theme/colors';
 import { useDispatch } from 'react-redux';
 import { changeRole } from '../../store/actions/userAction';
 import useEditProfile from '../../hooks/useEditProfile';
+import useReset from '../../hooks/useReset';
 
 const Container = styled.View`
   flex: 1;
@@ -35,10 +36,12 @@ const LastText = styled(Light)`
 export default function LandingPage_8() {
   const dispatch = useDispatch();
   const editProfile = useEditProfile({ role: 'complete' });
+  const reset = useReset({ screenName: 'User' });
 
   const goToNext = async () => {
     await editProfile();
     dispatch(changeRole('complete'));
+    reset();
   };
 
   return (

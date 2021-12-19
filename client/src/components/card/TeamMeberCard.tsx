@@ -19,6 +19,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { useToast } from 'react-native-toast-notifications';
 import useGoHome from '../../hooks/useGoHome';
+import { getSelectedTeam } from '../../store/actions/userAction';
 
 const Space = styled.View`
   width: 100%;
@@ -141,6 +142,7 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
       await axios.delete(`${ASSIST_SERVER_URL}/team/${selectedTeam.id}`, {
         headers: { authorization: `Bearer ${token}` },
       });
+      dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
       goHome();
       toast.show('팀 삭제가 완료 되었습니다');
     } catch (err) {
@@ -168,8 +170,9 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
           headers: { authorization: `Bearer ${token}` },
         },
       );
-      toast.show('팀원 강퇴가 완료 되었습니다.');
       setExpulsionVisible(false);
+      goHome();
+      toast.show('팀원 강퇴가 완료 되었습니다.');
     } catch (err) {
       console.log(err);
     }
@@ -355,7 +358,7 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
               <ContentAction>
                 {teamInfo.leaderId === el.id ? (
                   <TeamDeleteText onPress={handleTeamDeleteOpenModal}>팀 삭제하기</TeamDeleteText>
-                ) : checked !== el.id ? (
+                ) : checked === el.id ? (
                   <MemberRejectionText onPress={() => handleExpulsionOpenModal(el.id)}>
                     강퇴하기
                   </MemberRejectionText>
@@ -366,7 +369,9 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
             </ContentTitleBox>
           ) : (
             <ContentTitleBox key={el.id}>
-              <ContentRole>{teamInfo.leaderId === el.id ? <CaptainMark /> : <></>}</ContentRole>
+              <ContentRole>
+                {teamInfo.leaderId === el.id ? <CaptainMark /> : <Regular size={13}>팀원</Regular>}
+              </ContentRole>
               <ContentName>
                 <Regular size={16}>{el.name}</Regular>
               </ContentName>

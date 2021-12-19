@@ -19,7 +19,7 @@ export default function NewPhoneNav() {
       <NewPhone.Screen
         name="NewPhone_2"
         options={{
-          header: () => <DotsHeader current={2} total={2} />,
+          header: () => <DotsHeader reset="NewPhone_1" current={2} total={2} />,
         }}
         component={NewPhone_2}
       />
