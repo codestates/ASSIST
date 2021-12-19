@@ -121,23 +121,26 @@ export default function AddOns_2() {
         </MainTitle>
         <ContentContainer>
           <HeaderSpaceButton />
-          <CommonModalButton
-            disabled={!leader}
-            color="blue"
-            text="+ 팀원 초대하기"
-            onPress={() => navigation.navigate('AddOns_4', { inviteCode: data?.inviteCode })}
-          />
+          {leader && (
+            <CommonModalButton
+              color="blue"
+              text="+ 팀원 초대하기"
+              onPress={() => navigation.navigate('AddOns_4', { inviteCode: data?.inviteCode })}
+            />
+          )}
           <ButtonSpaceContents />
           <TeamMemberCard nowLeaderId={data?.leaderId} />
         </ContentContainer>
       </ColoredScrollView>
-      <NextButton
-        disabled={!leader}
-        text="주장 위임 하기 >"
-        onPress={() => {
-          handleLeaderOpenModal();
-        }}
-      />
+      {leader && (
+        <NextButton
+          disabled={!leader}
+          text="주장 위임 하기 >"
+          onPress={() => {
+            handleLeaderOpenModal();
+          }}
+        />
+      )}
     </>
   );
 }
