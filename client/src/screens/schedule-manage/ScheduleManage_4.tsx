@@ -73,7 +73,7 @@ export default function ScheduleManage_4() {
     axios
       .post(
         `${ASSIST_SERVER_URL}/match`,
-        { ...scheduleManage, teamId: `${selectedTeam.id}` },
+        { ...scheduleManage, teamId: selectedTeam.id },
         {
           headers: { authorization: `Bearer ${token}` },
         },

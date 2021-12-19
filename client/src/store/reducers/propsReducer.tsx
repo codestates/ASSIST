@@ -5,6 +5,7 @@ import {
   ADD_MATCH_ID,
   ADD_SCHEDULEMANAGE,
   ADD_TEAMMEMBERS,
+  ADD_MERCENARYMEMBER,
   MOD_LEADERID,
   CLEAR_ALL,
   PropsAction,
@@ -27,6 +28,10 @@ export default function propsReducer(state = propsState, action: PropsAction): t
       return Object.assign(state, { matchId: action.payload });
     case ADD_TEAMMEMBERS:
       return Object.assign(state, { teamMembers: { ...state.teamMembers, ...action.payload } });
+    case ADD_MERCENARYMEMBER:
+      return Object.assign(state, {
+        mercenaryInvite: { ...state.mercenaryInvite, ...action.payload },
+      });
     case MOD_LEADERID:
       return Object.assign(state, { newLeader: { ...state.newLeader, ...action.payload } });
     case CLEAR_ALL:

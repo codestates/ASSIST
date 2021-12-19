@@ -10,6 +10,8 @@ import ColoredScrollView from '../../components/view/ColoredScrollView';
 import CloseHeader from '../../components/header/CloseHeader';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
 
 const MainTitleSpaceContents = styled.View`
   height: 35px;
@@ -75,6 +77,7 @@ type MatchVoteProps = StackScreenProps<RootStackParamList, 'MatchVote_3'>;
 
 export default function MatchVote_3({ route }: MatchVoteProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { leader } = useSelector((state: RootState) => state.userReducer.selectedTeam);
 
   const handleDetailVote = () => {
     navigation.navigate('MatchVote_6');
@@ -153,7 +156,7 @@ export default function MatchVote_3({ route }: MatchVoteProps) {
           </Regular>
           <TextSpaceText />
           <Bold size={17}>
-            시작 {route.params?.data?.startTime} <AntDesign name="arrowright" size={17} />{' '}
+            시작 {route.params?.data?.startTime} <AntDesign name="arrowright" size={17} />
             {route.params?.data?.endTime} 종료
           </Bold>
           <TextSpaceText />
@@ -161,14 +164,18 @@ export default function MatchVote_3({ route }: MatchVoteProps) {
           <TextSpaceText />
           <MatchInfoDetailStadium>{route.params?.data?.address2}</MatchInfoDetailStadium>
           <CardSpaceButton />
-          <CommonModalButton
-            onPress={() => console.log('용병 구하기')}
-            height={55}
-            text="용병 구하기  >"
-            color="transparent"
-            blueText
-          />
-          <DottedLine />
+          {leader && (
+            <>
+              <CommonModalButton
+                onPress={() => navigation.navigate('MercenaryInvite')}
+                height={55}
+                text="용병 구하기  >"
+                color="transparent"
+                blueText
+              />
+              <DottedLine />
+            </>
+          )}
           {getAttendView()}
           <ButtonSpaceButton />
           {getAbsentView()}
