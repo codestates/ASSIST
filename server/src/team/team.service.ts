@@ -86,8 +86,16 @@ export class TeamService {
   }
 
   async checkCode(code: string): Promise<Team> {
-    const found = await this.teamRepository.findOne({ inviteCode: code });
+    const found: any = await this.teamRepository.findOne(
+      { inviteCode: code },
+      { relations: ['leaderId'] },
+    );
+
     if (!found) throw new NotFoundException('잘못된 코드입니다.');
+
+    found.leaderName = found.leaderId.name;
+    found.leaderId = found.leaderId.id;
+
     return found;
   }
   async getDetail(id: number, user: User): Promise<any> {
