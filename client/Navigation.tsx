@@ -33,6 +33,7 @@ export default function Navigation() {
                 JoinTeam_1: 'JoinTeam_1/:inviteCode',
               },
             },
+            AddOns_2: 'AddOns_2/:teamId',
           },
         },
         Guest: {
