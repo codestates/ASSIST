@@ -238,6 +238,9 @@ export default function AddOns_1() {
             horizontal={true}
             data={dummyArr}
             renderItem={({ item, index }) => {
+              if (lastMatch?.totalPage === 1) {
+                return <></>;
+              }
               if (lastMatch?.totalPage <= 5) {
                 if (index + 1 === selectPage) {
                   return (
