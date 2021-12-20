@@ -18,6 +18,7 @@ import { CreateMatchDto } from './dto/create-dto';
 import { Match } from './match.entity';
 import { UpdateMatchDto } from './dto/update-dto';
 import { VoteMatchDto } from './dto/vote-dto';
+import { MerceneryDto } from './dto/mercenery-dto';
 
 @Controller('match')
 @UseGuards(AuthGuard())
@@ -58,5 +59,14 @@ export class MatchController {
     @Body() voteMatchDto: VoteMatchDto,
   ) {
     return this.matchService.voteMatch(matchId, req.user, voteMatchDto);
+  }
+
+  @Post('/:id/mercenery')
+  requestMercenery(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() merceneryDto: MerceneryDto,
+    @Req() req: Request,
+  ) {
+    return this.matchService.requestMercenery(id, merceneryDto, req.user);
   }
 }

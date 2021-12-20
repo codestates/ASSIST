@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import React, { useState, useEffect } from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect, useRef } from 'react';
+import { NavigationProp, useNavigation, useScrollToTop } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
-
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
@@ -112,11 +111,17 @@ const PageNumber = styled(Regular)`
   font-size: 20px;
 `;
 
+const SelectPageNumber = styled(Regular)`
+  color:${colors.darkGray}
+  font-size: 35px;
+`;
+
 export default function AddOns_1() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const [lastMatch, setLastMatch] = useState<TeamLastMatchs>({});
-
+  const [dummyArr, setDummyArr] = useState<any>([]);
+  const [selectPage, setSelectPage] = useState(1);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       getLastMatch().catch((error) => console.log(error));
@@ -127,15 +132,21 @@ export default function AddOns_1() {
   const getLastMatch = async (pageNumber = 1) => {
     try {
       const { data }: AxiosResponse<TeamLastMatchs> = await axios.get(
-        `${ASSIST_SERVER_URL}/match/team/${selectedTeam.id}?limit=5&page=${pageNumber}`,
+        `${ASSIST_SERVER_URL}/match/team/${selectedTeam.id}?limit=4&page=${pageNumber}`,
         {
           headers: { authorization: `Bearer ${token}` },
         },
       );
       setLastMatch(data);
+      setDummyArr(new Array(data.totalPage).fill(''));
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handlePage = (index: number) => {
+    setSelectPage(index);
+    getLastMatch(index);
   };
 
   const getConditionMark = (condition: string) => {
@@ -165,7 +176,6 @@ export default function AddOns_1() {
   };
 
   const handleDetailVote = (id: number) => {
-    console.log(id);
     navigation.navigate('MatchVote', { matchId: id });
   };
 
@@ -226,16 +236,45 @@ export default function AddOns_1() {
             }}
             pagingEnabled={true}
             horizontal={true}
-            data={lastMatch?.lastMatchs}
-            renderItem={({ item, index }) =>
-              index + 1 === lastMatch?.totalPage + 1 ? (
-                <></>
-              ) : (
-                <FooterPageNumber onPress={() => getLastMatch(index + 1)}>
-                  <PageNumber>{index + 1}</PageNumber>
-                </FooterPageNumber>
-              )
-            }
+            data={dummyArr}
+            renderItem={({ item, index }) => {
+              if (lastMatch?.totalPage === 1) {
+                return <></>;
+              }
+              if (lastMatch?.totalPage <= 5) {
+                if (index + 1 === selectPage) {
+                  return (
+                    <FooterPageNumber>
+                      <SelectPageNumber>{index + 1}</SelectPageNumber>
+                    </FooterPageNumber>
+                  );
+                } else {
+                  return (
+                    <FooterPageNumber onPress={() => handlePage(index + 1)}>
+                      <PageNumber>{index + 1}</PageNumber>
+                    </FooterPageNumber>
+                  );
+                }
+              } else {
+                if (selectPage - 2 <= index + 1 && index + 1 <= selectPage + 2) {
+                  if (index + 1 === selectPage) {
+                    return (
+                      <FooterPageNumber>
+                        <SelectPageNumber>{index + 1}</SelectPageNumber>
+                      </FooterPageNumber>
+                    );
+                  } else {
+                    return (
+                      <FooterPageNumber onPress={() => handlePage(index + 1)}>
+                        <PageNumber>{index + 1}</PageNumber>
+                      </FooterPageNumber>
+                    );
+                  }
+                } else {
+                  return <></>;
+                }
+              }
+            }}
           />
         </ContentsContainer>
       </CardScrollView>

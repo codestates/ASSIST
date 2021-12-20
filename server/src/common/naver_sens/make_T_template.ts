@@ -53,7 +53,7 @@ export class MakeT {
            - ${data.team}
            
            ◼︎ 가입한 사람
-           - 김철수${data.name}
+           - ${data.name}
            
            ◼︎ 가입 일자
            - ${getHangleDate()}`;
@@ -62,8 +62,8 @@ export class MakeT {
       {
         type: 'WL',
         name: '팀 구성원 확인하기',
-        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
-        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
         // schemeIos: 'string',
         // schemeAndroid: 'string',
       },
@@ -86,8 +86,8 @@ export class MakeT {
       {
         type: 'WL',
         name: '팀 구성원 확인하기',
-        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
-        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
         // schemeIos: 'string',
         // schemeAndroid: 'string',
       },
@@ -161,8 +161,8 @@ export class MakeT {
       {
         type: 'WL',
         name: '팀 구성원 확인하기',
-        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
-        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
         // schemeIos: 'string',
         // schemeAndroid: 'string',
       },
@@ -186,8 +186,8 @@ export class MakeT {
       {
         type: 'WL',
         name: '팀 구성원 확인하기',
-        linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
-        linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
         // schemeIos: 'string',
         // schemeAndroid: 'string',
       },
@@ -237,7 +237,7 @@ export class MakeT {
     const buttons = [
       {
         type: 'WL',
-        name: '팀 상세정보 확인하기',
+        name: '상세정보 확인',
         linkMobile: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
         linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
         // schemeIos: 'string',

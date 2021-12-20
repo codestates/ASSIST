@@ -24,6 +24,7 @@ import { RootState } from '../../store/reducers';
 import { ASSIST_SERVER_URL } from '@env';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
+import { useToast } from 'react-native-toast-notifications';
 
 const InputSpaceInput = styled.View`
   width: 100%;
@@ -44,17 +45,19 @@ const Line = styled.View`
   margin-bottom: 35px;
 `;
 
-const schema = yup.object({
-  date: yup
-    .string()
-    .matches(/^(0?[1-9]|[12][0-9]|3[01])$/)
-    .required(),
-  money: yup.string().required(),
-  name: yup.string().required(),
-  bankAccount: yup
-    .string()
-    .matches(/^^[0-9]+(-[0-9]+)+$$/)
-    .required(),
+const schema = yup.object().shape({
+  teamInfo: yup.object().shape({
+    date: yup
+      .string()
+      .matches(/^(0?[1-9]|[12][0-9])$/)
+      .required(),
+    money: yup.string().required(),
+    name: yup.string().required(),
+    bankAccount: yup
+      .string()
+      .matches(/^^[0-9]+(-[0-9]+)+$$/)
+      .required(),
+  }),
 });
 
 type AddOnsProps = StackScreenProps<RootStackParamList, 'AddOns_3'>;
@@ -68,6 +71,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
+  const toast = useToast();
   const {
     control,
     handleSubmit,
@@ -76,7 +80,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
     setValue,
   } = useForm({
     mode: 'onChange',
-    defaultValues: { teamInfo: { name: '', date: 0, money: '', bankAccount: '' } },
+    defaultValues: { teamInfo: { name: '', date: '', money: '', bankAccount: '' } },
     resolver: yupResolver(schema),
   });
 
@@ -84,7 +88,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
     if (data !== undefined) {
       setValue('teamInfo', {
         name: data.name,
-        date: data.paymentDay,
+        date: String(data.paymentDay),
         money: data.dues,
         bankAccount: data.accountNumber,
       });
@@ -112,19 +116,22 @@ export default function AddOns_3({ route }: AddOnsProps) {
       'teamInfo.money',
       'teamInfo.bankAccount',
     ]);
+
     try {
       await axios.patch(
         `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
-        { headers: { authorization: `Bearer ${token}` } },
         {
           name: modifyTeamInfo[0],
-          paymentDay: modifyTeamInfo[1],
+          paymentDay: Number(modifyTeamInfo[1]),
           dues: modifyTeamInfo[2],
           accountNumber: modifyTeamInfo[3],
           accountBank: route.params?.bank,
         },
+        { headers: { authorization: `Bearer ${token}` } },
       );
+      navigation.replace('AddOns_3', { teamId: selectedTeam.id });
       setModalVisible(false);
+      toast.show('팀 수정이 완료되었습니다');
     } catch (err) {
       console.log(err);
     }
@@ -141,6 +148,13 @@ export default function AddOns_3({ route }: AddOnsProps) {
 
   const handleCloseModal = () => {
     setModalVisible(false);
+  };
+
+  const checkValid = () => {
+    if (isValid || route.params?.bank) {
+      return true;
+    }
+    return false;
   };
 
   return isLoading ? (
@@ -190,8 +204,8 @@ export default function AddOns_3({ route }: AddOnsProps) {
                 regex: /^\d+$/,
               },
               {
-                name: '1~31 사이',
-                regex: /^(0?[1-9]|[12][0-9]|3[01])$/,
+                name: '1~29 사이',
+                regex: /^(0?[1-9]|[12][0-9])$/,
               },
             ]}
           />
@@ -231,11 +245,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
         </ContentContainer>
       </ColoredScrollView>
       {selectedTeam.leader && (
-        <NextButton
-          disabled={Boolean(errorMessage)}
-          text="팀 정보 수정하기 >"
-          onPress={handleOpenModal}
-        />
+        <NextButton disabled={!checkValid()} text="팀 정보 수정하기 >" onPress={handleOpenModal} />
       )}
     </>
   );

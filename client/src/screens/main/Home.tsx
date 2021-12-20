@@ -31,7 +31,7 @@ export default function Home({ route }: TeamProps) {
       if (selectedTeam.id === -1) {
         getFirstTeam().catch((error) => console.log(error));
       } else if (selectedTeam.id > 0) {
-        getTeamInfo(teamId).catch((error) => console.log(error));
+        getTeamInfo(selectedTeam.id).catch((error) => console.log(error));
       }
     });
     return unsubscribe;

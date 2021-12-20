@@ -8,6 +8,7 @@ export default function useGoHome() {
   const {
     selectedTeam: { id },
   } = useSelector((state: RootState) => state.userReducer);
+
   return () =>
     navigation.dispatch(
       CommonActions.reset({
