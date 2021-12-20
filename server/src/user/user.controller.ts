@@ -118,7 +118,6 @@ export class UserController {
   @Get('/kakao')
   @UseGuards(AuthGuard('kakao'))
   async kakaoAuth(@Req() req) {
-    console.log('들어와진다');
     return req;
   }
 
@@ -128,16 +127,6 @@ export class UserController {
     console.log('콜백들어온다');
     const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
     res.redirect(`${process.env.HOMEPAGE_URL}/?accessToken=${accessToken}`);
-  }
-
-  @Get('/kakao/callback2')
-  @UseGuards(AuthGuard('kakao'))
-  async kakaoAuthCallback2(@Req() req, @Res() res) {
-    console.log('콜백들어온다');
-    const { accessToken } = await this.userService.kakaoAuthCallback(req.user);
-
-    console.log(`${process.env.HOMEPAGE_URL_LOCAL}/`);
-    res.redirect(`${process.env.HOMEPAGE_URL_LOCAL}/?accessToken=${accessToken}`);
   }
 
   @Post('kakao/mobile')
