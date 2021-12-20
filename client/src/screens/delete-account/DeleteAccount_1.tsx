@@ -78,7 +78,7 @@ export default function DeleteAccount_1() {
   const [deleteErrorMessage, setDeleteErrorMessage] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const { token } = useSelector((state: RootState) => state.userReducer);
+  const { token, provider } = useSelector((state: RootState) => state.userReducer);
 
   const setError = () => setPasswordError(' ');
   const clearDeleteErrorMessage = () => setDeleteErrorMessage('');
@@ -120,74 +120,113 @@ export default function DeleteAccount_1() {
 
   return (
     <>
-      <CommonModal visible={modalVisible} setVisible={hideErrorModal}>
-        <CommonModalTitle>
-          <Bold size={17}>비밀번호를 잘못 입력 하셨어요</Bold>
-          <Line>
-            <Regular gray size={13}>
-              오타는 없는지 다시 한 번 확인해 주세요.
-            </Regular>
-          </Line>
-        </CommonModalTitle>
-        <CommonModalButton color="whiteSmoke" text="돌아가기" onPress={hideErrorModal} />
-      </CommonModal>
-      <BottomDrawer>
-        <DeleteWrapper isUser={isUser}>
-          <TitleContainer>
-            <Bold size={20}>탈퇴하기</Bold>
-          </TitleContainer>
-          <SubtitleContainer>
-            <Regular gray>탈퇴 하시려는 이유를 알려주세요 😢</Regular>
-          </SubtitleContainer>
-          <LineInput
-            marginTop="20px"
-            control={deleteControl}
-            name="deleteAccount"
-            placeholder="직접 입력"
-            errorMessage={deleteErrorMessage}
-            clearErrorMessage={clearDeleteErrorMessage}
-            conditions={[
-              {
-                name: `글자수 ${String(watch('deleteAccount') || '').length}/50`,
-                regex: /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{1,50}$/,
-              },
-            ]}
-          />
-          <ButtonContainer>
-            <CommonModalButton
-              disabled={!isDeleteValid}
-              color="blue"
-              text="탈퇴하기  >"
-              onPress={() => deleteAccount()}
-            />
-          </ButtonContainer>
-        </DeleteWrapper>
-        <PasswordWrapper isUser={isUser}>
-          <TitleContainer>
-            <Bold size={20}>본인 확인</Bold>
-          </TitleContainer>
-          <SubtitleContainer>
-            <Regular gray>본인 확인을 위해 비밀번호를 입력해주세요.</Regular>
-          </SubtitleContainer>
-          <LineInput
-            type="password"
-            marginTop="20px"
-            control={passwordControl}
-            name="password"
-            placeholder="비밀번호를 입력해주세요"
-            errorMessage={passwordError}
-            clearErrorMessage={clearPasswordError}
-          />
-          <ButtonContainer passwordError={passwordError}>
-            <CommonModalButton
-              disabled={!isPasswordValid || Boolean(passwordError)}
-              color="blue"
-              text="다음  >"
-              onPress={() => checkUser()}
-            />
-          </ButtonContainer>
-        </PasswordWrapper>
-      </BottomDrawer>
+      {provider !== 'kakao' ? (
+        <>
+          <CommonModal visible={modalVisible} setVisible={hideErrorModal}>
+            <CommonModalTitle>
+              <Bold size={17}>비밀번호를 잘못 입력 하셨어요</Bold>
+              <Line>
+                <Regular gray size={13}>
+                  오타는 없는지 다시 한 번 확인해 주세요.
+                </Regular>
+              </Line>
+            </CommonModalTitle>
+            <CommonModalButton color="whiteSmoke" text="돌아가기" onPress={hideErrorModal} />
+          </CommonModal>
+          <BottomDrawer>
+            <DeleteWrapper isUser={isUser}>
+              <TitleContainer>
+                <Bold size={20}>탈퇴하기</Bold>
+              </TitleContainer>
+              <SubtitleContainer>
+                <Regular gray>탈퇴 하시려는 이유를 알려주세요 😢</Regular>
+              </SubtitleContainer>
+              <LineInput
+                marginTop="20px"
+                control={deleteControl}
+                name="deleteAccount"
+                placeholder="직접 입력"
+                errorMessage={deleteErrorMessage}
+                clearErrorMessage={clearDeleteErrorMessage}
+                conditions={[
+                  {
+                    name: `글자수 ${String(watch('deleteAccount') || '').length}/50`,
+                    regex: /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{1,50}$/,
+                  },
+                ]}
+              />
+              <ButtonContainer>
+                <CommonModalButton
+                  disabled={!isDeleteValid}
+                  color="blue"
+                  text="탈퇴하기  >"
+                  onPress={() => deleteAccount()}
+                />
+              </ButtonContainer>
+            </DeleteWrapper>
+            <PasswordWrapper isUser={isUser}>
+              <TitleContainer>
+                <Bold size={20}>본인 확인</Bold>
+              </TitleContainer>
+              <SubtitleContainer>
+                <Regular gray>본인 확인을 위해 비밀번호를 입력해주세요.</Regular>
+              </SubtitleContainer>
+              <LineInput
+                type="password"
+                marginTop="20px"
+                control={passwordControl}
+                name="password"
+                placeholder="비밀번호를 입력해주세요"
+                errorMessage={passwordError}
+                clearErrorMessage={clearPasswordError}
+              />
+              <ButtonContainer passwordError={passwordError}>
+                <CommonModalButton
+                  disabled={!isPasswordValid || Boolean(passwordError)}
+                  color="blue"
+                  text="다음  >"
+                  onPress={() => checkUser()}
+                />
+              </ButtonContainer>
+            </PasswordWrapper>
+          </BottomDrawer>
+        </>
+      ) : (
+        <>
+          <BottomDrawer>
+            <DeleteWrapper isUser={true}>
+              <TitleContainer>
+                <Bold size={20}>탈퇴하기</Bold>
+              </TitleContainer>
+              <SubtitleContainer>
+                <Regular gray>탈퇴 하시려는 이유를 알려주세요 😢</Regular>
+              </SubtitleContainer>
+              <LineInput
+                marginTop="20px"
+                control={deleteControl}
+                name="deleteAccount"
+                placeholder="직접 입력"
+                errorMessage={deleteErrorMessage}
+                clearErrorMessage={clearDeleteErrorMessage}
+                conditions={[
+                  {
+                    name: `글자수 ${String(watch('deleteAccount') || '').length}/50`,
+                    regex: /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{1,50}$/,
+                  },
+                ]}
+              />
+              <ButtonContainer>
+                <CommonModalButton
+                  disabled={!isDeleteValid}
+                  color="blue"
+                  text="탈퇴하기  >"
+                  onPress={() => deleteAccount()}
+                />
+              </ButtonContainer>
+            </DeleteWrapper>
+          </BottomDrawer>
+        </>
+      )}
     </>
   );
 }
