@@ -86,18 +86,23 @@ type TeamMemberProps = {
 };
 
 type NowLeaderIdProps = {
-  nowLeaderId: number;
+  newLeaderId: number;
   data: TeamMemberProps;
   teamId: number | string;
+  getNewLeaderId: (id: number) => void;
 };
 
-export default function TeamMemberCard({ nowLeaderId, teamId, data }: NowLeaderIdProps) {
+export default function TeamMemberCard({
+  newLeaderId,
+  teamId,
+  data,
+  getNewLeaderId,
+}: NowLeaderIdProps) {
   const dispatch = useDispatch();
   const toast = useToast();
   const goHome = useGoHome();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token, selectedTeam, id } = useSelector((state: RootState) => state.userReducer);
-  const [checked, setChecked] = useState(nowLeaderId);
   const [expulsionMemberId, setExpulsionMemberId] = useState(0);
   const [teamDeleteVisible, setTeamDeleteVisible] = useState(false);
   const [lastWarnVisible, setLastWarnVisible] = useState(false);
@@ -123,6 +128,7 @@ export default function TeamMemberCard({ nowLeaderId, teamId, data }: NowLeaderI
       await axios.delete(`${ASSIST_SERVER_URL}/user/team/${teamId}`, {
         headers: { authorization: `Bearer ${token}` },
       });
+      dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
       goHome();
       toast.show('팀 나가기가 완료 되었습니다.');
     } catch (err) {
@@ -135,8 +141,8 @@ export default function TeamMemberCard({ nowLeaderId, teamId, data }: NowLeaderI
       await axios.delete(`${ASSIST_SERVER_URL}/team/${teamId}/member/${expulsionMemberId}`, {
         headers: { authorization: `Bearer ${token}` },
       });
+      navigation.replace('AddOns_2', { teamId: String(teamId) });
       setExpulsionVisible(false);
-      goHome();
       toast.show('팀원 강퇴가 완료 되었습니다.');
     } catch (err) {
       console.log(err);
@@ -144,17 +150,17 @@ export default function TeamMemberCard({ nowLeaderId, teamId, data }: NowLeaderI
   };
 
   const handleRadioButton = (id: number) => {
-    if (checked !== id) {
-      setChecked(id);
+    if (newLeaderId !== id) {
+      getNewLeaderId(id);
       handleModifyLeaderId(id);
     } else {
-      setChecked(nowLeaderId);
-      handleModifyLeaderId(nowLeaderId);
+      getNewLeaderId(newLeaderId);
+      handleModifyLeaderId(newLeaderId);
     }
   };
 
-  const handleModifyLeaderId = (checked: number) => {
-    dispatch(modifyLeaderId({ nowLeaderId: checked }));
+  const handleModifyLeaderId = (newLeaderId: number) => {
+    dispatch(modifyLeaderId({ nowLeaderId: newLeaderId }));
   };
 
   const handleTeamDeleteOpenModal = () => {
@@ -308,7 +314,7 @@ export default function TeamMemberCard({ nowLeaderId, teamId, data }: NowLeaderI
               ) : (
                 <RadioButton.Android
                   value={String(el.id)}
-                  status={checked === el.id ? 'checked' : 'unchecked'}
+                  status={newLeaderId === el.id ? 'checked' : 'unchecked'}
                   onPress={() => handleRadioButton(el.id)}
                 />
               )}
@@ -322,7 +328,7 @@ export default function TeamMemberCard({ nowLeaderId, teamId, data }: NowLeaderI
             <ContentAction>
               {data.leaderId === el.id ? (
                 <TeamDeleteText onPress={handleTeamDeleteOpenModal}>팀 삭제하기</TeamDeleteText>
-              ) : checked === el.id ? (
+              ) : newLeaderId === el.id ? (
                 <MemberRejectionText onPress={() => handleExpulsionOpenModal(el.id)}>
                   강퇴하기
                 </MemberRejectionText>
