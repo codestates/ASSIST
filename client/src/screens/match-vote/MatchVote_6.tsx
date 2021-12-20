@@ -93,7 +93,7 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
   const getDetailMatch = async () => {
     try {
       const { data }: AxiosResponse<NextMatch> = await axios.get(
-        `${ASSIST_SERVER_URL}/match/${route.params?.id}`,
+        `${ASSIST_SERVER_URL}/match/${route.params?.matchId}`,
         { headers: { authorization: `Bearer ${token}` } },
       );
       setTeamDetailMatch(data);
