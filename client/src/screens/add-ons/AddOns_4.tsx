@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import MainTitle from '../../components/text/MainTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -12,7 +12,12 @@ import KakaoButton from '../../components/button/KakaoButton';
 import * as Clipboard from 'expo-clipboard';
 import { useToast } from 'react-native-toast-notifications';
 import { StackScreenProps } from '@react-navigation/stack';
-import useGoHome from '../../hooks/useGoHome';
+import useTeamCode from '../../hooks/useTeamCode';
+import LoadingView from '../../components/view/LoadingView';
+import useInviteKakao from '../../hooks/useKakaoInvite';
+import useInviteSms from '../../hooks/useSmsInvite';
+import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
+import CommonModalButton from '../../components/button/CommonModalButton';
 
 const CodeContainer = styled.TouchableOpacity`
   width: 100%;
@@ -38,24 +43,69 @@ const ButtonContainer = styled.View`
   justify-content: space-between;
 `;
 
+const Line = styled.View`
+  margin-top: 13px;
+  margin-bottom: 35px;
+`;
+
+const ButtonSpace = styled.View`
+  height: 12px;
+`;
+
 type AddOnsProps = StackScreenProps<RootStackParamList, 'AddOns_4'>;
 
 export default function AddOns_4({ route }: AddOnsProps) {
-  const inviteCode = String(route.params.inviteCode);
+  const { data, isLoading } = useTeamCode({ inviteCode: route.params?.inviteCode || '' });
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [modalVisible, setModalVisible] = useState(false);
   const toast = useToast();
-  const goHome = useGoHome();
+  const inviteKakao = useInviteKakao({
+    teamName: data?.name,
+    inviteCode: data?.inviteCode,
+    leader: data?.leaderName,
+  });
+  const inviteSms = useInviteSms({
+    teamName: data?.name,
+    inviteCode: data?.inviteCode,
+    leader: data?.leaderName,
+  });
+
+  const inviteCode = String(route.params?.inviteCode);
 
   const copyToClipboard = () => {
     Clipboard.setString(inviteCode);
     toast.show('클립보드에 복사되었습니다.');
   };
 
-  return (
+  const hideErrorModal = () => {
+    setModalVisible(false);
+  };
+
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  return isLoading ? (
+    <LoadingView />
+  ) : (
     <>
+      <CommonModal visible={modalVisible} setVisible={hideErrorModal}>
+        <CommonModalTitle>
+          <Bold size={17}>초대 메시지가 복사되었습니다.</Bold>
+          <Line>
+            <Regular gray size={13}>
+              메시지 앱에서 초대 메시지를 보내주세요.
+            </Regular>
+          </Line>
+        </CommonModalTitle>
+        <CommonModalButton color="blue" text="메시지 앱으로 이동  >" onPress={() => inviteSms()} />
+        <ButtonSpace />
+        <CommonModalButton text="돌아가기  >" onPress={hideErrorModal} />
+      </CommonModal>
       <NextPageView>
         <MainTitle>
           <Light size={22}>새로운 팀원을</Light>
-          <Bold size={22}>초대 할 차례에요 📩</Bold>
+          <Bold size={22}>초대 해 보세요 📩</Bold>
         </MainTitle>
         <CodeContainer onPress={copyToClipboard}>
           <CodeTitle>팀 초대 코드</CodeTitle>
@@ -65,19 +115,15 @@ export default function AddOns_4({ route }: AddOnsProps) {
           </FlexBox>
         </CodeContainer>
         <ButtonContainer>
-          <KakaoButton
-            text="카카오톡으로 초대하기  >"
-            isKakao
-            onPress={() => console.log('kakaotalk')}
-          />
+          <KakaoButton text="카카오톡으로 초대하기  >" isKakao onPress={() => inviteKakao()} />
           <KakaoButton
             text="문자메시지로 초대하기  >"
             isKakao={false}
-            onPress={() => console.log('sms')}
+            onPress={() => showModal()}
           />
         </ButtonContainer>
       </NextPageView>
-      <SkipButton text="다음에 초대할게요" onPress={() => goHome()} />
+      <SkipButton text="다음에 초대할게요" onPress={() => navigation.goBack()} />
     </>
   );
 }
