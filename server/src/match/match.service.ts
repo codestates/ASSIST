@@ -163,10 +163,13 @@ export class MatchService {
 
     const [lastMatchs, count] = await this.matchRepository.findAndCount({
       where: {
-        date: Raw((alias) => `${alias} < :date`, {
-          date: getDate(),
-        }),
+        // date: Raw((alias) => `${alias} < :date`, {
+        //   date: getDate(),
+        // }),
         team: { id: teamId },
+        condition: Raw((alias) => `${alias} IN (:condition)`, {
+          condition: ['경기 완료', '경기 취소'],
+        }),
       },
       order: { date: 'DESC', endTime: 'DESC', id: 'DESC' },
       skip: offset,
@@ -300,28 +303,31 @@ export class MatchService {
     return data;
   }
 
-  async requestMercenery(id, need, money, teamId) {
+  async requestMercenery(id, merceneryDto, user) {
     const match: any = await this.matchRepository.findOne(
       { id },
       { relations: ['team', 'team.leaderId'] },
     );
 
-    console.log(match);
+    console.log(user, match.team.leaderId.id);
+    if (user.id !== match.team.leaderId.id) {
+      throw new BadRequestException('용병 구인은 팀장만 가능합니다.');
+    }
+
     const template = `
     팀이름 : ${match.team.name},
-    
-    경기정보
-    ${match.date} ${match.day}
-    시작 ${match.startTime} ~ ${match.endTime} 종료
-    ${match.address}
-    ${match.address2}
+    -경기정보
 
-    주장이름 : ${match.leaderId.name}
-    주장번호 : ${match.leaderId.phone}
-    필요인원 ${need}명
-    참가비 ${money}`;
+    날짜 : ${match.date} ${match.day}
+    시간 : ${match.startTime} ~ ${match.endTime}
+    장소 :${match.address}
+         ${match.address2}
 
-    console.log(template);
-    // this.naverSensService.sendSMS('', template);
+    주장이름 : ${match.team.leaderId.name}
+    주장번호 : ${match.team.leaderId.phone}
+    필요인원 ${merceneryDto.needNumber}명
+    참가비 ${merceneryDto.money}원`;
+    this.naverSensService.sendSMS(process.env.HOST_PHONE, template, 'LMS');
+    return { message: 'ok' };
   }
 }
