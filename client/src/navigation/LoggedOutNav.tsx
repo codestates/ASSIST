@@ -3,12 +3,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoggedOutHeader from '../components/header/LoggedOutHeader';
 import Lobby from '../screens/main/Lobby';
 import GetStartedNav from './GetStartedNav';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios, { AxiosResponse } from 'axios';
 import { getAccessToken, getUserInfo, UserInfoType } from '../store/actions/userAction';
 import { ASSIST_SERVER_URL } from '@env';
 import useReset from '../hooks/useReset';
 import { Platform } from 'react-native';
+import { RootState } from '../store/reducers/index.native';
 
 const LobbyStack = createStackNavigator();
 
@@ -16,10 +17,18 @@ export default function LoggedOutNav() {
   const dispatch = useDispatch();
   const resetUser = useReset({ screenName: 'User' });
   const resetLanding = useReset({ screenName: 'Landing' });
+  const { token, role } = useSelector((state: RootState) => state.userReducer);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
       loginKakaoWeb();
+    }
+    if (token) {
+      if (role === 'complete') {
+        resetUser();
+      } else {
+        resetLanding();
+      }
     }
   }, []);
 
