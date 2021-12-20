@@ -82,21 +82,27 @@ type TeamMemberProps = {
     provider: string;
     role: string;
   }>;
+  leaderId: number;
 };
 
 type NowLeaderIdProps = {
-  nowLeaderId: number | undefined;
+  newLeaderId: number;
+  data: TeamMemberProps;
+  teamId: number | string;
+  getNewLeaderId: (id: number) => void;
 };
 
-export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
+export default function TeamMemberCard({
+  newLeaderId,
+  teamId,
+  data,
+  getNewLeaderId,
+}: NowLeaderIdProps) {
   const dispatch = useDispatch();
   const toast = useToast();
   const goHome = useGoHome();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token, selectedTeam, id } = useSelector((state: RootState) => state.userReducer);
-  const [members, setMembers] = useState<TeamMemberProps>([]);
-  const [teamInfo, setTeamInfo] = useState<TeamInfo>(Object);
-  const [checked, setChecked] = useState(nowLeaderId);
   const [expulsionMemberId, setExpulsionMemberId] = useState(0);
   const [teamDeleteVisible, setTeamDeleteVisible] = useState(false);
   const [lastWarnVisible, setLastWarnVisible] = useState(false);
@@ -104,42 +110,9 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
   const [lastLeaveTeamVisible, setLastLeaveTeamVisible] = useState(false);
   const [expulsionVisible, setExpulsionVisible] = useState(false);
 
-  useEffect(() => {
-    getTeamMember().catch((err) => console.log(err));
-    getTeamInfo().catch((err) => console.log(err));
-  }, []);
-
-  const getTeamInfo = async () => {
-    try {
-      const { data }: AxiosResponse<TeamInfo> = await axios.get(
-        `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
-        {
-          headers: { authorization: `Bearer ${token}` },
-        },
-      );
-      setTeamInfo(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getTeamMember = async () => {
-    try {
-      const { data }: AxiosResponse<TeamMemberProps> = await axios.get(
-        `${ASSIST_SERVER_URL}/team/${selectedTeam.id}/member`,
-        {
-          headers: { authorization: `Bearer ${token}` },
-        },
-      );
-      setMembers(data.users);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const removeTeam = async () => {
     try {
-      await axios.delete(`${ASSIST_SERVER_URL}/team/${selectedTeam.id}`, {
+      await axios.delete(`${ASSIST_SERVER_URL}/team/${teamId}`, {
         headers: { authorization: `Bearer ${token}` },
       });
       dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
@@ -152,9 +125,10 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
 
   const leaveTeam = async () => {
     try {
-      await axios.delete(`${ASSIST_SERVER_URL}/user/team/${selectedTeam.id}`, {
+      await axios.delete(`${ASSIST_SERVER_URL}/user/team/${teamId}`, {
         headers: { authorization: `Bearer ${token}` },
       });
+      dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
       goHome();
       toast.show('팀 나가기가 완료 되었습니다.');
     } catch (err) {
@@ -164,14 +138,11 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
 
   const expulsionMember = async () => {
     try {
-      await axios.delete(
-        `${ASSIST_SERVER_URL}/team/${selectedTeam.id}/member/${expulsionMemberId}`,
-        {
-          headers: { authorization: `Bearer ${token}` },
-        },
-      );
+      await axios.delete(`${ASSIST_SERVER_URL}/team/${teamId}/member/${expulsionMemberId}`, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      navigation.replace('AddOns_2', { teamId: String(teamId) });
       setExpulsionVisible(false);
-      goHome();
       toast.show('팀원 강퇴가 완료 되었습니다.');
     } catch (err) {
       console.log(err);
@@ -179,17 +150,17 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
   };
 
   const handleRadioButton = (id: number) => {
-    if (checked !== id) {
-      setChecked(id);
+    if (newLeaderId !== id) {
+      getNewLeaderId(id);
       handleModifyLeaderId(id);
     } else {
-      setChecked(nowLeaderId);
-      handleModifyLeaderId(nowLeaderId);
+      getNewLeaderId(newLeaderId);
+      handleModifyLeaderId(newLeaderId);
     }
   };
 
-  const handleModifyLeaderId = (checked: number) => {
-    dispatch(modifyLeaderId({ nowLeaderId: checked }));
+  const handleModifyLeaderId = (newLeaderId: number) => {
+    dispatch(modifyLeaderId({ nowLeaderId: newLeaderId }));
   };
 
   const handleTeamDeleteOpenModal = () => {
@@ -320,7 +291,7 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
           onPress={handleExpulsionCloseModal}
         />
       </CommonModal>
-      <ContentTitleBox nowLeaderId={nowLeaderId}>
+      <ContentTitleBox>
         <ContentRole>
           <Regular size={13}>역할</Regular>
         </ContentRole>
@@ -334,62 +305,59 @@ export default function TeamMemberCard({ nowLeaderId }: NowLeaderIdProps) {
           <Regular size={13}>팀 행동</Regular>
         </ContentAction>
       </ContentTitleBox>
-      {members &&
-        members.map((el) =>
-          selectedTeam.leader ? (
-            <ContentTitleBox key={el.id}>
-              <ContentRole>
-                {teamInfo.leaderId === el.id ? (
-                  <CaptainMark />
-                ) : (
-                  <RadioButton.Android
-                    value={el.id}
-                    status={checked === el.id ? 'checked' : 'unchecked'}
-                    onPress={() => handleRadioButton(el.id)}
-                  />
-                )}
-              </ContentRole>
-              <ContentName>
-                <Regular size={16}>{el.name}</Regular>
-              </ContentName>
-              <ContentPhone>
-                <Regular size={16}>{el.phone}</Regular>
-              </ContentPhone>
-              <ContentAction>
-                {teamInfo.leaderId === el.id ? (
-                  <TeamDeleteText onPress={handleTeamDeleteOpenModal}>팀 삭제하기</TeamDeleteText>
-                ) : checked === el.id ? (
-                  <MemberRejectionText onPress={() => handleExpulsionOpenModal(el.id)}>
-                    강퇴하기
-                  </MemberRejectionText>
-                ) : (
-                  <></>
-                )}
-              </ContentAction>
-            </ContentTitleBox>
-          ) : (
-            <ContentTitleBox key={el.id}>
-              <ContentRole>
-                {teamInfo.leaderId === el.id ? <CaptainMark /> : <Regular size={13}>팀원</Regular>}
-              </ContentRole>
-              <ContentName>
-                <Regular size={16}>{el.name}</Regular>
-              </ContentName>
-              <ContentPhone>
-                <Regular size={16}>{el.phone}</Regular>
-              </ContentPhone>
-              <ContentAction>
-                {id === el.id ? (
-                  <TeamDeleteText onPress={handleLeaveTeamOpenModal}>
-                    팀 나가기 {'>'}
-                  </TeamDeleteText>
-                ) : (
-                  <></>
-                )}
-              </ContentAction>
-            </ContentTitleBox>
-          ),
-        )}
+      {data.users.map((el) =>
+        data.leaderId === id ? (
+          <ContentTitleBox key={el.id}>
+            <ContentRole>
+              {data.leaderId === el.id ? (
+                <CaptainMark />
+              ) : (
+                <RadioButton.Android
+                  value={String(el.id)}
+                  status={newLeaderId === el.id ? 'checked' : 'unchecked'}
+                  onPress={() => handleRadioButton(el.id)}
+                />
+              )}
+            </ContentRole>
+            <ContentName>
+              <Regular size={16}>{el.name}</Regular>
+            </ContentName>
+            <ContentPhone>
+              <Regular size={16}>{el.phone}</Regular>
+            </ContentPhone>
+            <ContentAction>
+              {data.leaderId === el.id ? (
+                <TeamDeleteText onPress={handleTeamDeleteOpenModal}>팀 삭제하기</TeamDeleteText>
+              ) : newLeaderId === el.id ? (
+                <MemberRejectionText onPress={() => handleExpulsionOpenModal(el.id)}>
+                  강퇴하기
+                </MemberRejectionText>
+              ) : (
+                <></>
+              )}
+            </ContentAction>
+          </ContentTitleBox>
+        ) : (
+          <ContentTitleBox key={el.id}>
+            <ContentRole>
+              {data.leaderId === el.id ? <CaptainMark /> : <Regular size={13}>팀원</Regular>}
+            </ContentRole>
+            <ContentName>
+              <Regular size={16}>{el.name}</Regular>
+            </ContentName>
+            <ContentPhone>
+              <Regular size={16}>{el.phone}</Regular>
+            </ContentPhone>
+            <ContentAction>
+              {id === el.id ? (
+                <TeamDeleteText onPress={handleLeaveTeamOpenModal}>팀 나가기 {'>'}</TeamDeleteText>
+              ) : (
+                <></>
+              )}
+            </ContentAction>
+          </ContentTitleBox>
+        ),
+      )}
     </>
   );
 }

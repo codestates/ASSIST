@@ -55,8 +55,8 @@ export class TeamController {
   }
 
   @Get('/:id/member')
-  getMember(@Param('id', ParseIntPipe) id: number): Promise<IgetMember> {
-    return this.teamService.getMember(id);
+  getMember(@Param('id', ParseIntPipe) id: number, @Req() req: Request): Promise<IgetMember> {
+    return this.teamService.getMember(id, req.user);
   }
 
   @Delete('/:id')

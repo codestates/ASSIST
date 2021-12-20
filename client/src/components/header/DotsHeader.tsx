@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import styled from 'styled-components/native';
+import useGoHome from '../../hooks/useGoHome';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { colors } from '../../theme/colors';
 import { Regular } from '../../theme/fonts';
@@ -47,14 +48,19 @@ type DotsHeaderProps = {
   total: number;
   isLanding?: boolean;
   reset?: keyof RootStackParamList;
+  goHome?: boolean;
 };
 
-export default function DotsHeader({ reset, current, total, isLanding }: DotsHeaderProps) {
+export default function DotsHeader({ reset, goHome, current, total, isLanding }: DotsHeaderProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigateToHome = useGoHome();
+
 
   const getNavigation = () => {
     if (reset) {
       navigation.reset({ routes: [{ name: reset }] });
+    } else if (goHome) {
+      navigateToHome();
     } else {
       navigation.goBack();
     }

@@ -20,6 +20,8 @@ import { useToast } from 'react-native-toast-notifications';
 import useGoHome from '../../hooks/useGoHome';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { number } from 'yup/lib/locale';
+import { date } from 'yup';
 
 const HeaderSpaceButton = styled.View`
   width: 100%;
@@ -45,15 +47,59 @@ const Line = styled.View`
   margin-bottom: 35px;
 `;
 
-export default function AddOns_2() {
+export default function AddOns_2({ route }: any) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { name, leader, id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
-  const { token } = useSelector((state: RootState) => state.userReducer);
+  const { token, id } = useSelector((state: RootState) => state.userReducer);
   const { nowLeaderId } = useSelector((state: RootState) => state.propsReducer.newLeader);
   const toast = useToast();
   const goHome = useGoHome();
-  const { isLoading, data } = useTeamInfo();
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState({
+    count: 0,
+    users: [
+      {
+        id: 0,
+        email: '',
+        name: '',
+        phone: '',
+        gender: '',
+        provider: '',
+        role: '',
+        teamName: '',
+        inviteCode: '',
+      },
+    ],
+    leaderId: 0,
+  });
+  const [newLeaderId, setNewLeaderId] = useState(data?.leaderId);
+  useEffect(() => {
+    const navi = () => {
+      if (!token) {
+        // 로그인이 안되어있을때 스크린이동 // 추후 리덕스에 들어온 페이지 정보를
+        // 저장해놓고 로그인했을떄 일로 보내는형식으로 만들면 좋을듯
+        return navigation.replace('Guest', { screen: 'GetStarted' });
+      }
+      if (route.params.teamId) {
+        axios
+          .get(`${ASSIST_SERVER_URL}/team/${route.params.teamId}/member`, {
+            headers: { authorization: `Bearer ${token}` },
+          })
+          .then((el) => {
+            setData(el.data);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            //가입된 팀이 아닐시 스크린이동
+            navigation.replace('NotFound');
+          });
+      }
+    };
+    navi();
+    return () => {
+      setIsLoading(true);
+    };
+  }, []);
   const [modalVisible, setModalVisible] = useState(false);
 
   const onSubmit = (data: string) => {
@@ -71,21 +117,21 @@ export default function AddOns_2() {
   const handleChangeLeaderId = async (nowLeaderId: number) => {
     try {
       await axios.patch(
-        `${ASSIST_SERVER_URL}/team/${id}`,
+        `${ASSIST_SERVER_URL}/team/${route.params.teamId}`,
         {
-          name: data?.name,
           leaderId: `${nowLeaderId}`,
-          paymentDay: data?.paymentDay,
-          accountNumber: data?.accountNumber,
-          accountBank: data?.accountBank,
         },
         { headers: { authorization: `Bearer ${token}` } },
       );
-      goHome();
+      navigation.replace('AddOns_2', { teamId: String(route.params?.teamId) });
       toast.show('주장 위임이 완료 되었습니다.');
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const getNewLeaderId = (newLeaderId: number) => {
+    setNewLeaderId(newLeaderId);
   };
 
   return isLoading ? (
@@ -117,24 +163,30 @@ export default function AddOns_2() {
       <ColoredScrollView titleColor={colors.whiteSmoke}>
         <MainTitle marginBottom="15px">
           <Bold size={22}>팀 구성원</Bold>
-          <Regular size={17}>{name}</Regular>
+          <Regular size={17}>{data.users[0].teamName}</Regular>
         </MainTitle>
         <ContentContainer>
           <HeaderSpaceButton />
-          {leader && (
+          {data.leaderId === id && (
             <CommonModalButton
               color="blue"
               text="+ 팀원 초대하기"
-              onPress={() => navigation.navigate('AddOns_4', { inviteCode: data?.inviteCode })}
+              onPress={() =>
+                navigation.navigate('AddOns_4', { inviteCode: data?.users[0].inviteCode })
+              }
             />
           )}
           <ButtonSpaceContents />
-          <TeamMemberCard nowLeaderId={data?.leaderId} />
+          <TeamMemberCard
+            data={data}
+            teamId={route.params.teamId}
+            newLeaderId={newLeaderId}
+            getNewLeaderId={getNewLeaderId}
+          />
         </ContentContainer>
       </ColoredScrollView>
-      {leader && (
+      {newLeaderId && (
         <NextButton
-          disabled={!leader}
           text="주장 위임 하기 >"
           onPress={() => {
             handleLeaderOpenModal();

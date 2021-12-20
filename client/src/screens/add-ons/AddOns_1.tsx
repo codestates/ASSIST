@@ -165,6 +165,7 @@ export default function AddOns_1() {
   };
 
   const handleDetailVote = (id: number) => {
+    console.log(id);
     navigation.navigate('MatchVote', { matchId: id });
   };
 
