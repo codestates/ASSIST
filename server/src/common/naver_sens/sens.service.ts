@@ -13,8 +13,7 @@ export class NaverSensService {
       contentType: 'COMM',
       countryCode: '82',
       from: process.env.HOST_PHONE, // 발신자 번호
-      content: `[어시스트 ASSIST]
-      인증번호 [${content}] 입니다.`,
+      content: content,
       messages: [
         {
           to: phone, // 수신자 번호
