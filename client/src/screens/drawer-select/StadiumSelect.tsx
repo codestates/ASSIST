@@ -41,7 +41,7 @@ export default function StadiumSelect({ route }: StadiumSelectProps) {
         />
       ) : (
         <Postcode
-          style={{ display: 'flex', width: 300, height: 500 }}
+          style={{ display: 'flex' }}
           jsOptions={{ animation: true, hideMapBtn: true }}
           onSelected={(data) => onSelected(data.address)}
           onError={onError}
