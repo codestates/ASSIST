@@ -33,6 +33,13 @@ export default function Navigation() {
                 JoinTeam_1: 'JoinTeam_1/:inviteCode',
               },
             },
+            ScheduleManage: {
+              path: 'ScheduleManage',
+              screens: {
+                ScheduleManage_2: 'ScheduleManage_2',
+                StadiumSelect: 'StadiumSelect',
+              },
+            },
           },
         },
         Guest: {

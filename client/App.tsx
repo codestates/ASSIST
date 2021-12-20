@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import AppLoading from 'expo-app-loading';
@@ -10,6 +10,7 @@ import { persistor, store } from './src/store';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { Provider } from 'react-redux';
 import Navigation from './Navigation';
+import initializeKakao from './src/functions/initializeKakao';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -25,6 +26,10 @@ function App() {
   const preload = async () => {
     return preloadAssets();
   };
+
+  useEffect(() => {
+    initializeKakao();
+  }, []);
 
   if (loading) {
     return <AppLoading startAsync={preload} onError={console.warn} onFinish={onFinish} />;
