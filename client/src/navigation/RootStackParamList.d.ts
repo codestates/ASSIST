@@ -9,7 +9,7 @@ export type RootStackParamList = {
   Match: undefined;
   Landing: undefined;
   AddOns_1: undefined;
-  AddOns_2: undefined;
+  AddOns_2: undefined | { teamId: string };
   AddOns_3: undefined | { bank: string };
   AddOns_4: { inviteCode: string | undefined };
   MyPage: undefined;

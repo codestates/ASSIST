@@ -6,6 +6,8 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
 import Card from './Card';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
 
 const TitleView = styled.View`
   margin-bottom: 30px;
@@ -25,6 +27,7 @@ const Container = styled.View`
 
 export default function AddOnsCard() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { selectedTeam } = useSelector((state: RootState) => state.userReducer);
   return (
     <Container>
       <Card>
@@ -37,7 +40,8 @@ export default function AddOnsCard() {
           </Regular>
           <MaterialIcons name="keyboard-arrow-right" size={23} color={colors.gray} />
         </MenuView>
-        <MenuView onPress={() => navigation.navigate('AddOns_2')}>
+        <MenuView
+          onPress={() => navigation.navigate('AddOns_2', { teamId: String(selectedTeam.id) })}>
           <Regular size={13} gray>
             팀 구성원
           </Regular>
