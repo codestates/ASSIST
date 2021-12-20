@@ -72,7 +72,7 @@ export type VoteUser = {
   user: { name: string; phone: string };
 };
 
-export type VoteChoice = 'attend' | 'absent' | 'hold';
+export type VoteChoice = 'attend' | 'absent' | 'hold' | 'nonRes';
 
 export type MatchInfo =
   | {
