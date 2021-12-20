@@ -2,11 +2,16 @@ import React from 'react';
 import FinishPageView from '../../components/view/FinishPageView';
 import { Bold, Light } from '../../theme/fonts';
 import useGoHome from '../../hooks/useGoHome';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigation/RootStackParamList';
 
-export default function ScheduleManage_5() {
+// type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_5'>;
+export default function ScheduleManage_5({ route, navigation }: any) {
   const goHome = useGoHome();
   return (
-    <FinishPageView buttonText="투표 하러 가기" onPress={() => goHome()}>
+    <FinishPageView
+      buttonText="참석 현황 보기"
+      onPress={() => navigation.navigate('MatchVote', { matchId: route.params?.matchId })}>
       <>
         <Bold size={20}>일정 공지가 완료</Bold>
         <Light size={20}>되었어요!</Light>
