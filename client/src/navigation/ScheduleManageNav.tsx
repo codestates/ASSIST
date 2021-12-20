@@ -7,9 +7,8 @@ import ScheduleManage_3 from '../screens/schedule-manage/ScheduleManage_3';
 import ScheduleManage_4 from '../screens/schedule-manage/ScheduleManage_4';
 import ScheduleManage_5 from '../screens/schedule-manage/ScheduleManage_5';
 import CalendarSelect from '../screens/drawer-select/CalendarSelect';
-import StartTimeSelect from '../screens/drawer-select/StartTimeSelect';
-import EndTimeSelect from '../screens/drawer-select/EndTimeSelect';
 import StadiumSelect from '../screens/drawer-select/StadiumSelect';
+import TimeSelect from '../screens/drawer-select/TimeSelect';
 const ScheduleManage = createStackNavigator();
 
 export default function ScheduleManageNav() {
@@ -60,17 +59,8 @@ export default function ScheduleManageNav() {
         }}
       />
       <ScheduleManage.Screen
-        name="StartTimeSelect"
-        component={StartTimeSelect}
-        options={{
-          presentation: 'transparentModal',
-          cardOverlayEnabled: true,
-          headerShown: false,
-        }}
-      />
-      <ScheduleManage.Screen
-        name="EndTimeSelect"
-        component={EndTimeSelect}
+        name="TimeSelect"
+        component={TimeSelect}
         options={{
           presentation: 'transparentModal',
           cardOverlayEnabled: true,

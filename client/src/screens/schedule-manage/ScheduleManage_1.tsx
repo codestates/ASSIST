@@ -42,11 +42,11 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
   };
   const handleStartTime = () => {
     setIsStartPressed(true);
-    navigation.navigate('StartTimeSelect');
+    navigation.navigate('TimeSelect', { time: 'start' });
   };
   const handleEndTime = () => {
     setIsEndPressed(true);
-    navigation.navigate('EndTimeSelect');
+    navigation.navigate('TimeSelect', { time: 'end' });
   };
 
   return (
