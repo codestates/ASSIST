@@ -175,11 +175,21 @@ export class TeamService {
     return { message: '완료 되었습니다' };
   }
 
-  async getMember(id: number): Promise<IgetMember> {
+  async getMember(id: number, user): Promise<IgetMember> {
     let users: any = await getManager().query(
-      `SELECT u.id,u.email,u.name,u.phone,u.gender,provider,role,leaderId FROM user_team as ut join user as u on u.id = ut.userId 
+      `SELECT u.id,u.email,u.name,u.phone,u.gender,provider,role,leaderId,inviteCode,team.name as teamName FROM user_team as ut join user as u on u.id = ut.userId 
       join team on team.id = ut.teamId where teamId = ${id} order by case when leaderId = u.id then 1 end desc, binary(u.name)`,
     );
+
+    if (!users.length) {
+      throw new NotFoundException('해당 팀은 존재하지 않습니다.');
+    }
+
+    const found = users.findIndex((el) => el.id === user.id);
+
+    if (found === -1) {
+      throw new NotFoundException('해당 유저는 팀원이 아닙니다.');
+    }
 
     return { count: users.length, users, leaderId: users[0].leaderId };
   }

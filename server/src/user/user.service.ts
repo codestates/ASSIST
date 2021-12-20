@@ -266,7 +266,7 @@ export class UserService {
     }
     const deleteTeam = user.teams.splice(index, 1)[0];
 
-    let form = this.makeT.T006(user.leaderId.phone, {
+    let form = this.makeT.T006(deleteTeam.leaderId.phone, {
       teamId: deleteTeam.id,
       team: deleteTeam.name,
       name: user.name,
