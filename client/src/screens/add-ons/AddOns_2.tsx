@@ -72,19 +72,28 @@ export default function AddOns_2({ route }: any) {
     leaderId: 0,
   });
   useEffect(() => {
-    const test = async () => {
+    const navi = () => {
+      if (!token) {
+        // 로그인이 안되어있을때 스크린이동 // 추후 리덕스에 들어온 페이지 정보를
+        // 저장해놓고 로그인했을떄 일로 보내는형식으로 만들면 좋을듯
+        return navigation.replace('Guest', { screen: 'GetStarted' });
+      }
       if (route.params.teamId) {
-        const { data } = await axios.get(
-          `${ASSIST_SERVER_URL}/team/${route.params.teamId}/member`,
-          {
+        axios
+          .get(`${ASSIST_SERVER_URL}/team/${route.params.teamId}/member`, {
             headers: { authorization: `Bearer ${token}` },
-          },
-        );
-        setData(data);
-        setIsLoading(false);
+          })
+          .then((el) => {
+            setData(el.data);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            //가입된 팀이 아닐시 스크린이동
+            navigation.replace('NotFound');
+          });
       }
     };
-    test();
+    navi();
     return () => {
       setIsLoading(true);
     };
