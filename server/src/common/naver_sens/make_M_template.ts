@@ -59,7 +59,7 @@ export class MakeM {
        - ${data.address} ${data.address2}
        
        ◼︎ 모집 마감
-       - ${getHangleDate(data.date)} (내일) ${data.deadline}
+       - ${data.deadline} (내일) 19:00 
        
        —-
        
@@ -93,10 +93,11 @@ export class MakeM {
        - ${data.startTime} - ${data.endTime}
        
        ◼︎ 경기 장소
-       - ${data.address} ${data.address2}
+       - ${data.address} 
+         ${data.address2}
        
        ◼︎ 모집 마감
-       - ${getHangleDate(data.date)} (내일) ${data.deadline}
+       - ${data.deadline} (내일) 19:00
        
        —-
        
@@ -129,10 +130,11 @@ export class MakeM {
        - ${data.startTime} - ${data.endTime}
        
        ◼︎ 경기 장소
-       - ${data.address} ${data.address2}
+       - ${data.address}
+         ${data.address2}
        
        ◼︎ 모집 마감
-       - ${getHangleDate(data.date)} (오늘) ${data.deadline}
+       - ${getHangleDate(data.date)} (오늘) 19:00
        
        —-
        
@@ -161,7 +163,8 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.address} ${data.address2}
+       - 주소 : ${data.address} 
+               ${data.address2}
        
        ◼︎ 모집 결과
        - 참석 : ${data.attend}명
@@ -186,7 +189,8 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.address} ${data.address2}
+       - 주소 : ${data.address} 
+               ${data.address2}
        
        ◼︎ 모집 결과
        - 참석 : ${data.attend}명
@@ -217,7 +221,8 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.address} ${data.address2}
+       - 주소 : ${data.address} 
+               ${data.address2}
        
        ◼︎ 모집 결과
        - 참석 : ${data.attend}
@@ -251,12 +256,28 @@ export class MakeM {
        ◼ 경기 정보
        - 일자 : ${getHangleDate(data.date)}
        - 시간 : ${data.startTime} - ${data.endTime}
-       - 주소 : ${data.address} ${data.address2}
+       - 주소 : ${data.address}
+               ${data.address2}
        
        —-
        
        ** 경기 인원이 모자라면 [용병 구인]을 신청 해 보세요`;
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '참석 인원 확인',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+      },
+      {
+        type: 'WL',
+        name: '용병 구인하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+      },
+    ];
+
+    return { to, content, buttons };
   }
 
   M009(to: string, data: M009dto) {
@@ -268,12 +289,21 @@ export class MakeM {
      ◼ 경기 정보
      - 일자 : ${getHangleDate(data.date)}
      - 시간 : ${data.startTime} - ${data.endTime}
-     - 주소 : ${data.address} ${data.address2}
+     - 주소 : ${data.address}
+             ${data.address2}
      
      ◼︎ 취소 사유
      - ${data.reason}`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '자세히 보기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M010(to: string, data: M010dto) {
@@ -298,6 +328,14 @@ export class MakeM {
        ** 용병 구인 시 추가로 요청할 부분이 있으면 카카오톡 채팅으로 알려주세요. 참고해서 구인할게요!
        ** 참가비는 선정된 용병으로부터 직접 받으셔야 합니다. (향후 자동 결제 기능을 개발할 예정입니다)`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '자세히 보기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+      },
+    ];
+    return { to, content, buttons };
   }
 }

@@ -168,7 +168,9 @@ export class TeamService {
       arr.push(form);
     }
 
-    this.naverSensService.sendKakaoAlarm('T005', arr);
+    if (arr.length) {
+      this.naverSensService.sendKakaoAlarm('T005', arr);
+    }
 
     await this.teamRepository.delete({ id });
 

@@ -173,7 +173,7 @@ export class MatchService {
       take: limit,
     });
 
-    const totalPage = Math.round(count / limit);
+    const totalPage = Math.ceil(count / limit);
 
     const payload = { lastMatchs, totalPage };
     if (page === 1) {
@@ -298,5 +298,30 @@ export class MatchService {
 
     this.kakaoAlimService.autoFixMatchSendM006(data);
     return data;
+  }
+
+  async requestMercenery(id, need, money, teamId) {
+    const match: any = await this.matchRepository.findOne(
+      { id },
+      { relations: ['team', 'team.leaderId'] },
+    );
+
+    console.log(match);
+    const template = `
+    팀이름 : ${match.team.name},
+    
+    경기정보
+    ${match.date} ${match.day}
+    시작 ${match.startTime} ~ ${match.endTime} 종료
+    ${match.address}
+    ${match.address2}
+
+    주장이름 : ${match.leaderId.name}
+    주장번호 : ${match.leaderId.phone}
+    필요인원 ${need}명
+    참가비 ${money}`;
+
+    console.log(template);
+    // this.naverSensService.sendSMS('', template);
   }
 }

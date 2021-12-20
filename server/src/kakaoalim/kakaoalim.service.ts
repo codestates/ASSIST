@@ -178,6 +178,7 @@ export class KakaoAlimService {
   async sendM008(data, beforeCondi, afterCondi) {
     let to = data.team.leaderId.phone;
     let payload = {
+      matchId: data.id,
       team: data.team.name,
       startTime: data.startTime,
       endTime: data.endTime,
@@ -198,6 +199,7 @@ export class KakaoAlimService {
     data.user_matchs.forEach((el) => {
       if (el.condition === '참석' || el.condition === '미정' || el.condition === '미응답') {
         const payload: M009dto = {
+          matchId: data.id,
           team: data.team.name,
           startTime: data.startTime,
           endTime: data.endTime,
