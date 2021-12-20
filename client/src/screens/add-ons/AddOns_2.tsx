@@ -21,6 +21,7 @@ import useGoHome from '../../hooks/useGoHome';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { number } from 'yup/lib/locale';
+import { date } from 'yup';
 
 const HeaderSpaceButton = styled.View`
   width: 100%;
@@ -47,7 +48,7 @@ const Line = styled.View`
 `;
 
 export default function AddOns_2({ route }: any) {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token, id } = useSelector((state: RootState) => state.userReducer);
   const { nowLeaderId } = useSelector((state: RootState) => state.propsReducer.newLeader);
   const toast = useToast();
@@ -71,6 +72,7 @@ export default function AddOns_2({ route }: any) {
     ],
     leaderId: 0,
   });
+  const [newLeaderId, setNewLeaderId] = useState(data?.leaderId);
   useEffect(() => {
     const navi = () => {
       if (!token) {
@@ -121,11 +123,15 @@ export default function AddOns_2({ route }: any) {
         },
         { headers: { authorization: `Bearer ${token}` } },
       );
-      goHome();
+      navigation.replace('AddOns_2', { teamId: String(route.params?.teamId) });
       toast.show('주장 위임이 완료 되었습니다.');
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const getNewLeaderId = (newLeaderId: number) => {
+    setNewLeaderId(newLeaderId);
   };
 
   return isLoading ? (
@@ -171,12 +177,16 @@ export default function AddOns_2({ route }: any) {
             />
           )}
           <ButtonSpaceContents />
-          <TeamMemberCard data={data} teamId={route.params.teamId} nowLeaderId={data?.leaderId} />
+          <TeamMemberCard
+            data={data}
+            teamId={route.params.teamId}
+            newLeaderId={newLeaderId}
+            getNewLeaderId={getNewLeaderId}
+          />
         </ContentContainer>
       </ColoredScrollView>
-      {data.leaderId === id && (
+      {newLeaderId && (
         <NextButton
-          disabled={!(data.leaderId === id)}
           text="주장 위임 하기 >"
           onPress={() => {
             handleLeaderOpenModal();
