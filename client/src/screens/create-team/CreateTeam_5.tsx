@@ -53,7 +53,6 @@ export default function CreateTeam_5({ route }: CreateTeamProps) {
     inviteCode: data?.inviteCode,
     leader: data?.leaderName,
   });
-  console.log(data);
   const inviteSms = useInviteSms({
     teamName: data?.name,
     inviteCode: data?.inviteCode,
