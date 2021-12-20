@@ -40,6 +40,7 @@ export default function Navigation() {
                 StadiumSelect: 'StadiumSelect',
               },
             },
+            AddOns_2: 'AddOns_2/:teamId',
           },
         },
         Guest: {

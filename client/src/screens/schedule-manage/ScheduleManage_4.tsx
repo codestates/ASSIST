@@ -20,7 +20,13 @@ const TitleSpaceContents = styled.View`
 `;
 
 const ContentsSpaceContents = styled.View`
-  flex: 2;
+  width: 100%;
+  height: 35px;
+`;
+
+const TextSpaceText = styled.View`
+  width: 100%;
+  height: 8px;
 `;
 
 const Container = styled.View`
@@ -30,27 +36,25 @@ const Container = styled.View`
 
 const MatchInfoContainer = styled.View`
   width: 100%;
-  height: 100%;
   background-color: ${colors.whiteSmoke};
   border: 1px solid ${colors.lightGray};
   padding: 32px;
 `;
 
 const MatchInfoTitle = styled.View`
-  flex: 1;
+  width: 100%;
 `;
 
 const MatchInfoContents = styled.View`
-  flex: 4;
+  width: 100%;
   justify-content: space-between;
 `;
 
 export default function ScheduleManage_4() {
-  console.log(ASSIST_SERVER_URL);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const { scheduleManage } = useSelector((state: RootState) => state.propsReducer);
-  const { token } = useSelector((state: RootState) => state.userReducer);
+  const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
 
   const [isPressed, setIsPressed] = useState(false);
 
@@ -69,7 +73,7 @@ export default function ScheduleManage_4() {
     axios
       .post(
         `${ASSIST_SERVER_URL}/match`,
-        { ...scheduleManage, teamId: 430 },
+        { ...scheduleManage, teamId: selectedTeam.id },
         {
           headers: { authorization: `Bearer ${token}` },
         },
@@ -96,11 +100,14 @@ export default function ScheduleManage_4() {
             <ContentsSpaceContents />
             <MatchInfoContents>
               <Regular size={20}>{scheduleManage.date}</Regular>
+              <TextSpaceText />
               <Bold size={20}>
                 시작 {scheduleManage.startTime} <AntDesign name="arrowright" size={20} />
                 {scheduleManage.endTime} 종료
               </Bold>
+              <TextSpaceText />
               <Regular size={16}>{scheduleManage.address}</Regular>
+              <TextSpaceText />
               <Regular size={16}>{scheduleManage.address2}</Regular>
             </MatchInfoContents>
           </MatchInfoContainer>

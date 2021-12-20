@@ -11,6 +11,8 @@ import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import SubTitle from '../../components/text/SubTitle';
 import CounterButton from '../../components/button/CounterButton';
+import { useDispatch } from 'react-redux';
+import { addMercenaryMember } from '../../store/actions/propsAction';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -31,6 +33,17 @@ const CounterContainer = styled.View`
 
 export default function MercenaryInvite_3() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
+  const [money, setMoney] = useState(0);
+
+  const getMercenaryMoney = () => {
+    dispatch(addMercenaryMember({ money: money }));
+    navigation.navigate('MercenaryInvite_4');
+  };
+
+  const getMoney = (money: number) => {
+    setMoney(money);
+  };
 
   return (
     <>
@@ -47,16 +60,11 @@ export default function MercenaryInvite_3() {
         <TitleSpaceContents />
         <CounterContainer>
           <CounterSpace />
-          <CounterButton text=" 원" type="money" />
+          <CounterButton counter={money} getCounter={getMoney} text=" 원" type="money" />
           <CounterSpace />
         </CounterContainer>
       </NextPageView>
-      <NextButton
-        disabled={false}
-        onPress={() => {
-          navigation.navigate('MercenaryInvite_4');
-        }}
-      />
+      <NextButton disabled={false} onPress={() => getMercenaryMoney()} />
     </>
   );
 }

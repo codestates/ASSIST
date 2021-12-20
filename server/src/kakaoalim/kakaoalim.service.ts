@@ -16,7 +16,7 @@ export class KakaoAlimService {
   async sendM002() {
     let nextday = getDate(1);
 
-    const queryString = `SELECT b.name, b.phone , d.name as team, c.date,c.startTime,c.endTime, c.deadline, c.address,c.address2
+    const queryString = `SELECT b.name, b.phone , d.name as team, c.id,c.date,c.startTime,c.endTime, c.deadline, c.address,c.address2
      FROM user_match as a join user as b on b.id = a.userId
     join assist.match as c on c.id = matchId join team as d on d.id = teamId 
     where c.deadline = '${nextday}' and a.condition in ('미응답','미정') and c.condition = '인원 모집 중'`;
@@ -26,8 +26,9 @@ export class KakaoAlimService {
 
     if (data.length) {
       let messages = data.map(
-        ({ name, phone, team, date, startTime, endTime, deadline, address, address2 }) => {
+        ({ name, phone, team, date, startTime, endTime, deadline, address, address2, id }) => {
           return this.makeM.M002(phone, {
+            matchId: id,
             name,
             team,
             date,
@@ -46,7 +47,7 @@ export class KakaoAlimService {
   async sendM003() {
     let nextday = getDate(1);
 
-    const queryString = `SELECT b.name, b.phone , d.name as team, c.date,c.startTime,c.endTime, c.deadline, c.address,c.address2
+    const queryString = `SELECT b.name, b.phone , d.name as team, c.id,c.date,c.startTime,c.endTime, c.deadline, c.address,c.address2
      FROM user_match as a join user as b on b.id = a.userId
     join assist.match as c on c.id = matchId join team as d on d.id = teamId 
     where c.deadline = '${nextday}' and a.condition in ('미응답','불참') and c.condition = '인원 모집 중'`;
@@ -56,8 +57,9 @@ export class KakaoAlimService {
     console.log(data);
     if (data.length) {
       let messages = data.map(
-        ({ name, phone, team, date, startTime, endTime, deadline, address, address2 }) => {
+        ({ name, phone, team, date, startTime, endTime, deadline, address, address2, id }) => {
           return this.makeM.M003(phone, {
+            matchId: id,
             name,
             team,
             date,
@@ -83,6 +85,7 @@ export class KakaoAlimService {
       let arr2 = [];
       item.user_matchs.forEach((el) => {
         const payload: any = {
+          matchId: el.id,
           team: item.team.name,
           startTime: item.startTime,
           endTime: item.endTime,
@@ -145,6 +148,7 @@ export class KakaoAlimService {
       let arr2 = [];
       item.user_matchs.forEach((el) => {
         const payload: any = {
+          matchId: item.id,
           team: item.team.name,
           startTime: item.startTime,
           endTime: item.endTime,

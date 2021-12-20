@@ -1,5 +1,5 @@
 export const userState = {
-  id: '',
+  id: 0,
   token: '',
   phone: '',
   email: '',
@@ -45,5 +45,10 @@ export const propsState = {
 
   newLeader: {
     nowLeaderId: 0,
+  },
+
+  mercenaryInvite: {
+    needNumber: 0,
+    money: '',
   },
 };

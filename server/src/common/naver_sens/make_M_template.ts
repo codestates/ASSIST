@@ -13,7 +13,7 @@ import {
 import getHangleDate from './utlls/get_hangle_date';
 
 export class MakeM {
-  M001(data: M001dto) {
+  M001(to, data: M001dto) {
     const content = `${data.team}에 새로운 경기가 등록 되었어요 ⚽️
     지금 투표에 참여 해 보세요!
     
@@ -29,16 +29,22 @@ export class MakeM {
     ◼︎ 경기 장소
     - ${data.address} ${data.address2}`;
 
-    return { code: 'M001', content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '10초 만에 투표하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M002(to: string, data: M002dto) {
-    const content = `${data.name.slice(
-      1,
-    )}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
-       팀원들이 ${data.name.slice(
-         1,
-       )}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
+    const content = `${data.name.slice(1)}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
+       팀원들이 ${data.name.slice(1)}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
        
        ◼︎ 팀 이름
        - ${data.team}
@@ -60,7 +66,17 @@ export class MakeM {
        ** 마감 까지 미정, 미응답인 경우 불참으로 처리 됩니다.
        ** 마감 후에도 참석 여부를 변경할 수 있습니다.`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '10초 만에 투표하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M003(to: string, data: M003dto) {
@@ -87,20 +103,25 @@ export class MakeM {
        ** 마감 까지 미정, 미응답인 경우 불참으로 처리 됩니다.
        ** 마감 후에도 참석 여부를 변경할 수 있습니다.`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '자세히 보기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M004(to: string, data: M004dto) {
-    const content = `${data.name.slice(
-      1,
-    )}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
-       팀원들이 ${data.name.slice(
-         1,
-       )}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
+    const content = `${data.name.slice(1)}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
+       팀원들이 ${data.name.slice(1)}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
        
        ◼︎ 팀 이름
        - ${data.team}
-       
        ◼︎ 경기 일자
        - ${getHangleDate(data.date)}
        
@@ -118,7 +139,17 @@ export class MakeM {
        ** 마감 까지 미정, 미응답인 경우 불참으로 처리 됩니다.
        ** 마감 후에도 참석 여부를 변경할 수 있습니다.`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '10초 만에 투표하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M005(to: string, data: M005dto) {
@@ -147,9 +178,7 @@ export class MakeM {
   }
 
   M006(to: string, data: M006dto) {
-    const content = `[${data.name}] 선수님, [${
-      data.team
-    }]의 다음 경기가 확정되었어요🎉🎉
+    const content = `[${data.name}] 선수님, [${data.team}]의 다음 경기가 확정되었어요🎉🎉
 
        ◼︎ 팀 이름
        - ${data.team}
@@ -163,7 +192,17 @@ export class MakeM {
        - 참석 : ${data.attend}명
        - 불참 : ${data.absent}명`;
 
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '자세히 보기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M007(to: string, data: M007dto) {
@@ -183,7 +222,18 @@ export class MakeM {
        ◼︎ 모집 결과
        - 참석 : ${data.attend}
        - 불참 : ${data.absent}`;
-    return { to, content };
+
+    const buttons = [
+      {
+        type: 'WL',
+        name: '경기 확정하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        // schemeIos: 'string',
+        // schemeAndroid: 'string',
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M008(to: string, data: M008dto) {
