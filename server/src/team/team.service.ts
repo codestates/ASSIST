@@ -71,7 +71,7 @@ export class TeamService {
       const form1 = this.makeT.T011(info.to, info);
       this.naverSensService.sendKakaoAlarm('T011', [form1]);
     }
-
+    
     if (team.leaderId?.provider === 'kakao') {
       const info2 = {
         teamId: team.id,
