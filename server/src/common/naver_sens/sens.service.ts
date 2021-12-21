@@ -50,6 +50,9 @@ export class NaverSensService {
       payload.push(el);
     });
 
+    payload.forEach((el) => {
+      console.log(el);
+    });
     const body: AlimTalkMessageRequest = {
       templateCode: code,
       plusFriendId: '@assist',
