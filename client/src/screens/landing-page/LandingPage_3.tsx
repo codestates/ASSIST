@@ -12,7 +12,7 @@ import { Dimensions } from 'react-native';
 
 const TitleSpaceTitle = styled.View`
   width: 100%;
-  height: 20px;
+  height: 15px;
 `;
 
 const TitleContainer = styled.View`
@@ -25,7 +25,7 @@ const TitleLeftButton = styled.TouchableOpacity`
   flex: 1;
   align-items: flex-start;
   justify-content: flex-end;
-  padding-bottom: 12px;
+  padding-bottom: 14px;
 `;
 
 const Title = styled.View`
@@ -39,7 +39,7 @@ const TitleRightButton = styled.TouchableOpacity`
   flex: 1;
   align-items: flex-end;
   justify-content: flex-end;
-  padding-bottom: 12px;
+  padding-bottom: 14px;
 `;
 
 const ImageContainer = styled.View`

@@ -12,7 +12,7 @@ import { Dimensions } from 'react-native';
 
 const TitleSpaceTitle = styled.View`
   width: 100%;
-  height: 20px;
+  height: 15px;
 `;
 
 const TitleContainer = styled.View`
