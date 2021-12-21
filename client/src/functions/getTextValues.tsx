@@ -46,13 +46,6 @@ export default function getTextValues({ text, type }: getTextValuesProps) {
       temp += ',';
       temp += text.substr(3);
       return '₩' + temp;
-    } else {
-      temp += text.substr(0, 3);
-      temp += ',';
-      temp += text.substr(3);
-      temp += ',';
-      temp += text.substr(3, 4);
-      return '₩' + temp;
     }
   } else if (type === 'password') {
     text = text.replace(/\s/, '');

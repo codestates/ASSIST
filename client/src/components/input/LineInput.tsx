@@ -120,6 +120,9 @@ export default function LineInput({
 
   const getFocus = () => setFocused(true);
   const loseFocus = () => {
+    if (field.value === '₩') {
+      clearInput();
+    }
     setTimeout(() => {
       setFocused(false);
     });
