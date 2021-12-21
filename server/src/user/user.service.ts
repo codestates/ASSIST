@@ -272,7 +272,11 @@ export class UserService {
       name: user.name,
     });
     await this.userRepository.save(user);
-    this.naverSensService.sendKakaoAlarm('T016', [form]);
+
+    if (deleteTeam.leaderId.provider === 'kakao') {
+      this.naverSensService.sendKakaoAlarm('T016', [form]);
+    }
+
     return { message: '완료 되었습니다.' };
   }
 

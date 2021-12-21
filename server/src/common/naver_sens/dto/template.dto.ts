@@ -58,7 +58,7 @@ export class M008dto {
   after: voteCondition;
 }
 
-export class M009dto {
+export class M019dto {
   matchId: string;
   team: string;
   startTime: string;

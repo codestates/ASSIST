@@ -7,7 +7,7 @@ import {
   M006dto,
   M007dto,
   M008dto,
-  M009dto,
+  M019dto,
   M010dto,
 } from './dto/template.dto';
 import getHangleDate from './utlls/get_hangle_date';
@@ -285,7 +285,7 @@ export class MakeM {
     return { to, content, buttons };
   }
 
-  M009(to: string, data: M009dto) {
+  M019(to: string, data: M019dto) {
     const content = `[${data.name}]님, 아쉽게도 다음 경기가 취소 되었어요 😭
 
 ◼ 팀 이름

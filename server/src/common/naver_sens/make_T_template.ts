@@ -111,7 +111,7 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
         linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
       },
     ];
-    return { to, content, buttons };
+    return { to, content };
   }
 
   T005(to: string, data: T005dto) {
