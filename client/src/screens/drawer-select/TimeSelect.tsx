@@ -39,9 +39,9 @@ export default function TimeSelect({ route }: TimeSelectProps) {
   const hours: { value: string }[] = [...Array(24).keys()].map((hour) =>
     `${hour}`.length === 1 ? { value: `0${hour}` } : { value: `${hour}` },
   );
-  const minutes: { value: string }[] = [...Array(60).keys()].map((minute) =>
-    `${minute}`.length === 1 ? { value: `0${minute}` } : { value: `${minute}` },
-  );
+  const minutes: { value: string }[] = [...Array(60).keys()]
+    .filter((minute) => minute % 5 === 0)
+    .map((minute) => (`${minute}`.length === 1 ? { value: `0${minute}` } : { value: `${minute}` }));
   const dummies = [{ value: '' }, { value: '' }];
   const hoursData = [...dummies, ...hours, ...dummies];
   const minutesData = [...dummies, ...minutes, ...dummies];
