@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components/native';
 import LineSelect from '../../components/input/LineSelect';
-import { StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import axios, { AxiosResponse } from 'axios';
@@ -28,7 +28,7 @@ const Seperator = styled.View`
 type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_5'>;
 
 export default function GetStarted_5({ route }: GetStartedProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {
     control,
     getValues,
@@ -67,7 +67,7 @@ export default function GetStarted_5({ route }: GetStartedProps) {
         gender: route.params?.gender,
       })
       .then(({ data: { accessToken } }: AxiosResponse<{ accessToken: string }>) => {
-        navigation.navigate('GetStarted_6', { accessToken });
+        navigation.reset({ routes: [{ name: 'GetStarted_6', params: { accessToken } }] });
       })
       .catch((error) => console.log(error));
   };

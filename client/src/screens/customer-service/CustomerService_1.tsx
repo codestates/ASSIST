@@ -3,10 +3,10 @@ import styled from 'styled-components/native';
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../navigation/RootStackParamList';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import KakaoButton from '../../components/button/KakaoButton';
+import { Linking, Platform } from 'react-native';
+import { CUSTOMER_SERVICE_NUMBER } from '@env';
 
 const ContentContainer = styled.View`
   align-items: center;
@@ -44,7 +44,13 @@ const CallButton = styled.TouchableOpacity`
 `;
 
 export default function CustomerService_1() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const handlePhoneCall = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`tel://${CUSTOMER_SERVICE_NUMBER}`).catch((err) => console.log(err));
+    } else {
+      Linking.openURL(`tel:${CUSTOMER_SERVICE_NUMBER}`).catch((err) => console.log(err));
+    }
+  };
 
   return (
     <>
@@ -62,8 +68,8 @@ export default function CustomerService_1() {
           <DashedLine />
           <ButtonContainer>
             <KakaoButton onPress={() => console.log('kakao')} text="카카오톡 상담  >" isKakao />
-            <CallButton onPress={() => console.log('call')}>
-              <Regular gray>전화 상담 : 1644-9999</Regular>
+            <CallButton onPress={() => handlePhoneCall()}>
+              <Regular gray>전화 상담 &gt;</Regular>
             </CallButton>
           </ButtonContainer>
         </ContentContainer>
