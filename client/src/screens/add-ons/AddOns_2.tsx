@@ -11,17 +11,13 @@ import CommonModalButton from '../../components/button/CommonModalButton';
 import NextButton from '../../components/button/NextButton';
 import TeamMemberCard from '../../components/card/TeamMeberCard';
 import { RootState } from '../../store/reducers';
-import useTeamInfo from '../../hooks/useTeamInfo';
 import LoadingView from '../../components/view/LoadingView';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import axios from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import { useToast } from 'react-native-toast-notifications';
-import useGoHome from '../../hooks/useGoHome';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { number } from 'yup/lib/locale';
-import { date } from 'yup';
 
 const HeaderSpaceButton = styled.View`
   width: 100%;
@@ -52,7 +48,6 @@ export default function AddOns_2({ route }: any) {
   const { token, id } = useSelector((state: RootState) => state.userReducer);
   const { nowLeaderId } = useSelector((state: RootState) => state.propsReducer.newLeader);
   const toast = useToast();
-  const goHome = useGoHome();
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({
@@ -185,7 +180,9 @@ export default function AddOns_2({ route }: any) {
           />
         </ContentContainer>
       </ColoredScrollView>
-      {newLeaderId && (
+      {newLeaderId === 0 ? (
+        <></>
+      ) : (
         <NextButton
           text="주장 위임 하기 >"
           onPress={() => {

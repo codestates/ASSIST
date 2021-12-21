@@ -155,6 +155,7 @@ export class MakeM {
 ◼︎ 팀 이름
 - ${data.team}
 
+
 ◼ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}

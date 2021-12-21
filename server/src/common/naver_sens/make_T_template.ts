@@ -11,7 +11,9 @@ import {
 import getHangleDate from './utlls/get_hangle_date';
 
 export class MakeT {
+
   T011(to: string, data: T001dto) {
+
     let a = `[팀 가입 완료 안내]
 
 풋살 팀 가입이 완료 되었어요 🎉🎉
@@ -41,6 +43,7 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
         linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
       },
     ];
+
     //추후 버튼추가
     return { to, content: a, buttons };
   }
@@ -55,6 +58,7 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
 - ${data.name}
            
 ◼︎ 가입 일자
+
 - ${getHangleDate()}
 
 ** 해당 선수 가입 알림 메시지는 고객님의 알림 신청에 의해 발송된 메시지입니다.`;
@@ -140,6 +144,7 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
     const content = `아래 팀원이 팀을 나갔습니다.
 
 ◼︎ 팀 이름
+
 - ${data.team}
       
 ◼︎ 팀원 이름
@@ -160,6 +165,7 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
     ];
 
     return { to, content, buttons };
+
   }
 
   T007(to: string, data: T007dto) {

@@ -19,22 +19,28 @@ const Container = styled.SafeAreaView`
   background-color: ${colors.white};
   padding-top: ${getPadding()};
   justify-content: center;
+  box-shadow: ${(props: HeaderProps) =>
+    props.isLobby ? '0px 0px 20px rgba(0, 0, 0, 0.15)' : 'none'};
+  position: relative;
+  z-index: 5;
 `;
 
 type HeaderProps = {
   width: number;
   height?: number;
+  isLobby?: boolean;
 };
 
 type HeaderContainerProps = {
   children: React.ReactNode;
   height?: number;
+  isLobby?: boolean;
 };
 
-export default function HeaderContainer({ children, height }: HeaderContainerProps) {
+export default function HeaderContainer({ children, height, isLobby }: HeaderContainerProps) {
   const { width } = useWindowDimensions();
   return (
-    <Container width={width} height={height}>
+    <Container isLobby={isLobby} width={width} height={height}>
       {children}
     </Container>
   );

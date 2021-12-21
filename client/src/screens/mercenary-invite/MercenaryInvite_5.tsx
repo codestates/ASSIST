@@ -23,7 +23,7 @@ export default function MercenaryInvite_5() {
     goHome();
   };
   return (
-    <FinishPageView buttonText="홈으로 >" onPress={onPress}>
+    <FinishPageView buttonText="홈으로  >" onPress={onPress}>
       <Container>
         <Bold size={20}>
           용병 구인 신청이 완료 <Light size={20}>되었어요!</Light>

@@ -60,7 +60,7 @@ export default function MercenaryInvite_3() {
         <TitleSpaceContents />
         <CounterContainer>
           <CounterSpace />
-          <CounterButton counter={money} getCounter={getMoney} text=" 원" type="money" />
+          <CounterButton counter={money} getCounter={getMoney} type="money" />
           <CounterSpace />
         </CounterContainer>
       </NextPageView>
