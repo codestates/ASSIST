@@ -7,7 +7,7 @@ export class M001dto {
   address2: string;
   date: string;
 }
-export class M002dto {
+export class M012dto {
   matchId: number;
   name: string;
   team: string;
@@ -19,8 +19,8 @@ export class M002dto {
   deadline: string;
 }
 
-export class M003dto extends M002dto {}
-export class M004dto extends M002dto {}
+export class M003dto extends M012dto {}
+export class M004dto extends M012dto {}
 
 export class M005dto extends M001dto {
   attend: number;
@@ -58,7 +58,7 @@ export class M008dto {
   after: voteCondition;
 }
 
-export class M009dto {
+export class M019dto {
   matchId: string;
   team: string;
   startTime: string;

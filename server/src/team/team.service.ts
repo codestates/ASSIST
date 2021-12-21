@@ -62,26 +62,30 @@ export class TeamService {
       });
     }
 
-    let info = {
-      teamId: team.id,
-      team: team.name,
-      code: team.inviteCode,
-      name: user.name,
-      leader: team.leaderId.name,
-      to: user.phone,
-    };
+    if (user.provider === 'kakao') {
+      const info = {
+        teamId: team.id,
+        team: team.name,
+        code: team.inviteCode,
+        name: user.name,
+        leader: team.leaderId.name,
+        to: user.phone,
+      };
+      const form1 = this.makeT.T011(info.to, info);
+      this.naverSensService.sendKakaoAlarm('T011', [form1]);
+    }
 
-    let info2 = {
-      teamId: team.id,
-      team: team.name,
-      name: team.leaderId.name,
-      to: team.leaderId.phone,
-    };
+    if (team.leaderId.role === 'kakao') {
+      const info2 = {
+        teamId: team.id,
+        team: team.name,
+        name: user.name,
+        to: team.leaderId.phone,
+      };
+      const form2 = this.makeT.T002(info2.to, info2);
+      this.naverSensService.sendKakaoAlarm('T002', [form2]);
+    }
 
-    const form1 = this.makeT.T001(info.to, info);
-    const form2 = this.makeT.T002(info2.to, info2);
-    this.naverSensService.sendKakaoAlarm('T001', [form1]);
-    this.naverSensService.sendKakaoAlarm('T002', [form2]);
     return { id: team.id };
   }
 
@@ -136,18 +140,25 @@ export class TeamService {
     let returnData = await this.teamRepository.patchTeam(found, updateTeamDto);
 
     if (leader) {
-      let form1 = this.makeT.T003(user.phone, {
-        teamId: found.id,
-        team: found.name,
-        leader: leader.name,
-      });
-      let form2 = this.makeT.T004(leader.phone, {
-        teamId: found.id,
-        team: found.name,
-        leader: user.name,
-      });
-      await this.naverSensService.sendKakaoAlarm('T003', [form1]);
-      await this.naverSensService.sendKakaoAlarm('T004', [form2]);
+      if (user.provider === 'kakao') {
+        console.log('위임한 친구의 provider', user.provider);
+        let form1 = this.makeT.T003(user.phone, {
+          teamId: found.id,
+          team: found.name,
+          leader: leader.name,
+        });
+        await this.naverSensService.sendKakaoAlarm('T003', [form1]);
+      }
+
+      if (leader.provider === 'kakao') {
+        console.log('위임된친구의 provider', leader.provider);
+        let form2 = this.makeT.T004(leader.phone, {
+          teamId: found.id,
+          team: found.name,
+          leader: user.name,
+        });
+        await this.naverSensService.sendKakaoAlarm('T004', [form2]);
+      }
     }
 
     return returnData;
@@ -161,11 +172,15 @@ export class TeamService {
     if (team.leaderId.id !== user.id) {
       throw new UnauthorizedException('팀 해체는 팀장만 할 수 있습니다.');
     }
+
     let arr = [];
     for (let member of team.users) {
+      console.log(member.provider);
       if (member.id === user.id) continue;
-      let form = this.makeT.T005(member.phone, { team: team.name });
-      arr.push(form);
+      if (member.provider === 'kakao') {
+        let form = this.makeT.T005(member.phone, { team: team.name });
+        arr.push(form);
+      }
     }
 
     if (arr.length) {
@@ -215,15 +230,20 @@ export class TeamService {
     let kickUser = team.users.splice(index, 1)[0];
     await this.teamRepository.save(team);
 
-    let form1 = this.makeT.T007(user.phone, {
-      teamId: team.id,
-      team: team.name,
-      name: kickUser.name,
-    });
-    let form2 = this.makeT.T008(kickUser.phone, { team: team.name });
+    if (user.provider === 'kakao') {
+      let form1 = this.makeT.T007(user.phone, {
+        teamId: team.id,
+        team: team.name,
+        name: kickUser.name,
+      });
+      this.naverSensService.sendKakaoAlarm('T007', [form1]);
+    }
 
-    this.naverSensService.sendKakaoAlarm('T007', [form1]);
-    this.naverSensService.sendKakaoAlarm('T008', [form2]);
+    if (kickUser.provider === 'kakao') {
+      let form2 = this.makeT.T008(kickUser.phone, { team: team.name });
+      this.naverSensService.sendKakaoAlarm('T008', [form2]);
+    }
+
     return { message: '완료되었습니다.' };
   }
 }
