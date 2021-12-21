@@ -36,13 +36,9 @@ const TextSpaceText = styled.View`
   height: 8px;
 `;
 
-const Space = styled.View`
-  width: 100%;
-  height: 120px;
-`;
-
 const MainTitleContainer = styled.View`
   width: 100%;
+  padding-top: 20px;
   padding-horizontal: 20px;
 `;
 
@@ -94,7 +90,7 @@ const CardTitleButtonText = styled(Regular)`
   color: ${colors.gray};
 `;
 const MatchInfoDetailStadium = styled(Regular)`
-  font-size: 16px;
+  font-size: 15px;
   color: ${colors.gray};
 `;
 
@@ -108,7 +104,7 @@ const FooterPageNumber = styled(TouchableOpacity)`
 
 const PageNumber = styled(Regular)`
   color:${colors.darkGray}
-  font-size: 20px;
+  font-size: 16px;
 `;
 
 const SelectPageNumber = styled(Regular)`
@@ -193,7 +189,7 @@ export default function AddOns_1() {
           {lastMatch.lastMatchs?.length === 0 ? (
             <Card margin={16}>
               <CardTitleContainer>
-                <Bold size={17}>지난 경기가 없어요 🤔</Bold>
+                <Bold size={18}>지난 경기가 없어요 🤔</Bold>
               </CardTitleContainer>
               <MainTitleSpaceContents />
               <Regular size={13}>새로운 경기를 생성해주세요!</Regular>
@@ -214,8 +210,8 @@ export default function AddOns_1() {
                   <MainTitleSpaceContents />
                   <Regular size={17}>{el.date}</Regular>
                   <TextSpaceText />
-                  <Bold size={20}>
-                    시작 {el.startTime} <AntDesign name="arrowright" size={20} /> {el.endTime} 종료
+                  <Bold size={17}>
+                    시작 {el.startTime} <AntDesign name="arrowright" size={17} /> {el.endTime} 종료
                   </Bold>
                   <TextSpaceText />
                   <MatchInfoDetailStadium>{el.address}</MatchInfoDetailStadium>

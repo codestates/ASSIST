@@ -30,6 +30,11 @@ const CounterContainer = styled.View`
   border-bottom-color: ${colors.blue};
 `;
 
+const CounterText = styled(Bold)`
+  font-size: 17px;
+  color: ${colors.blue};
+`;
+
 type CounterButtonProps = {
   text: string;
   type: string;
@@ -63,8 +68,8 @@ function CounterButton(props: CounterButtonProps) {
           <AntDesign name="minus" />
         </OperationButton>
         <TitleContainer>
-          <Bold size={17}>{counter}</Bold>
-          <Bold size={17}>{text}</Bold>
+          <CounterText>{counter}</CounterText>
+          <CounterText>{text}</CounterText>
         </TitleContainer>
         <OperationButton onPress={handleIncrement}>
           <AntDesign name="plus" />

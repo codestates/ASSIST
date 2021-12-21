@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import axios from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
+import getTextValues from '../../functions/getTextValues';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -102,20 +103,22 @@ export default function MercenaryInvite_4() {
             </MatchInfoTitle>
             <ContentsSpaceContents />
             <MatchInfoContents>
-              <Regular size={20}>
+              <Regular size={17}>
                 {data?.date}
                 {data?.day}
               </Regular>
-              <Bold size={20}>
-                시작 {data?.startTime} <AntDesign name="arrowright" size={20} /> {data?.endTime}{' '}
+              <Bold size={17}>
+                시작 {data?.startTime} <AntDesign name="arrowright" size={17} /> {data?.endTime}{' '}
                 종료
               </Bold>
-              <Regular size={16}>{data?.address}</Regular>
-              <Regular size={16}>{data?.address2}</Regular>
+              <Regular size={15}>{data?.address}</Regular>
+              <Regular size={15}>{data?.address2}</Regular>
             </MatchInfoContents>
             <ContentSpaceButton />
             <MecenaryAttendContainer>
-              <Bold size={16}>참가비 : {dto.money}원</Bold>
+              <Bold size={15}>
+                참가비 : {getTextValues({ text: `${dto.money}`, type: 'money' })}원
+              </Bold>
             </MecenaryAttendContainer>
           </MatchInfoContainer>
         </Container>
