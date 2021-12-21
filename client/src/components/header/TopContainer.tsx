@@ -11,17 +11,18 @@ const Container = styled.View`
 `;
 const LogoContainer = styled.View`
   flex-direction: row;
+  align-items: center;
 `;
 const BoxLogo = styled.Image`
-  width: 21px;
-  height: 21px;
+  width: 28px;
+  height: 28px;
   margin-top: 7px;
+  margin-bottom: 2px;
 `;
 const FontLogo = styled.Image`
   width: 77px;
-  height: 23.3px;
-  margin-left: 9px;
-  margin-top: 3px;
+  height: 28px;
+  margin-left: 8px;
 `;
 
 type TopContainerProps = {
@@ -32,8 +33,8 @@ export default function TopContainer({ children }: TopContainerProps) {
   return (
     <Container>
       <LogoContainer>
-        <BoxLogo source={smallLogo} />
-        <FontLogo source={fontLogo} />
+        <BoxLogo source={smallLogo} resizeMode="contain" />
+        <FontLogo source={fontLogo} resizeMode="contain" />
       </LogoContainer>
       {children}
     </Container>

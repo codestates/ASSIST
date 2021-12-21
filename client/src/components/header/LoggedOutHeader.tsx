@@ -11,7 +11,7 @@ import TopContainer from './TopContainer';
 export default function LoggedOutHeader() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <HeaderContainer height={Platform.OS === 'web' ? 80 : 100}>
+    <HeaderContainer isLobby height={Platform.OS === 'web' ? 80 : 100}>
       <TopContainer>
         <CommonButton
           width="105px"
