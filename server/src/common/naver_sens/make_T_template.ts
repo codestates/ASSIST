@@ -11,7 +11,8 @@ import {
 import getHangleDate from './utlls/get_hangle_date';
 
 export class MakeT {
-  T001(to: string, data: T001dto) {
+
+  T011(to: string, data: T001dto) {
 
     let a = `[팀 가입 완료 안내]
 
@@ -44,7 +45,7 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
     ];
 
     //추후 버튼추가
-    return { to, content: a };
+    return { to, content: a, buttons };
   }
 
   T002(to: string, data: T002dto) {
@@ -114,7 +115,7 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
         linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
       },
     ];
-    return { to, content, buttons };
+    return { to, content };
   }
 
   T005(to: string, data: T005dto) {
@@ -139,7 +140,7 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
     return { to, content, buttons };
   }
 
-  T006(to: string, data: T006dto) {
+  T016(to: string, data: T006dto) {
     const content = `아래 팀원이 팀을 나갔습니다.
 
 ◼︎ 팀 이름
@@ -154,17 +155,17 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
       
 ** 팀을 나간 이유는 팀원에게 직접 문의 해 주세요.`;
 
+    const buttons = [
+      {
+        type: 'WL',
+        name: '팀 구성원 확인하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
+      },
+    ];
 
-    // const buttons = [
-    //   {
-    //     type: 'WL',
-    //     name: '팀 구성원 확인하기',
-    //     linkMobile: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
-    //     linkPc: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
-    //   },
-    // ];
-    //추후 버튼추가
-    return { to, content };
+    return { to, content, buttons };
+
   }
 
   T007(to: string, data: T007dto) {

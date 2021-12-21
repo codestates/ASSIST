@@ -1,13 +1,13 @@
 import {
   M001dto,
-  M002dto,
+  M012dto,
   M003dto,
   M004dto,
   M005dto,
   M006dto,
   M007dto,
   M008dto,
-  M009dto,
+  M019dto,
   M010dto,
 } from './dto/template.dto';
 import getHangleDate from './utlls/get_hangle_date';
@@ -43,7 +43,7 @@ export class MakeM {
     return { to, content, buttons };
   }
 
-  M002(to: string, data: M002dto) {
+  M012(to: string, data: M012dto) {
     const content = `${data.name.slice(1)}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
 팀원들이 ${data.name.slice(1)}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
 
@@ -286,7 +286,7 @@ export class MakeM {
     return { to, content, buttons };
   }
 
-  M009(to: string, data: M009dto) {
+  M019(to: string, data: M019dto) {
     const content = `[${data.name}]님, 아쉽게도 다음 경기가 취소 되었어요 😭
 
 ◼ 팀 이름
