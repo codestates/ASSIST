@@ -96,61 +96,35 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
         `${ASSIST_SERVER_URL}/match/${route.params?.matchId}`,
         { headers: { authorization: `Bearer ${token}` } },
       );
+      console.log(data);
       setTeamDetailMatch(data);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const [data, setData] = useState({
-    vote: '',
-    attend: [],
-    absent: [],
-    hold: [],
-    nonRes: [],
-    date: '',
-    startTime: '',
-    endTime: '',
-    address: '',
-    address2: '',
-    day: '',
-  });
-
-  useEffect(() => {
-    if (route.params) {
-      setData(route.params.data);
-    }
-    setIsLoading(false);
-    return () => {
-      setIsLoading(true);
-    };
-  }, []);
-
-  const [isLoading, setIsLoading] = useState(true);
-
   const onSubmit = (data: string) => {
     console.log(data);
   };
 
-  const voteUserNum: string = (userNum: number) => {
+  const voteUserNum = (userNum: number) => {
     const allUsersNum: number =
       teamDetailMatch?.attend.length +
       teamDetailMatch?.absent.length +
       teamDetailMatch?.hold.length +
       teamDetailMatch?.nonRes.length;
 
-    return !allUsersNum ? '0' : `${(userNum / allUsersNum) * 100}`;
+    return !allUsersNum ? '0' : `${Math.round((userNum / allUsersNum) * 100)}`;
   };
 
   return (
     <>
-      <CloseHeader goBack color={colors.whiteSmoke} />
+      <CloseHeader action={true} color={colors.whiteSmoke} />
       <ColoredScrollView titleColor={colors.whiteSmoke}>
         <MainTitle marginBottom="15px">
           <Bold size={22}>참석 투표 현황</Bold>
           <Regular size={17}>
-            {teamDetailMatch?.date} {teamDetailMatch?.day} {teamDetailMatch?.startTime} ~
-            {teamDetailMatch?.endTime}
+            {`${teamDetailMatch?.date} (${teamDetailMatch?.day}) ${teamDetailMatch?.startTime} ~ ${teamDetailMatch?.endTime}`}
           </Regular>
         </MainTitle>
         <ContentContainer>
@@ -191,61 +165,10 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
             />
           </VotePercentContents>
           <CardSpaceCard />
-          {teamDetailMatch?.attend.length ? (
-            teamDetailMatch?.attend.map((users: object) => (
-              <VoteStatusCard
-                key={users.id}
-                title="참석"
-                person={teamDetailMatch?.attend.length}
-                name={users?.user.name}
-                call={users?.user.phone}
-              />
-            ))
-          ) : (
-            <VoteStatusCard title="참석" person={0} name="..." call={''} />
-          )}
-          <Space />
-          {teamDetailMatch?.absent.length ? (
-            teamDetailMatch?.absent.map((users: object) => (
-              <VoteStatusCard
-                key={users.id}
-                title="불참"
-                person={teamDetailMatch?.absent.length}
-                name={users?.user.name}
-                call={''}
-              />
-            ))
-          ) : (
-            <VoteStatusCard title="불참" person={0} name="..." call={''} />
-          )}
-          <Space />
-          {teamDetailMatch?.hold.length ? (
-            teamDetailMatch?.hold.map((users: object) => (
-              <VoteStatusCard
-                key={users.id}
-                title="미정"
-                person={teamDetailMatch?.hold.length}
-                name={users?.user.name}
-                call={''}
-              />
-            ))
-          ) : (
-            <VoteStatusCard title="미정" person={0} name="..." call={''} />
-          )}
-          <Space />
-          {teamDetailMatch?.nonRes.length ? (
-            teamDetailMatch?.nonRes.map((users: object) => (
-              <VoteStatusCard
-                key={users.id}
-                title="미응답"
-                person={teamDetailMatch?.nonRes.length}
-                name={users?.user.name}
-                call={''}
-              />
-            ))
-          ) : (
-            <VoteStatusCard title="미응답" person={0} name="..." call={''} />
-          )}
+          <VoteStatusCard title="참석" data={teamDetailMatch?.attend} />
+          <VoteStatusCard title="불참" data={teamDetailMatch?.absent} />
+          <VoteStatusCard title="미정" data={teamDetailMatch?.hold} />
+          <VoteStatusCard title="미응답" data={teamDetailMatch?.nonRes} />
         </ContentContainer>
       </ColoredScrollView>
     </>
