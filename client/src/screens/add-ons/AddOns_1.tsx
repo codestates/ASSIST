@@ -21,11 +21,6 @@ import GatheringMark from '../../components/mark/GatheringMark';
 import VotedMark from '../../components/mark/VotedMark';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
-const MainTitleSpaceContents = styled.View`
-  width: 100%;
-  height: 32px;
-`;
-
 const CardSpaceCard = styled.View`
   width: 100%;
   height: 35px;
@@ -36,13 +31,9 @@ const TextSpaceText = styled.View`
   height: 8px;
 `;
 
-const Space = styled.View`
-  width: 100%;
-  height: 120px;
-`;
-
 const MainTitleContainer = styled.View`
   width: 100%;
+  padding-top: 20px;
   padding-horizontal: 20px;
 `;
 
@@ -54,11 +45,10 @@ const ContentsContainer = styled.View`
 `;
 
 const CardTitleContainer = styled.View`
-  width: 100%;
-  height: 20%;
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26px;
 `;
 
 const CardTitleRedBox = styled.View`
@@ -94,7 +84,7 @@ const CardTitleButtonText = styled(Regular)`
   color: ${colors.gray};
 `;
 const MatchInfoDetailStadium = styled(Regular)`
-  font-size: 16px;
+  font-size: 15px;
   color: ${colors.gray};
 `;
 
@@ -108,7 +98,12 @@ const FooterPageNumber = styled(TouchableOpacity)`
 
 const PageNumber = styled(Regular)`
   color:${colors.darkGray}
-  font-size: 20px;
+  font-size: 16px;
+`;
+
+const SelectPageNumber = styled(Regular)`
+  color:${colors.darkGray}
+  font-size: 35px;
 `;
 
 const SelectPageNumber = styled(Regular)`
@@ -193,9 +188,8 @@ export default function AddOns_1() {
           {lastMatch.lastMatchs?.length === 0 ? (
             <Card margin={16}>
               <CardTitleContainer>
-                <Bold size={17}>지난 경기가 없어요 🤔</Bold>
+                <Bold size={18}>지난 경기가 없어요 🤔</Bold>
               </CardTitleContainer>
-              <MainTitleSpaceContents />
               <Regular size={13}>새로운 경기를 생성해주세요!</Regular>
             </Card>
           ) : (
@@ -211,11 +205,10 @@ export default function AddOns_1() {
                       <CardTitleButtonText>자세히 보기</CardTitleButtonText>
                     </CardTitleButtonBox>
                   </CardTitleContainer>
-                  <MainTitleSpaceContents />
                   <Regular size={17}>{el.date}</Regular>
                   <TextSpaceText />
-                  <Bold size={20}>
-                    시작 {el.startTime} <AntDesign name="arrowright" size={20} /> {el.endTime} 종료
+                  <Bold size={17}>
+                    시작 {el.startTime} <AntDesign name="arrowright" size={17} /> {el.endTime} 종료
                   </Bold>
                   <TextSpaceText />
                   <MatchInfoDetailStadium>{el.address}</MatchInfoDetailStadium>

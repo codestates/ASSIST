@@ -327,7 +327,9 @@ export class MatchService {
     주장번호 : ${match.team.leaderId.phone}
     필요인원 ${merceneryDto.needNumber}명
     참가비 ${merceneryDto.money}원`;
+
     this.naverSensService.sendSMS(process.env.HOST_PHONE, template, 'LMS');
+    this.kakaoAlimService.sendM010(match, merceneryDto, user);
     return { message: 'ok' };
   }
 }

@@ -9,5 +9,5 @@ export default function getHangleDate(date = new Date().toISOString()) {
 
   const _day = date.substr(8, 2);
 
-  return _year + '년' + _month + '월' + _day + '일' + day;
+  return _year + '년' + ' ' + _month + '월' + ' ' + _day + '일' + ' ' + day;
 }
