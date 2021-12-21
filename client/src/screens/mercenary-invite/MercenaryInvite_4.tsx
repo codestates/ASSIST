@@ -24,34 +24,30 @@ const TitleSpaceContents = styled.View`
   height: 16px;
 `;
 
-const ContentsSpaceContents = styled.View`
-  flex: 2;
-`;
-
-const ContentSpaceButton = styled.View`
-  width: 100%;
-  height: 35px;
-`;
-
 const Container = styled.View`
   width: 100%;
-  height: 50%;
+  height: 100%;
 `;
 
 const MatchInfoContainer = styled.View`
   width: 100%;
-  height: 100%;
+  height: 55%;
   background-color: ${colors.whiteSmoke};
   border: 1px solid ${colors.lightGray};
-  padding: 32px;
+  padding: 35px;
+  border-radius: 15px;
 `;
 
 const MatchInfoTitle = styled.View`
-  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26px;
 `;
 
 const MatchInfoContents = styled.View`
-  flex: 4;
+  height: 103px;
+  margin-bottom: 35px;
   justify-content: space-between;
 `;
 
@@ -101,11 +97,9 @@ export default function MercenaryInvite_4() {
             <MatchInfoTitle>
               <Bold size={20}>{selectedTeam?.name}</Bold>
             </MatchInfoTitle>
-            <ContentsSpaceContents />
             <MatchInfoContents>
               <Regular size={17}>
-                {data?.date}
-                {data?.day}
+                {data?.date} ({data?.day})
               </Regular>
               <Bold size={17}>
                 시작 {data?.startTime} <AntDesign name="arrowright" size={17} /> {data?.endTime}{' '}
@@ -114,16 +108,15 @@ export default function MercenaryInvite_4() {
               <Regular size={15}>{data?.address}</Regular>
               <Regular size={15}>{data?.address2}</Regular>
             </MatchInfoContents>
-            <ContentSpaceButton />
             <MecenaryAttendContainer>
               <Bold size={15}>
-                참가비 : {getTextValues({ text: `${dto.money}`, type: 'money' })}원
+                참가비 : {getTextValues({ text: `${dto.money}`, type: 'money' })}
               </Bold>
             </MecenaryAttendContainer>
           </MatchInfoContainer>
         </Container>
       </NextPageView>
-      <NextButton disabled={false} text="구인 신청 >" onPress={() => handleRequest()} />
+      <NextButton disabled={false} text="구인 신청  >" onPress={() => handleRequest()} />
     </>
   );
 }

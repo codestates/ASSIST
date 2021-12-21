@@ -4,6 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { Bold } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
+import getTextValues from '../../functions/getTextValues';
 
 const OperationButton = styled.TouchableOpacity`
   flex: 1;
@@ -36,7 +37,7 @@ const CounterText = styled(Bold)`
 `;
 
 type CounterButtonProps = {
-  text: string;
+  text?: string;
   type: string;
   counter: number;
   getCounter: (counter: number) => number;
@@ -68,7 +69,9 @@ function CounterButton(props: CounterButtonProps) {
           <AntDesign name="minus" />
         </OperationButton>
         <TitleContainer>
-          <CounterText>{counter}</CounterText>
+          <CounterText>
+            {type === 'money' ? getTextValues({ text: String(counter), type: 'money' }) : counter}
+          </CounterText>
           <CounterText>{text}</CounterText>
         </TitleContainer>
         <OperationButton onPress={handleIncrement}>
