@@ -131,25 +131,25 @@ export class MatchService {
     data.user_matchs.forEach((el) => {
       switch (el.condition) {
         case '미응답':
-          if (el.user.id === user.id) {
+          if (el.user?.id === user.id) {
             data.vote = 'nonRes';
           }
           data.nonRes.push(el);
           break;
         case '참석':
-          if (el.user.id === user.id) {
+          if (el.user?.id === user.id) {
             data.vote = 'attend';
           }
           data.attend.push(el);
           break;
         case '불참':
-          if (el.user.id === user.id) {
+          if (el.user?.id === user.id) {
             data.vote = 'absent';
           }
           data.absent.push(el);
           break;
         case '미정':
-          if (el.user.id === user.id) {
+          if (el.user?.id === user.id) {
             data.vote = 'hold';
           }
           data.hold.push(el);
@@ -157,6 +157,7 @@ export class MatchService {
       }
     });
     delete data.user_matchs;
+
     return data;
   }
 
