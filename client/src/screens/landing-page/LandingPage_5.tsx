@@ -76,7 +76,7 @@ export default function LandingPage_5() {
               <Light>경기 할 인원이 부족하세요?</Light>
             </Line>
             <Bold>
-              주변 플레이어를 용병으로 초대 <Light>해 보세요!</Light>
+              주변 플레이어를 초대<Light>해 보세요!</Light>
             </Bold>
           </Title>
           <TitleRightButton onPress={() => navigation.navigate('LandingPage_6')}>
