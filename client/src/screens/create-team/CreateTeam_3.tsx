@@ -1,5 +1,5 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
@@ -13,8 +13,12 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addCreateTeam } from '../../store/actions/propsAction';
+import { RootState } from '../../store/reducers';
+import { ASSIST_SERVER_URL } from '@env';
+import axios, { AxiosResponse } from 'axios';
+import { getSelectedTeam } from '../../store/actions/userAction';
 
 const schema = yup.object({
   accountNumber: yup
@@ -26,7 +30,7 @@ const schema = yup.object({
 type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
 
 export default function CreateTeam_3({ route }: CreateTeamProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {
     control,
     formState: { isValid },
@@ -39,6 +43,7 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
   const dispatch = useDispatch();
   const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const state = useSelector((state: RootState) => state);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -64,6 +69,20 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
       }),
     );
     navigation.navigate('CreateTeam_4');
+  };
+
+  const createTeam = () => {
+    axios
+      .post(
+        `${ASSIST_SERVER_URL}/team`,
+        { ...state.propsReducer.createTeam },
+        { headers: { authorization: `Bearer ${state.userReducer.token}` } },
+      )
+      .then(({ data: { id, inviteCode } }: AxiosResponse<{ id: number; inviteCode: string }>) => {
+        dispatch(getSelectedTeam({ id, name: state.propsReducer.createTeam.name, leader: true }));
+        navigation.reset({ routes: [{ name: 'CreateTeam_5', params: { inviteCode } }] });
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -100,7 +119,7 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
           ]}
         />
       </NextPageView>
-      <SkipButton onPress={() => navigation.navigate('CreateTeam_4')} />
+      <SkipButton onPress={() => createTeam()} />
       <NextButton
         disabled={!isValid || route.params?.bank === undefined || Boolean(errorMessage)}
         onPress={() => goToNext()}

@@ -286,9 +286,10 @@ export class MatchService {
       .leftJoinAndSelect('match.user_matchs', 'user_match')
       .leftJoinAndSelect('user_match.user', 'user')
       .where('match.date = :date', { date: nextday })
-      .andWhere('match.condition = :condition', { condition: '경기 준비 중' })
+      .andWhere('match.condition = :condition', { condition: '인원 모집 중' })
       .getMany();
 
+    console.log(data);
     if (!data.length) return { message: '확정할 경기가 없습니다.' };
 
     const teamIdarr = data.map((el) => el.id);
@@ -332,7 +333,7 @@ export class MatchService {
     필요인원 ${merceneryDto.needNumber}명
     참가비 ${merceneryDto.money}원`;
 
-    this.naverSensService.sendSMS(process.env.HOST_PHONE, template, 'LMS');
+    // this.naverSensService.sendSMS(process.env.HOST_PHONE, template, 'LMS');
     this.kakaoAlimService.sendM010(match, merceneryDto, user);
     return { message: 'ok' };
   }

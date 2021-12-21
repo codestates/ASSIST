@@ -15,4 +15,12 @@ export class KakaoalimController {
   async test() {
     return await this.kakaoAlimService.sendM007();
   }
+
+  @Post('8pm')
+  async pm8() {
+    this.kakaoAlimService.sendM012();
+    this.kakaoAlimService.sendM003();
+
+    return { message: 'ok' };
+  }
 }

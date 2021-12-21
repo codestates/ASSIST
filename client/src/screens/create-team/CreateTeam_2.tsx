@@ -1,4 +1,4 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
@@ -11,8 +11,13 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addCreateTeam } from '../../store/actions/propsAction';
+import { RootState } from '../../store/reducers';
+import { ASSIST_SERVER_URL } from '@env';
+import axios, { AxiosResponse } from 'axios';
+import { getSelectedTeam } from '../../store/actions/userAction';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const schema = yup.object({
   date: yup
@@ -34,13 +39,29 @@ export default function CreateTeam_2() {
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
+  const state = useSelector((state: RootState) => state);
 
   const goToNext = () => {
     dispatch(addCreateTeam({ paymentDay: Number(getValues('date')) }));
     navigation.navigate('CreateTeam_3');
   };
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const createTeam = () => {
+    axios
+      .post(
+        `${ASSIST_SERVER_URL}/team`,
+        { ...state.propsReducer.createTeam },
+        { headers: { authorization: `Bearer ${state.userReducer.token}` } },
+      )
+      .then(({ data: { id, inviteCode } }: AxiosResponse<{ id: number; inviteCode: string }>) => {
+        dispatch(getSelectedTeam({ id, name: state.propsReducer.createTeam.name, leader: true }));
+        navigation.reset({ routes: [{ name: 'CreateTeam_5', params: { inviteCode } }] });
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <>
       <NextPageView>
@@ -74,7 +95,7 @@ export default function CreateTeam_2() {
           ]}
         />
       </NextPageView>
-      <SkipButton onPress={() => navigation.navigate('CreateTeam_3')} />
+      <SkipButton onPress={() => createTeam()} />
       <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
     </>
   );
