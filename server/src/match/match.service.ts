@@ -81,19 +81,23 @@ export class MatchService {
 
     const arr: AlimtalkDto[] = [];
     users.forEach((user) => {
-      const message = this.makeM.M001(user.phone, {
-        matchId: match.id,
-        team: name,
-        startTime,
-        date,
-        endTime,
-        address,
-        address2,
-      });
-      arr.push(message);
+      if (user?.provider === 'kakao') {
+        const message = this.makeM.M001(user.phone, {
+          matchId: match.id,
+          team: name,
+          startTime,
+          date,
+          endTime,
+          address,
+          address2,
+        });
+        arr.push(message);
+      }
     });
 
-    this.naverSensService.sendKakaoAlarm('M001', arr);
+    if (arr.length) {
+      this.naverSensService.sendKakaoAlarm('M001', arr);
+    }
 
     return { id: match.id };
   }

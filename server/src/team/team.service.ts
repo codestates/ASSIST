@@ -62,7 +62,7 @@ export class TeamService {
       });
     }
 
-    if (user.provider === 'kakao') {
+    if (user?.provider === 'kakao') {
       const info = {
         teamId: team.id,
         team: team.name,
@@ -75,7 +75,7 @@ export class TeamService {
       this.naverSensService.sendKakaoAlarm('T011', [form1]);
     }
 
-    if (team.leaderId.role === 'kakao') {
+    if (team.leaderId.provider === 'kakao') {
       const info2 = {
         teamId: team.id,
         team: team.name,
@@ -125,7 +125,7 @@ export class TeamService {
       throw new NotFoundException('요청한 팀이 없습니다.');
     }
 
-    if (found.leaderId.id !== user.id) {
+    if (found.leaderId?.id !== user.id) {
       throw new UnauthorizedException('팀 수정은 리더만 할 수 있습니다.');
     }
 
@@ -140,7 +140,7 @@ export class TeamService {
     let returnData = await this.teamRepository.patchTeam(found, updateTeamDto);
 
     if (leader) {
-      if (user.provider === 'kakao') {
+      if (user?.provider === 'kakao') {
         console.log('위임한 친구의 provider', user.provider);
         let form1 = this.makeT.T003(user.phone, {
           teamId: found.id,
@@ -230,7 +230,7 @@ export class TeamService {
     let kickUser = team.users.splice(index, 1)[0];
     await this.teamRepository.save(team);
 
-    if (user.provider === 'kakao') {
+    if (user?.provider === 'kakao') {
       let form1 = this.makeT.T007(user.phone, {
         teamId: team.id,
         team: team.name,
