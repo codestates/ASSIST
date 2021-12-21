@@ -74,13 +74,13 @@ export class TeamService {
     let info2 = {
       teamId: team.id,
       team: team.name,
-      name: team.leaderId.name,
+      name: user.name,
       to: team.leaderId.phone,
     };
 
-    const form1 = this.makeT.T001(info.to, info);
+    const form1 = this.makeT.T011(info.to, info);
     const form2 = this.makeT.T002(info2.to, info2);
-    this.naverSensService.sendKakaoAlarm('T001', [form1]);
+    this.naverSensService.sendKakaoAlarm('T011', [form1]);
     this.naverSensService.sendKakaoAlarm('T002', [form2]);
     return { id: team.id };
   }

@@ -1,6 +1,6 @@
 import {
   M001dto,
-  M002dto,
+  M012dto,
   M003dto,
   M004dto,
   M005dto,
@@ -43,7 +43,7 @@ export class MakeM {
     return { to, content, buttons };
   }
 
-  M002(to: string, data: M002dto) {
+  M012(to: string, data: M012dto) {
     const content = `${data.name.slice(1)}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
 팀원들이 ${data.name.slice(1)}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
 
@@ -67,15 +67,15 @@ export class MakeM {
 ** 마감 까지 미정, 미응답인 경우 불참으로 처리 됩니다.
 ** 마감 후에도 참석 여부를 변경할 수 있습니다.`;
 
-    // const buttons = [
-    //   {
-    //     type: 'WL',
-    //     name: '10초 만에 투표하기',
-    //     linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
-    //     linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
-    //   },
-    // ];
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '10초 만에 투표하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M003(to: string, data: M003dto) {

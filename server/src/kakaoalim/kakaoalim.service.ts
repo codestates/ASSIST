@@ -6,14 +6,14 @@ import { MatchService } from 'src/match/match.service';
 import { getDate } from 'src/common/getDate';
 import { MatchRepository } from 'src/match/match.repository';
 import { Match } from 'src/match/match.entity';
-import { M009dto } from 'src/common/naver_sens/dto/template.dto';
+import { M009dto, M010dto } from 'src/common/naver_sens/dto/template.dto';
 import { MakeU } from 'src/common/naver_sens/make_U_template';
 
 @Injectable()
 export class KakaoAlimService {
   makeM = new MakeM();
   naverSensService = new NaverSensService();
-  async sendM002() {
+  async sendM012() {
     let nextday = getDate(1);
 
     const queryString = `SELECT b.name, b.phone , d.name as team, c.id,c.date,c.startTime,c.endTime, c.deadline, c.address,c.address2
@@ -27,7 +27,7 @@ export class KakaoAlimService {
     if (data.length) {
       let messages = data.map(
         ({ name, phone, team, date, startTime, endTime, deadline, address, address2, id }) => {
-          return this.makeM.M002(phone, {
+          return this.makeM.M012(phone, {
             matchId: id,
             name,
             team,
@@ -40,7 +40,7 @@ export class KakaoAlimService {
           });
         },
       );
-      this.naverSensService.sendKakaoAlarm('M002', messages);
+      this.naverSensService.sendKakaoAlarm('M012', messages);
     }
   }
 
@@ -224,5 +224,21 @@ export class KakaoAlimService {
     let makeU = new MakeU();
     let form = makeU.U001(user.phone);
     this.naverSensService.sendKakaoAlarm('U001', [form]);
+  }
+
+  async sendM010(match, merceneryDto, user) {
+    const payload: M010dto = {
+      matchId: match.id,
+      team: match.team.name,
+      startTime: match.startTime,
+      endTime: match.endTime,
+      address: match.address,
+      address2: match.address2,
+      date: match.date,
+      need: merceneryDto.needNumber,
+      money: merceneryDto.money,
+    };
+    let form = this.makeM.M010(user.phone, payload);
+    this.naverSensService.sendKakaoAlarm('M010', [form]);
   }
 }

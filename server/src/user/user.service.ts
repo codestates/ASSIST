@@ -266,13 +266,13 @@ export class UserService {
     }
     const deleteTeam = user.teams.splice(index, 1)[0];
 
-    let form = this.makeT.T006(deleteTeam.leaderId.phone, {
+    let form = this.makeT.T016(deleteTeam.leaderId.phone, {
       teamId: deleteTeam.id,
       team: deleteTeam.name,
       name: user.name,
     });
     await this.userRepository.save(user);
-    this.naverSensService.sendKakaoAlarm('T006', [form]);
+    this.naverSensService.sendKakaoAlarm('T016', [form]);
     return { message: '완료 되었습니다.' };
   }
 
