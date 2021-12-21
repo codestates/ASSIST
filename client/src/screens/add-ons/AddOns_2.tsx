@@ -162,15 +162,13 @@ export default function AddOns_2({ route }: any) {
         </MainTitle>
         <ContentContainer>
           <HeaderSpaceButton />
-          {data.leaderId === id && (
-            <CommonModalButton
-              color="blue"
-              text="+ 팀원 초대하기"
-              onPress={() =>
-                navigation.navigate('AddOns_4', { inviteCode: data?.users[0].inviteCode })
-              }
-            />
-          )}
+          <CommonModalButton
+            color="blue"
+            text="+ 팀원 초대하기"
+            onPress={() =>
+              navigation.navigate('AddOns_4', { inviteCode: data?.users[0].inviteCode })
+            }
+          />
           <ButtonSpaceContents />
           <TeamMemberCard
             data={data}

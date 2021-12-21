@@ -320,7 +320,9 @@ export default function TeamMemberCard({
               )}
             </ContentRole>
             <ContentName>
-              <Regular size={16}>{el.name}</Regular>
+              <Regular size={16}>
+                {el.name.length > 5 ? el.name.slice(0, 4).concat('...') : el.name}
+              </Regular>
             </ContentName>
             <ContentPhone>
               <Regular size={16}>{el.phone}</Regular>
@@ -343,7 +345,9 @@ export default function TeamMemberCard({
               {data.leaderId === el.id ? <CaptainMark /> : <Regular size={13}>팀원</Regular>}
             </ContentRole>
             <ContentName>
-              <Regular size={16}>{el.name}</Regular>
+              <Regular size={16}>
+                {el.name.length > 5 ? el.name.slice(0, 4).concat('...') : el.name}
+              </Regular>
             </ContentName>
             <ContentPhone>
               <Regular size={16}>{el.phone}</Regular>
