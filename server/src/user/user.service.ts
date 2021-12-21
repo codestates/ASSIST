@@ -22,6 +22,7 @@ import { MatchRepository } from 'src/match/match.repository';
 import { TeamRepository } from 'src/team/team.repository';
 import { MakeT } from 'src/common/naver_sens/make_T_template';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
+import { getManager } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -265,6 +266,12 @@ export class UserService {
       throw new NotFoundException('해당 팀에 유저가 가입되어 있지 않습니다.');
     }
     const deleteTeam = user.teams.splice(index, 1)[0];
+
+    await getManager().query(
+      `delete um from user_match as um join assist.match as m on m.id = um.matchId
+     join team on team.id = m.teamId where userId =${userInfo.id} and teamId =${deleteTeam.id}
+      and m.condition in ('인원 모집 중', '경기 확정')`,
+    );
 
     let form = this.makeT.T016(deleteTeam.leaderId.phone, {
       teamId: deleteTeam.id,

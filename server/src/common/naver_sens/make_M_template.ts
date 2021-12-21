@@ -14,6 +14,24 @@ import getHangleDate from './utlls/get_hangle_date';
 
 export class MakeM {
   M001(to, data: M001dto) {
+<<<<<<< HEAD
+    let b = `[${data.team}]에 새로운 경기가 등록 되었어요 ⚽️
+ 지금 투표에 참여 해 보세요!
+    
+ ◼ 팀 이름
+ - ${data.team}
+    
+ ◼︎ 경기 일자
+ - ${getHangleDate(data.date)}
+    
+ ◼︎ 경기 시간
+ - ${data.startTime} ~ ${data.endTime}
+    
+ ◼︎ 경기 장소
+ - ${data.address} ${data.address2}
+    
+ **해당 새로운 경기 등록 알림 메시지는 고객님의 알림신청에 의해 발송되었습니다.`;
+=======
     const content = `${data.team}에 새로운 경기가 등록 되었어요 ⚽️
 지금 투표에 참여 해 보세요!
 ◼ 팀 이름
@@ -26,6 +44,7 @@ export class MakeM {
 - ${data.address}
   ${data.address2}
 **해당 새로운 경기 등록 알림 메시지는 고객님의 알림신청에 의해 발송되었습니다.`;
+>>>>>>> a0d327cc0d4deb0809bd65520b496c05fc3d7f75
 
     const buttons = [
       {
@@ -35,7 +54,7 @@ export class MakeM {
         linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
       },
     ];
-    return { to, content, buttons };
+    return { to, content: b, buttons };
   }
 
   M012(to: string, data: M012dto) {
@@ -106,8 +125,13 @@ export class MakeM {
 ◼︎ 경기 시간
 - ${data.startTime} - ${data.endTime}
 ◼︎ 경기 장소
+<<<<<<< HEAD
+- ${data.address} ${data.address2}
+
+=======
 - ${data.address}
   ${data.address2}
+>>>>>>> a0d327cc0d4deb0809bd65520b496c05fc3d7f75
 ◼︎ 모집 마감
 - ${getHangleDate(data.date)} (오늘) 19:00
 —-
@@ -132,8 +156,7 @@ export class MakeM {
 ◼ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}
-- 주소 : ${data.address} 
-        ${data.address2}
+- 주소 : ${data.address} ${data.address2}
        
 ◼︎ 모집 결과
 - 참석 : ${data.attend}명
@@ -168,8 +191,7 @@ export class MakeM {
 ◼ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}
-- 주소 : ${data.address} 
-        ${data.address2}
+- 주소 : ${data.address} ${data.address2}
        
 ◼︎ 모집 결과
 - 참석 : ${data.attend}명
@@ -188,22 +210,24 @@ export class MakeM {
 
   M007(to: string, data: M007dto) {
     let t = data.team;
+    let l = data.leader;
     let b;
-    b = `[${data.leader}] 주장님, 오늘 19:00에 [${t}]의 다음 경기가 자동 '경기 확정' 될 예정입니다.
+
+    let c = `[${l}] 주장님, 오늘 19:00에 [${t}]의 다음 경기가 자동 '경기 확정' 될 예정입니다.
+
 오늘 19:00에 팀원 모두에게 경기 확정 알림이 가게 되니, 만약 경기를 취소해야 한다면 지금 꼭 취소 해 주세요!
-       
+    
 ◼︎ 팀 이름
-- ${data.team}
-       
+  - ${data.team}
+    
 ◼ 경기 정보
-- 일자 : ${getHangleDate(data.date)}
-- 시간 : ${data.startTime} - ${data.endTime}
-- 주소 : ${data.address} 
-        ${data.address2}
-       
+  - 일자 : ${getHangleDate(data.date)}
+  - 시간 : ${data.startTime} - ${data.endTime}
+  - 주소 : ${data.address} ${data.address2}
+    
 ◼︎ 모집 결과
-- 참석 : ${data.attend}
-- 불참 : ${data.absent}`;
+  - 참석 : ${data.attend}명
+  - 불참 : ${data.absent}명`;
 
     const buttons = [
       {
@@ -213,7 +237,7 @@ export class MakeM {
         linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
       },
     ];
-    return { to, content: b, buttons };
+    return { to, content: c, buttons };
   }
 
   M008(to: string, data: M008dto) {
@@ -227,8 +251,13 @@ export class MakeM {
 ◼ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}
+<<<<<<< HEAD
+- 주소 : ${data.address} ${data.address2}
+
+=======
 - 주소 : ${data.address}
         ${data.address2}
+>>>>>>> a0d327cc0d4deb0809bd65520b496c05fc3d7f75
 —-
 ** 경기 인원이 모자라면 [용병 구인]을 신청 해 보세요`;
     const buttons = [
@@ -257,8 +286,7 @@ export class MakeM {
 ◼ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}
-- 주소 : ${data.address}
-        ${data.address2}
+- 주소 : ${data.address} ${data.address2}
      
 ◼︎ 취소 사유
 - ${data.reason}`;

@@ -93,16 +93,16 @@ export class KakaoAlimService {
           address2: item.address2,
           date: item.date,
         };
-        if (el.condition === '찬성') {
+        if (el.condition === '참석') {
           attend++;
-          if (el.provider === 'kakao') {
+          if (el.user?.provider === 'kakao') {
             payload.to = el.user.phone;
             payload.name = el.user.name;
             arr2.push(payload);
           }
         } else if (el.condition === '미응답' || el.condition === '미정') {
           absent++;
-          if (el.provider === 'kakao') {
+          if (el.user?.provider === 'kakao') {
             payload.to = el.user.phone;
             payload.name = el.user.name;
             arr2.push(payload);
@@ -137,7 +137,7 @@ export class KakaoAlimService {
       .leftJoinAndSelect('match.user_matchs', 'user_match')
       .leftJoinAndSelect('user_match.user', 'user')
       .where('match.date = :date', { date: nextday })
-      // .andWhere('match.condition = :condition', { condition: '경기 준비 중' })
+      .andWhere('match.condition = :condition', { condition: '인원 모집 중' })
       .getMany();
 
     if (!data.length) {
@@ -150,7 +150,7 @@ export class KakaoAlimService {
       let absent = 0;
       let arr2 = [];
       item.user_matchs.forEach((el) => {
-        if (el.provider === 'kakao') {
+        if (el.user?.provider === 'kakao') {
           const payload: any = {
             matchId: item.id,
             team: item.team.name,
@@ -206,7 +206,7 @@ export class KakaoAlimService {
     let arr2 = [];
     data.user_matchs.forEach((el) => {
       if (
-        (el.user.provider === 'kakao' && el.condition === '참석') ||
+        (el.user?.provider === 'kakao' && el.condition === '참석') ||
         el.condition === '미정' ||
         el.condition === '미응답'
       ) {
@@ -239,8 +239,8 @@ export class KakaoAlimService {
   }
 
   async sendM010(match, merceneryDto, user) {
-    console.log('유저의 가입경로', user.provider);
-    if (user.provider === 'kakao') {
+    console.log('유저의 가입경로', user?.provider);
+    if (user?.provider === 'kakao') {
       const payload: M010dto = {
         matchId: match.id,
         team: match.team.name,
