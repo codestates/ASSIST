@@ -29,15 +29,15 @@ export default function useInviteKakao({ teamName, inviteCode, leader }: useInvi
   ◼︎ 팀 코드
       - ${inviteCode || ''}`,
         link: {
-          mobileWebUrl: `http://localhost:19006/User/JoinTeam/JoinTeam_1/${inviteCode || ''}`,
-          webUrl: `http://localhost:19006/User/JoinTeam/JoinTeam_1/${inviteCode || ''}`,
+          mobileWebUrl: `https://team-assist.kr/User/JoinTeam/JoinTeam_1/${inviteCode || ''}`,
+          webUrl: `https://team-assist.kr/JoinTeam/JoinTeam_1/${inviteCode || ''}`,
         },
         buttons: [
           {
             title: '가입하러 가기',
             link: {
-              mobileWebUrl: `http://localhost:19006/User/JoinTeam/JoinTeam_1/${inviteCode || ''}`,
-              webUrl: `http://localhost:19006/User/JoinTeam/JoinTeam_1/${inviteCode || ''}`,
+              mobileWebUrl: `https://team-assist.kr/User/JoinTeam/JoinTeam_1/${inviteCode || ''}`,
+              webUrl: `https://team-assist.kr/User/JoinTeam/JoinTeam_1/${inviteCode || ''}`,
             },
           },
         ],

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import styled from 'styled-components/native';
 
 import MainTitle from '../../components/text/MainTitle';
@@ -45,25 +45,32 @@ const Line = styled.View`
   margin-bottom: 35px;
 `;
 
-const schema = yup.object().shape({
-  teamInfo: yup.object().shape({
-    date: yup
-      .string()
-      .matches(/^(0?[1-9]|[12][0-9])$/)
-      .required(),
-    money: yup.string().required(),
-    name: yup.string().required(),
-    bankAccount: yup
-      .string()
-      .matches(/^^[0-9]+(-[0-9]+)+$$/)
-      .required(),
-  }),
+const nameSchema = yup.object({
+  name: yup.string().required(),
+});
+
+const dateSchema = yup.object({
+  date: yup
+    .string()
+    .matches(/^(0?[1-9]|[12][0-9])$/)
+    .required(),
+});
+
+const moneySchema = yup.object({
+  money: yup.string().required(),
+});
+
+const bankAccountSchema = yup.object({
+  bankAccount: yup
+    .string()
+    .matches(/^^[0-9]+(-[0-9]+)+$$/)
+    .required(),
 });
 
 type AddOnsProps = StackScreenProps<RootStackParamList, 'AddOns_3'>;
 
 export default function AddOns_3({ route }: AddOnsProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const { isLoading, data } = useTeamInfo();
 
@@ -73,27 +80,61 @@ export default function AddOns_3({ route }: AddOnsProps) {
 
   const toast = useToast();
   const {
-    control,
-    handleSubmit,
-    formState: { isValid },
-    getValues,
-    setValue,
+    control: nameControl,
+    formState: { isValid: isNameValid },
+    getValues: getName,
+    setValue: setName,
+    watch: watchName,
   } = useForm({
     mode: 'onChange',
-    defaultValues: { teamInfo: { name: '', date: '', money: '', bankAccount: '' } },
-    resolver: yupResolver(schema),
+    defaultValues: { name: '' },
+    resolver: yupResolver(nameSchema),
+  });
+
+  const {
+    control: dateControl,
+    formState: { isValid: isDateValid },
+    getValues: getDate,
+    setValue: setDate,
+    watch: watchDate,
+  } = useForm({
+    mode: 'onChange',
+    defaultValues: { date: '' },
+    resolver: yupResolver(dateSchema),
+  });
+
+  const {
+    control: moneyControl,
+    formState: { isValid: isMoneyValid },
+    setValue: setMoney,
+    getValues: getMoney,
+    watch: watchMoney,
+  } = useForm({
+    mode: 'onChange',
+    defaultValues: { money: '' },
+    resolver: yupResolver(moneySchema),
+  });
+
+  const {
+    control: bankAccountControl,
+    formState: { isValid: isbankAccountValid },
+    setValue: setbankAccount,
+    getValues: getBankAccount,
+    watch: watchBankAccount,
+  } = useForm({
+    mode: 'onChange',
+    defaultValues: { bankAccount: '' },
+    resolver: yupResolver(bankAccountSchema),
   });
 
   useEffect(() => {
     if (data !== undefined) {
-      setValue('teamInfo', {
-        name: data.name,
-        date: String(data.paymentDay),
-        money: data.dues,
-        bankAccount: data.accountNumber,
-      });
+      setName('name', data.name);
+      setDate('date', data.paymentDay === 0 ? '' : String(data.paymentDay));
+      setMoney('money', data.dues);
+      setbankAccount('bankAccount', data.accountNumber);
     }
-  }, [data, setValue]);
+  }, [data]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -105,26 +146,16 @@ export default function AddOns_3({ route }: AddOnsProps) {
   }, [navigation, isPressed]);
 
   const clearErrorMessage = () => setErrorMessage('');
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
 
   const handleModifyTeamInfo = async () => {
-    const modifyTeamInfo = getValues([
-      'teamInfo.name',
-      'teamInfo.date',
-      'teamInfo.money',
-      'teamInfo.bankAccount',
-    ]);
-
     try {
       await axios.patch(
         `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
         {
-          name: modifyTeamInfo[0],
-          paymentDay: Number(modifyTeamInfo[1]),
-          dues: modifyTeamInfo[2],
-          accountNumber: modifyTeamInfo[3],
+          name: getName('name'),
+          paymentDay: Number(getDate('date')) || 0,
+          dues: getMoney('money'),
+          accountNumber: getBankAccount('bankAccount'),
           accountBank: route.params?.bank,
         },
         { headers: { authorization: `Bearer ${token}` } },
@@ -151,10 +182,19 @@ export default function AddOns_3({ route }: AddOnsProps) {
   };
 
   const checkValid = () => {
-    if (isValid || route.params?.bank) {
+    if (data?.name !== watchName('name') && isNameValid) {
       return true;
+    } else if (String(data?.paymentDay) !== watchDate('date') && isDateValid) {
+      return true;
+    } else if (data?.dues !== watchMoney('money') && isMoneyValid) {
+      return true;
+    } else if (data?.accountNumber !== watchBankAccount('bankAccount') && isbankAccountValid) {
+      return true;
+    } else if (data?.accountBank !== route.params?.bank && route.params?.bank) {
+      return true;
+    } else {
+      return false;
     }
-    return false;
   };
 
   return isLoading ? (
@@ -181,66 +221,90 @@ export default function AddOns_3({ route }: AddOnsProps) {
           <Regular size={17}>{data?.name}</Regular>
         </MainTitle>
         <ContentContainer>
-          <LineInput
-            name="teamInfo.name"
-            control={control}
-            title="팀 이름"
-            placeholder="팀 이름을 입력 해 주세요"
-            errorMessage={errorMessage}
-            clearErrorMessage={clearErrorMessage}
-          />
+          {selectedTeam.leader ? (
+            <LineInput
+              name="name"
+              control={nameControl}
+              title="팀 이름"
+              placeholder="팀 이름을 입력 해 주세요"
+              errorMessage={errorMessage}
+              clearErrorMessage={clearErrorMessage}
+            />
+          ) : (
+            <LineSelect isFixed title="팀 이름" selected={data?.name} />
+          )}
           <InputSpaceInput />
-          <LineInput
-            name="teamInfo.date"
-            type="date"
-            control={control}
-            title="팀 회비 납부일"
-            placeholder="납부일을 입력 해 주세요"
-            errorMessage={errorMessage}
-            clearErrorMessage={clearErrorMessage}
-            conditions={[
-              {
-                name: '숫자',
-                regex: /^\d+$/,
-              },
-              {
-                name: '1~29 사이',
-                regex: /^(0?[1-9]|[12][0-9])$/,
-              },
-            ]}
-          />
+          {selectedTeam.leader ? (
+            <LineInput
+              name="date"
+              type="date"
+              control={dateControl}
+              title="팀 회비 납부일"
+              placeholder="납부일을 입력 해 주세요"
+              errorMessage={errorMessage}
+              clearErrorMessage={clearErrorMessage}
+              conditions={[
+                {
+                  name: '숫자',
+                  regex: /^\d+$/,
+                },
+                {
+                  name: '1~29 사이',
+                  regex: /^(0?[1-9]|[12][0-9])$/,
+                },
+              ]}
+            />
+          ) : (
+            <LineSelect
+              title="팀 회비 납부일"
+              selected={data?.paymentDay !== 0 ? String(data?.paymentDay) : '미정'}
+              isFixed
+            />
+          )}
           <InputSpaceInput />
-          <LineInput
-            name="teamInfo.money"
-            type="money"
-            control={control}
-            title="월 회비 금액"
-            placeholder="회비 금액을 입력 해 주세요"
-            errorMessage={errorMessage}
-            clearErrorMessage={clearErrorMessage}
-          />
+          {selectedTeam.leader ? (
+            <LineInput
+              name="money"
+              type="money"
+              control={moneyControl}
+              title="월 회비 금액"
+              placeholder="회비 금액을 입력 해 주세요"
+              errorMessage={errorMessage}
+              clearErrorMessage={clearErrorMessage}
+            />
+          ) : (
+            <LineSelect title="월 회비 금액" selected={data?.dues || '미정'} isFixed />
+          )}
           <InputSpaceInput />
-          <LineSelect
-            title="은행"
-            isPressed={isPressed}
-            selected={route.params?.bank || data?.accountBank}
-            onPress={() => goToNext()}
-          />
+          {selectedTeam.leader ? (
+            <LineSelect
+              title="은행"
+              isPressed={isPressed}
+              selected={route.params?.bank || data?.accountBank}
+              onPress={() => goToNext()}
+            />
+          ) : (
+            <LineSelect title="은행" selected={data?.accountBank || '미정'} isFixed />
+          )}
           <InputSpaceInput />
-          <LineInput
-            name="teamInfo.bankAccount"
-            control={control}
-            title="계좌번호"
-            placeholder="계좌번호를 입력해주세요"
-            errorMessage={errorMessage}
-            clearErrorMessage={clearErrorMessage}
-            conditions={[
-              {
-                name: '숫자, 하이픈(-)만 사용',
-                regex: /^^[0-9]+(-[0-9]+)+$$/,
-              },
-            ]}
-          />
+          {selectedTeam.leader ? (
+            <LineInput
+              name="bankAccount"
+              control={bankAccountControl}
+              title="계좌번호"
+              placeholder="계좌번호를 입력해주세요"
+              errorMessage={errorMessage}
+              clearErrorMessage={clearErrorMessage}
+              conditions={[
+                {
+                  name: '숫자, 하이픈(-)만 사용',
+                  regex: /^^[0-9]+(-[0-9]+)+$$/,
+                },
+              ]}
+            />
+          ) : (
+            <LineSelect title="계좌번호" selected={data?.accountNumber || '미정'} isFixed />
+          )}
           <InputSpaceInput />
         </ContentContainer>
       </ColoredScrollView>
