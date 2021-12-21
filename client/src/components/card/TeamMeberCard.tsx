@@ -223,7 +223,7 @@ export default function TeamMemberCard({
         <Space />
         <CommonModalButton
           color="whiteSmoke"
-          text="이전 화면으로 >"
+          text="이전 화면으로  >"
           onPress={handleTeamDeleteCloseModal}
         />
       </CommonModal>
@@ -253,7 +253,7 @@ export default function TeamMemberCard({
         <Space />
         <CommonModalButton
           color="whiteSmoke"
-          text="이전 화면으로 >"
+          text="이전 화면으로  >"
           onPress={handleLeaveTeamCloseModal}
         />
       </CommonModal>
@@ -268,7 +268,7 @@ export default function TeamMemberCard({
         </CommonModalTitle>
         <CommonModalButton
           color="blue"
-          text="이전 화면으로 >"
+          text="이전 화면으로  >"
           onPress={handleLastLeaveTeamCloseModal}
         />
         <Space />
@@ -287,7 +287,7 @@ export default function TeamMemberCard({
         <Space />
         <CommonModalButton
           color="whiteSmoke"
-          text="이전 화면으로 >"
+          text="이전 화면으로  >"
           onPress={handleExpulsionCloseModal}
         />
       </CommonModal>

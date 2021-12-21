@@ -67,15 +67,15 @@ export class MakeM {
 ** 마감 까지 미정, 미응답인 경우 불참으로 처리 됩니다.
 ** 마감 후에도 참석 여부를 변경할 수 있습니다.`;
 
-    // const buttons = [
-    //   {
-    //     type: 'WL',
-    //     name: '10초 만에 투표하기',
-    //     linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
-    //     linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
-    //   },
-    // ];
-    return { to, content };
+    const buttons = [
+      {
+        type: 'WL',
+        name: '10초 만에 투표하기',
+        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+      },
+    ];
+    return { to, content, buttons };
   }
 
   M003(to: string, data: M003dto) {
@@ -154,6 +154,7 @@ export class MakeM {
 
 ◼︎ 팀 이름
 - ${data.team}
+
 
 ◼ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
