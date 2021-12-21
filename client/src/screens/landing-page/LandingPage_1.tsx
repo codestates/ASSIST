@@ -20,6 +20,11 @@ const TitleLeftButtonSpace = styled.View`
   flex: 1;
 `;
 
+const Space = styled.View`
+  width: 100%;
+  height: 14px;
+`;
+
 const Title = styled.View`
   /* flex: 6; */
   flex-direction: column;
@@ -65,6 +70,7 @@ export default function LandingPage_1() {
   return (
     <LandingPageView>
       <MainTitle>
+        <Space />
         <TitleContainer>
           <TitleLeftButtonSpace />
           <Title>

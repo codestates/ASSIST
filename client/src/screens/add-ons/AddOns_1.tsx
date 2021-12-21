@@ -106,11 +106,6 @@ const SelectPageNumber = styled(Regular)`
   font-size: 35px;
 `;
 
-const SelectPageNumber = styled(Regular)`
-  color:${colors.darkGray}
-  font-size: 35px;
-`;
-
 export default function AddOns_1() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);

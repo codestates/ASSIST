@@ -10,6 +10,11 @@ import { colors } from '../../theme/colors';
 import Landing_7 from '../../assets/images/Landing_7.png';
 import { Dimensions } from 'react-native';
 
+const Space = styled.View`
+  width: 100%;
+  height: 26px;
+`;
+
 const TitleContainer = styled.View`
   flex: 3;
   flex-direction: row;
@@ -64,6 +69,7 @@ export default function LandingPage_2() {
   return (
     <LandingPageView>
       <MainTitle>
+        <Space />
         <TitleContainer>
           <TitleLeftButton onPress={() => navigation.navigate('LandingPage_6')}>
             <AntDesign name="left" size={26} color={colors.lightGray} />
