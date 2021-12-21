@@ -27,7 +27,10 @@ export class MakeM {
 - ${data.startTime} ~ ${data.endTime}
 
 ◼︎ 경기 장소
-- ${data.address} ${data.address2}`;
+- ${data.address}
+  ${data.address2}
+
+**해당 새로운 경기 등록 알림 메시지는 고객님의 알림신청에 의해 발송되었습니다.`;
 
     const buttons = [
       {
@@ -151,6 +154,7 @@ export class MakeM {
 
 ◼︎ 팀 이름
 - ${data.team}
+
 
 ◼ 경기 정보
 - 일자 : ${getHangleDate(data.date)}

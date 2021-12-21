@@ -12,26 +12,27 @@ import getHangleDate from './utlls/get_hangle_date';
 
 export class MakeT {
   T001(to: string, data: T001dto) {
-    const content = `[팀 가입 완료 안내]
-    
+
+    let a = `[팀 가입 완료 안내]
+
 풋살 팀 가입이 완료 되었어요 🎉🎉
-            
-◼︎ 팀 이름
-- ${data.team}
-            
-◼︎ 초대한 사람
-- ${data.leader} 주장님
-            
-◼︎ 팀 코드
-- ${data.code}
-            
+
+︎◼︎ 팀 이름
+     - ${data.team}
+
+︎◼︎ 초대한 사람
+     - ${data.leader} 주장님
+
+︎◼︎ 팀 코드
+     - ${data.code}
+
 -----
-            
+
 ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(Assist) 해 드릴게요!
-            
-1. 앞으로 팀에 경기가 생기면 알려드려요.
-2. 팀 회비 납부 전날 알려드려요.
-3. 그 외에 팀과 관련된 소식을 알려드려요.`;
+
+  1. 앞으로 팀에 경기가 생기면 알려드려요.
+  2. 팀 회비 납부 전날 알려드려요.
+  3. 그 외에 팀과 관련된 소식을 알려드려요.`;
 
     const buttons = [
       {
@@ -42,8 +43,8 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
       },
     ];
 
-    console.log(`${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`);
-    return { to, content, buttons };
+    //추후 버튼추가
+    return { to, content: a };
   }
 
   T002(to: string, data: T002dto) {
@@ -51,12 +52,15 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
     
 ◼︎ 팀 이름
 - ${data.team}
-           
+
 ◼︎ 가입한 사람
 - ${data.name}
            
 ◼︎ 가입 일자
-- ${getHangleDate()}`;
+
+- ${getHangleDate()}
+
+** 해당 선수 가입 알림 메시지는 고객님의 알림 신청에 의해 발송된 메시지입니다.`;
 
     const buttons = [
       {
@@ -139,7 +143,8 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
     const content = `아래 팀원이 팀을 나갔습니다.
 
 ◼︎ 팀 이름
--  ${data.team}
+
+- ${data.team}
       
 ◼︎ 팀원 이름
 - ${data.name} 님
@@ -149,15 +154,17 @@ ${data.name}님의 즐겁고 간편한 풋살 라이프, 저희가 어시스트(
       
 ** 팀을 나간 이유는 팀원에게 직접 문의 해 주세요.`;
 
-    const buttons = [
-      {
-        type: 'WL',
-        name: '팀 구성원 확인하기',
-        linkMobile: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
-        linkPc: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
-      },
-    ];
-    return { to, content, buttons };
+
+    // const buttons = [
+    //   {
+    //     type: 'WL',
+    //     name: '팀 구성원 확인하기',
+    //     linkMobile: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
+    //     linkPc: `${process.env.HOMEPAGE_URL}/User/AddOns_2/${data.teamId}`,
+    //   },
+    // ];
+    //추후 버튼추가
+    return { to, content };
   }
 
   T007(to: string, data: T007dto) {
