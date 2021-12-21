@@ -27,7 +27,10 @@ export class MakeM {
 - ${data.startTime} ~ ${data.endTime}
 
 ◼︎ 경기 장소
-- ${data.address} ${data.address2}`;
+- ${data.address}
+  ${data.address2}
+
+**해당 새로운 경기 등록 알림 메시지는 고객님의 알림신청에 의해 발송되었습니다.`;
 
     const buttons = [
       {
@@ -64,15 +67,15 @@ export class MakeM {
 ** 마감 까지 미정, 미응답인 경우 불참으로 처리 됩니다.
 ** 마감 후에도 참석 여부를 변경할 수 있습니다.`;
 
-    const buttons = [
-      {
-        type: 'WL',
-        name: '10초 만에 투표하기',
-        linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
-        linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
-      },
-    ];
-    return { to, content, buttons };
+    // const buttons = [
+    //   {
+    //     type: 'WL',
+    //     name: '10초 만에 투표하기',
+    //     linkMobile: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+    //     linkPc: `${process.env.HOMEPAGE_URL}/User/MatchVote/${data.matchId}`,
+    //   },
+    // ];
+    return { to, content };
   }
 
   M003(to: string, data: M003dto) {
