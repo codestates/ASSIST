@@ -51,10 +51,9 @@ export type RootStackParamList = {
   ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
   ScheduleManage_3: undefined;
   ScheduleManage_4: undefined;
-  ScheduleManage_5: undefined;
+  ScheduleManage_5: undefined | { matchId: string | number };
   CalendarSelect: undefined | { date: string };
-  StartTimeSelect: undefined | { startTime: string };
-  EndTimeSelect: undefined | { endTime: string };
+  TimeSelect: undefined | { time: 'start' | 'end' };
   StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
   ChangePassword: undefined | { screenName?: keyof RootStackParamList; phone?: string };
   FindPassword:

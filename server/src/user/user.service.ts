@@ -46,7 +46,7 @@ export class UserService {
       contentType: 'COMM',
       countryCode: '82',
       from: process.env.HOST_PHONE, // 발신자 번호
-      content: `인증번호 ${content} 입니다.`,
+      content,
       messages: [
         {
           to: phone, // 수신자 번호
@@ -76,7 +76,7 @@ export class UserService {
     if (number.length !== 6) {
       return this.sendAuthNum(phone);
     }
-    await this.sendSMS(phone, number);
+    await this.sendSMS(phone, `[어시스트 ASSIST]\n인증번호 [${number}] 입니다.`);
 
     return await this.smsRepository.createSms({ phone, number });
   }

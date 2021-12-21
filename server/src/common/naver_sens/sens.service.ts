@@ -5,22 +5,22 @@ import { AlimtalkDto } from './dto/sendTalk.dto';
 import { AlimTalkMessageRequest } from './interface/alimtalk_message';
 
 export class NaverSensService {
-  async sendSMS(phone: string, content: string): Promise<void> {
+  async sendSMS(phone: string, content: string, type = 'SMS'): Promise<void> {
     phone = phone.replace(/-/g, '');
     const url = `https://sens.apigw.ntruss.com/sms/v2/services/${process.env.SMS_SERVICEID}/messages`;
     const body = {
-      type: 'SMS',
+      type,
       contentType: 'COMM',
       countryCode: '82',
       from: process.env.HOST_PHONE, // 발신자 번호
-      content: `[어시스트 ASSIST]
-      인증번호 [${content}] 입니다.`,
+      content,
       messages: [
         {
           to: phone, // 수신자 번호
         },
       ],
     };
+
     const options = {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -50,6 +50,9 @@ export class NaverSensService {
       payload.push(el);
     });
 
+    payload.forEach((el) => {
+      console.log(el);
+    });
     const body: AlimTalkMessageRequest = {
       templateCode: code,
       plusFriendId: '@assist',

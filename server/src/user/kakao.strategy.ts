@@ -8,7 +8,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     super({
       clientID: process.env.KAKAO_CLIENTID,
       clientSecret: '', // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
-      callbackURL: `${process.env.SERVER_URL}/user/kakao/callback2`,
+      callbackURL: `${process.env.SERVER_URL}/user/kakao/callback`,
     });
   }
   async validate(accessToken: string, refreshToken: string, profile: Profile, done) {

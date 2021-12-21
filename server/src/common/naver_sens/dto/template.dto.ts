@@ -45,6 +45,7 @@ enum voteCondition {
   hold = '미정',
 }
 export class M008dto {
+  matchId: string;
   team: string;
   startTime: string;
   endTime: string;
@@ -58,6 +59,7 @@ export class M008dto {
 }
 
 export class M009dto {
+  matchId: string;
   team: string;
   startTime: string;
   endTime: string;
@@ -70,6 +72,7 @@ export class M009dto {
 }
 
 export class M010dto {
+  matchId: string;
   team: string;
   startTime: string;
   endTime: string;

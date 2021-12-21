@@ -120,14 +120,14 @@ export default function AddOns_3({ route }: AddOnsProps) {
     try {
       await axios.patch(
         `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
-        { headers: { authorization: `Bearer ${token}` } },
         {
           name: modifyTeamInfo[0],
-          paymentDay: modifyTeamInfo[1],
+          paymentDay: Number(modifyTeamInfo[1]),
           dues: modifyTeamInfo[2],
           accountNumber: modifyTeamInfo[3],
           accountBank: route.params?.bank,
         },
+        { headers: { authorization: `Bearer ${token}` } },
       );
       navigation.replace('AddOns_3', { teamId: selectedTeam.id });
       setModalVisible(false);

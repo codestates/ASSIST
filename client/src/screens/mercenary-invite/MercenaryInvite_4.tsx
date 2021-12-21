@@ -15,6 +15,9 @@ import SubTitle from '../../components/text/SubTitle';
 import useNextMatch from '../../hooks/useNextMatch';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import axios from 'axios';
+import { ASSIST_SERVER_URL } from '@env';
+import getTextValues from '../../functions/getTextValues';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -63,9 +66,22 @@ const MecenaryAttendContainer = styled.View`
 
 export default function MercenaryInvite_4() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { selectedTeam } = useSelector((state: RootState) => state.userReducer);
-  const { money } = useSelector((state: RootState) => state.propsReducer.mercenaryInvite);
+  const { selectedTeam, token } = useSelector((state: RootState) => state.userReducer);
+  const dto = useSelector((state: RootState) => state.propsReducer.mercenaryInvite);
   const { data } = useNextMatch({ teamId: selectedTeam?.id });
+
+  const handleRequest = () => {
+    axios
+      .post(`${ASSIST_SERVER_URL}/match/${data?.id}/mercenery`, dto, {
+        headers: { authorization: `Bearer ${token}` },
+      })
+      .then((el) => {
+        navigation.navigate('MercenaryInvite_5');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <>
@@ -87,31 +103,27 @@ export default function MercenaryInvite_4() {
             </MatchInfoTitle>
             <ContentsSpaceContents />
             <MatchInfoContents>
-              <Regular size={20}>
+              <Regular size={17}>
                 {data?.date}
                 {data?.day}
               </Regular>
-              <Bold size={20}>
-                시작 {data?.startTime} <AntDesign name="arrowright" size={20} /> {data?.endTime}{' '}
+              <Bold size={17}>
+                시작 {data?.startTime} <AntDesign name="arrowright" size={17} /> {data?.endTime}{' '}
                 종료
               </Bold>
-              <Regular size={16}>{data?.address}</Regular>
-              <Regular size={16}>{data?.address2}</Regular>
+              <Regular size={15}>{data?.address}</Regular>
+              <Regular size={15}>{data?.address2}</Regular>
             </MatchInfoContents>
             <ContentSpaceButton />
             <MecenaryAttendContainer>
-              <Bold size={16}>참가비 : {money}원</Bold>
+              <Bold size={15}>
+                참가비 : {getTextValues({ text: `${dto.money}`, type: 'money' })}원
+              </Bold>
             </MecenaryAttendContainer>
           </MatchInfoContainer>
         </Container>
       </NextPageView>
-      <NextButton
-        disabled={false}
-        text="구인 신청 >"
-        onPress={() => {
-          navigation.navigate('MercenaryInvite_5');
-        }}
-      />
+      <NextButton disabled={false} text="구인 신청 >" onPress={() => handleRequest()} />
     </>
   );
 }

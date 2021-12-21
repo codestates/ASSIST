@@ -28,6 +28,7 @@ const SelectInput = styled.TouchableOpacity`
 const Selected = styled(Regular)`
   font-size: 18px;
   color: ${(props: { color: string }) => props.color};
+  font-family: 'SpoqaHanSansNeo-Regular';
 `;
 
 type LineSelectProps = {

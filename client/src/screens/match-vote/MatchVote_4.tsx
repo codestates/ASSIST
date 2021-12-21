@@ -70,37 +70,46 @@ export default function MatchVote_4({ route }: MatchVoteProps) {
     navigation.navigate('MatchVote_6');
   };
 
+  let attendLength = route.params?.data?.attend.length || 0;
+  let absentLength = route.params?.data?.absent.length || 0;
+  let holdLength = route.params?.data?.hold.length || 0;
+  let nonResLendgth = route.params?.data?.nonRes.length || 0;
+
   const getAttendView = () => {
     if (route.params?.data?.vote === 'attend') {
       return (
         <VoteSelected>
           <Bold white>😍 참석</Bold>
-          <Bold white>{route.params?.data.attend.length}명</Bold>
+          <Bold white>{attendLength}명</Bold>
         </VoteSelected>
       );
     } else {
       return (
         <Vote>
           <Regular gray>😍 참석</Regular>
-          <Regular gray>{route.params?.data?.attend.length}명</Regular>
+          <Regular gray>{attendLength}명</Regular>
         </Vote>
       );
     }
   };
 
   const getAbsentView = () => {
-    if (route.params?.data?.vote === 'absent') {
+    if (
+      route.params?.data?.vote === 'absent' ||
+      route.params?.data?.vote === 'hold' ||
+      route.params?.data?.vote === 'nonRes'
+    ) {
       return (
         <VoteSelected>
           <Bold white>😭 불참</Bold>
-          <Bold white>{route.params?.data.absent.length}명</Bold>
+          <Bold white>{absentLength + holdLength + nonResLendgth}명</Bold>
         </VoteSelected>
       );
     } else {
       return (
         <Vote>
           <Regular gray>😭 불참</Regular>
-          <Regular gray>{route.params?.data?.absent.length}명</Regular>
+          <Regular gray>{absentLength + holdLength + nonResLendgth}명</Regular>
         </Vote>
       );
     }

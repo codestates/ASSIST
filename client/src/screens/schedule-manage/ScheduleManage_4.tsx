@@ -68,8 +68,6 @@ export default function ScheduleManage_4() {
   }, [navigation, isPressed]);
 
   const handleSaveSchedule = () => {
-    // 알림톡 보내기
-    // 팀 아이디 하드코딩 수정해야함
     axios
       .post(
         `${ASSIST_SERVER_URL}/match`,
@@ -78,7 +76,7 @@ export default function ScheduleManage_4() {
           headers: { authorization: `Bearer ${token}` },
         },
       )
-      .then(() => navigation.navigate('ScheduleManage_5'))
+      .then((el) => navigation.navigate('ScheduleManage_5', { matchId: el.data.id }))
       .catch((err) => console.log(err));
   };
 
