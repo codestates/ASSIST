@@ -73,10 +73,10 @@ export default function LandingPage_6() {
             <Bold size={17}>4. 회비 관리</Bold>
             <TitleSpaceTitle />
             <Line>
-              <Light>매월 회비 챙기기 귀찮으셨죠?</Light>
+              <Light>회비 챙기기 귀찮으셨죠?</Light>
             </Line>
             <Bold>
-              회비 납부 1일전 알림톡 <Light>을 보내드립니다!</Light>
+              납부 1일전<Light>에 알려드릴게요!</Light>
             </Bold>
           </Title>
           <TitleRightButton onPress={() => navigation.navigate('LandingPage_7')}>
