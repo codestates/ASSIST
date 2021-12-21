@@ -25,6 +25,7 @@ export default function Navigation() {
               path: 'MatchVote/:matchId',
               screens: {
                 MatchVote_Main: 'MatchVote_Main',
+                MatchVote_6: 'MatchVote_6',
               },
             },
             JoinTeam: {
@@ -52,6 +53,9 @@ export default function Navigation() {
     },
   };
 
+  const linking2 = {
+    prefixes: [prefix],
+  };
   const rootNavigator = createStackNavigator();
 
   return (
