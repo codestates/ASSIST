@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import LoadingView from '../../components/view/LoadingView';
 
 // const PercentBarSpace = styled.View`
 //   width: 1%;
@@ -85,9 +86,12 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
   const { token } = useSelector((state: RootState) => state.userReducer);
 
   const [teamDetailMatch, setTeamDetailMatch] = useState<MatchDetail>(null);
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    getDetailMatch().catch((err) => console.log(err));
+    getDetailMatch().catch((err) => {
+      console.log('실패');
+      navigation.navigate('NotFound');
+    });
   }, []);
 
   const getDetailMatch = async () => {
@@ -97,8 +101,9 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
         { headers: { authorization: `Bearer ${token}` } },
       );
       setTeamDetailMatch(data);
+      setIsLoading(false);
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   };
 
@@ -115,6 +120,10 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
 
     return !allUsersNum ? '0' : `${Math.round((userNum / allUsersNum) * 100)}`;
   };
+
+  if (isLoading) {
+    return <LoadingView />;
+  }
 
   return (
     <>
