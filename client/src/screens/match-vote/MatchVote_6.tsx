@@ -96,7 +96,6 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
         `${ASSIST_SERVER_URL}/match/${route.params?.matchId}`,
         { headers: { authorization: `Bearer ${token}` } },
       );
-      console.log(data);
       setTeamDetailMatch(data);
     } catch (err) {
       console.log(err);
@@ -119,7 +118,10 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
 
   return (
     <>
-      <CloseHeader action={true} color={colors.whiteSmoke} />
+      <CloseHeader
+        navigate={{ screenName: 'MatchVote_Main', params: { matchId: route.params?.matchId } }}
+        color={colors.whiteSmoke}
+      />
       <ColoredScrollView titleColor={colors.whiteSmoke}>
         <MainTitle marginBottom="15px">
           <Bold size={22}>참석 투표 현황</Bold>

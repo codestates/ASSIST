@@ -64,11 +64,11 @@ export default function VoteStatusCard({ title, data }: VoteStatusCardProps) {
       Linking.openURL(`tel:${user.phone}`).catch((err) => console.log(err));
     }
   };
-
+  
   if (!data) {
     return <LoadingView />;
   }
-  console.log(data);
+
   return (
     <VoteStatusContainer>
       <VoteStatusTitle>
