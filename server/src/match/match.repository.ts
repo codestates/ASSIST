@@ -22,7 +22,7 @@ export class MatchRepository extends Repository<Match> {
     });
 
     if (nextMatch) {
-      let find = nextMatch.user_matchs.find((el) => el.user.id === user.id);
+      let find = nextMatch.user_matchs.find((el) => el.user?.id === user.id);
 
       nextMatch.vote = false;
 

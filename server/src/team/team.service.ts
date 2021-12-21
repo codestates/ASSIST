@@ -43,9 +43,6 @@ export class TeamService {
     const nextMatchs: any = await this.matchRepository.find({
       relations: ['user_matchs'],
       where: {
-        date: Raw((alias) => `${alias} >= :date`, {
-          date: getDate(),
-        }),
         team: { id: team.id },
         condition: Raw((alias) => `${alias} IN (:...condition)`, {
           condition: ['경기 확정', '인원 모집 중'],
@@ -75,7 +72,7 @@ export class TeamService {
       this.naverSensService.sendKakaoAlarm('T011', [form1]);
     }
 
-    if (team.leaderId.provider === 'kakao') {
+    if (team.leaderId?.provider === 'kakao') {
       const info2 = {
         teamId: team.id,
         team: team.name,

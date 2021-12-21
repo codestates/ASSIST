@@ -17,13 +17,14 @@ export class KakaoAlimService {
     let nextday = getDate(1);
 
     const queryString = `SELECT b.name, b.phone , d.name as team, c.id,c.date,c.startTime,c.endTime, c.deadline, c.address,c.address2
-     FROM user_match as a join user as b on b.id = a.userId
-    join assist.match as c on c.id = matchId join team as d on d.id = teamId 
-    where c.deadline = '${nextday}' and b.provider = 'kakao' and a.condition in ('미응답','미정') and c.condition = '인원 모집 중' `;
+      FROM user_match as a join user as b on b.id = a.userId
+      join assist.match as c on c.id = a.matchId join team as d on d.id = c.teamId 
+      where c.deadline = '${nextday}' and b.provider = 'kakao' and a.condition in ('미응답','미정') and c.condition = '인원 모집 중' `;
 
     // 메세지 보낼 대상들.
     let data: [] = await getManager().query(queryString);
 
+    console.log(data);
     if (data.length) {
       let messages = data.map(
         ({ name, phone, team, date, startTime, endTime, deadline, address, address2, id }) => {
@@ -48,9 +49,9 @@ export class KakaoAlimService {
     let nextday = getDate(1);
 
     const queryString = `SELECT b.name, b.phone , d.name as team, c.id,c.date,c.startTime,c.endTime, c.deadline, c.address,c.address2
-     FROM user_match as a join user as b on b.id = a.userId
-    join assist.match as c on c.id = matchId join team as d on d.id = teamId 
-    where c.deadline = '${nextday}' b.provider = 'kakao' and a.condition in ('미응답','불참') and c.condition = '인원 모집 중' and `;
+    FROM user_match as a join user as b on b.id = a.userId
+    join assist.match as c on c.id = a.matchId join team as d on d.id = c.teamId 
+    where c.deadline = '${nextday}' and b.provider = 'kakao' and a.condition in ('참석','불참') and c.condition = '인원 모집 중'`;
 
     // 메세지 보낼 대상들.
     let data: [] = await getManager().query(queryString);
@@ -252,8 +253,8 @@ export class KakaoAlimService {
         need: merceneryDto.needNumber,
         money: merceneryDto.money,
       };
-      let form = this.makeM.M010(user.phone, payload);
-      this.naverSensService.sendKakaoAlarm('M010', [form]);
+      let form = this.makeM.M020(user.phone, payload);
+      this.naverSensService.sendKakaoAlarm('M020', [form]);
     }
   }
 }
