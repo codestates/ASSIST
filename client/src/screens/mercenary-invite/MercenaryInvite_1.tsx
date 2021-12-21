@@ -70,7 +70,7 @@ export default function MercenaryInvite_1() {
           <TitleSpaceButton />
           <CommonModalButton color="blue" text="용병 초대하기" onPress={onPress} />
           <ButtonSpaceButton />
-          <CommonModalButton color="transparent" text="돌아가기 >" onPress={() => goHome()} />
+          <CommonModalButton color="transparent" text="돌아가기  >" onPress={() => goHome()} />
         </ContentContainer>
       </ColoredScrollView>
     </>

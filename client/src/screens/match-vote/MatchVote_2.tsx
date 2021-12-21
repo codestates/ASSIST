@@ -167,7 +167,7 @@ export default function MatchVote_2({ route }: MatchVoteProps) {
                 onPress={() => navigation.navigate('ConfirmSelect')}
                 height={55}
                 color="blue"
-                text="경기 확정 >"
+                text="경기 확정  >"
               />
             </>
           )}
@@ -200,7 +200,7 @@ export default function MatchVote_2({ route }: MatchVoteProps) {
           <CommonModalButton
             height={55}
             color="transparent"
-            text="자세히 보기 >"
+            text="자세히 보기  >"
             onPress={handleDetailVote}
           />
         </ContentContainer>

@@ -21,11 +21,6 @@ import GatheringMark from '../../components/mark/GatheringMark';
 import VotedMark from '../../components/mark/VotedMark';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
-const MainTitleSpaceContents = styled.View`
-  width: 100%;
-  height: 32px;
-`;
-
 const CardSpaceCard = styled.View`
   width: 100%;
   height: 35px;
@@ -50,11 +45,10 @@ const ContentsContainer = styled.View`
 `;
 
 const CardTitleContainer = styled.View`
-  width: 100%;
-  height: 20%;
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26px;
 `;
 
 const CardTitleRedBox = styled.View`
@@ -196,7 +190,6 @@ export default function AddOns_1() {
               <CardTitleContainer>
                 <Bold size={18}>지난 경기가 없어요 🤔</Bold>
               </CardTitleContainer>
-              <MainTitleSpaceContents />
               <Regular size={13}>새로운 경기를 생성해주세요!</Regular>
             </Card>
           ) : (
@@ -212,7 +205,6 @@ export default function AddOns_1() {
                       <CardTitleButtonText>자세히 보기</CardTitleButtonText>
                     </CardTitleButtonBox>
                   </CardTitleContainer>
-                  <MainTitleSpaceContents />
                   <Regular size={17}>{el.date}</Regular>
                   <TextSpaceText />
                   <Bold size={17}>

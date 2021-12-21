@@ -52,7 +52,7 @@ export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardPr
     let blueText = true;
 
     if (conditions === '인원 모집 중') {
-      text = '투표하기 >';
+      text = '투표하기  >';
       color = 'blue';
       blueText = false;
     }

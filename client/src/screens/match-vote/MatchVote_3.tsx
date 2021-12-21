@@ -184,7 +184,7 @@ export default function MatchVote_3({ route }: MatchVoteProps) {
             height={55}
             grayText
             color="transparent"
-            text="자세히 보기 >"
+            text="자세히 보기  >"
             onPress={handleDetailVote}
           />
           <Space />
