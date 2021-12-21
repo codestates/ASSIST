@@ -35,12 +35,16 @@ const CloseButton = styled.TouchableOpacity`
 type ColseHeaderProps = {
   color?: string;
   goBack?: boolean;
+  action?: boolean;
 };
 
-export default function CloseHeader({ color, goBack }: ColseHeaderProps) {
+export default function CloseHeader({ color, goBack, action }: ColseHeaderProps) {
   const goHome = useGoHome();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const getNavigation = () => {
+    if (action) {
+      navigation.navigate('MatchVote_Main');
+    }
     if (goBack) {
       navigation.goBack();
     } else {

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Linking, Platform } from 'react-native';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import { Bold, Regular } from '../../theme/fonts';
-
+import LoadingView from '../view/LoadingView';
+import { RootState } from '../../store/reducers';
 const Space = styled.View`
   width: 16px;
   height; 100%;
@@ -21,45 +23,83 @@ const VoteStatusTitle = styled.View`
 
 const VoteStatusMembersContainer = styled.View`
   flex-direction: row;
+  margin-right: 5%;
+`;
+
+const UserNameContainer = styled.View`
+  flex-direction: row;
+  width: 90%;
   flex-wrap: wrap;
 `;
 
 const VoteStatusMember = styled.TouchableOpacity`
-  width: 22%;
+  flex-direction: row;
+  width: 100%;
   padding-vertical: 6px;
   margin: 8px 8px 8px 0;
 `;
 
-type VoteStatusCardProps = {
-  title: string;
-  person: number;
+type UserProps = {
+  id: number;
   name: string;
-  call: string;
+  phone: string;
+};
+type DataProps = {
+  condition: string;
+  id: number;
+  user: UserProps;
 };
 
-export default function VoteStatusCard(props: VoteStatusCardProps) {
-  const { title, person, name, call } = props;
+type VoteStatusCardProps = {
+  title: string;
+  data: DataProps[];
+};
 
-  const handlePhoneCall = () => {
+export default function VoteStatusCard({ title, data }: VoteStatusCardProps) {
+  const { id } = useSelector((state: RootState) => state.userReducer);
+  const handlePhoneCall = (user: UserProps) => {
     if (Platform.OS === 'ios') {
-      Linking.openURL(`tel://${call}`).catch((err) => console.log(err));
+      Linking.openURL(`tel://${user.phone}`).catch((err) => console.log(err));
     } else {
-      Linking.openURL(`tel:${call}`).catch((err) => console.log(err));
+      Linking.openURL(`tel:${user.phone}`).catch((err) => console.log(err));
     }
   };
 
+  if (!data) {
+    return <LoadingView />;
+  }
+  console.log(data);
   return (
     <VoteStatusContainer>
       <VoteStatusTitle>
-        <Bold size={20}>{title}</Bold>
+        <Bold size={18}>{title}</Bold>
         <Space />
-        <Regular size={20}>{person} 명</Regular>
+        <Regular size={18}>{data?.length}명</Regular>
       </VoteStatusTitle>
-      <VoteStatusMembersContainer>
-        <VoteStatusMember onPress={handlePhoneCall}>
-          <Regular size={17}>{name}</Regular>
-        </VoteStatusMember>
-      </VoteStatusMembersContainer>
+      <UserNameContainer>
+        {data.length ? (
+          data?.map((el) => {
+            return (
+              <VoteStatusMembersContainer key={el.id}>
+                <VoteStatusMember
+                  onPress={() => {
+                    handlePhoneCall(el.user);
+                  }}>
+                  <Regular blue={el.user?.id === id} size={15}>
+                    {el.user?.name}
+                  </Regular>
+                </VoteStatusMember>
+              </VoteStatusMembersContainer>
+            );
+          })
+        ) : (
+          <VoteStatusMembersContainer>
+            <VoteStatusMember>
+              <Regular size={15}> ...</Regular>
+            </VoteStatusMember>
+          </VoteStatusMembersContainer>
+        )}
+      </UserNameContainer>
     </VoteStatusContainer>
   );
 }
