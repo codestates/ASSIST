@@ -65,6 +65,10 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
   const clearError = () => setErrorMessage('');
 
   useEffect(() => {
+    if (!token) {
+      return navigation.replace('Guest');
+    }
+
     const unsubscribe = navigation.addListener('focus', () => {
       if (route.params?.reset) {
         reset({ inviteCode: '' });

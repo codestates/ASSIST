@@ -123,40 +123,42 @@ export class MatchService {
       throw new InternalServerErrorException('database err');
     }
 
-    data.attend = [];
-    data.absent = [];
-    data.hold = [];
-    data.nonRes = [];
+    if (data) {
+      data.attend = [];
+      data.absent = [];
+      data.hold = [];
+      data.nonRes = [];
 
-    data.user_matchs.forEach((el) => {
-      switch (el.condition) {
-        case '미응답':
-          if (el.user?.id === user.id) {
-            data.vote = 'nonRes';
-          }
-          data.nonRes.push(el);
-          break;
-        case '참석':
-          if (el.user?.id === user.id) {
-            data.vote = 'attend';
-          }
-          data.attend.push(el);
-          break;
-        case '불참':
-          if (el.user?.id === user.id) {
-            data.vote = 'absent';
-          }
-          data.absent.push(el);
-          break;
-        case '미정':
-          if (el.user?.id === user.id) {
-            data.vote = 'hold';
-          }
-          data.hold.push(el);
-          break;
-      }
-    });
-    delete data.user_matchs;
+      data.user_matchs.forEach((el) => {
+        switch (el.condition) {
+          case '미응답':
+            if (el.user?.id === user.id) {
+              data.vote = 'nonRes';
+            }
+            data.nonRes.push(el);
+            break;
+          case '참석':
+            if (el.user?.id === user.id) {
+              data.vote = 'attend';
+            }
+            data.attend.push(el);
+            break;
+          case '불참':
+            if (el.user?.id === user.id) {
+              data.vote = 'absent';
+            }
+            data.absent.push(el);
+            break;
+          case '미정':
+            if (el.user?.id === user.id) {
+              data.vote = 'hold';
+            }
+            data.hold.push(el);
+            break;
+        }
+      });
+      delete data.user_matchs;
+    }
 
     return data;
   }
@@ -232,7 +234,7 @@ export class MatchService {
     }
 
     if (updateMatchDto.condition === '경기 취소') {
-      this.kakaoAlimService.sendM009(match);
+      this.kakaoAlimService.sendM019(match);
     }
     return { message: 'ok' };
   }
@@ -335,7 +337,7 @@ export class MatchService {
     참가비 ${merceneryDto.money}원`;
 
     // this.naverSensService.sendSMS(process.env.HOST_PHONE, template, 'LMS');
-    this.kakaoAlimService.sendM010(match, merceneryDto, user);
+    this.kakaoAlimService.sendM020(match, merceneryDto, user);
     return { message: 'ok' };
   }
 }

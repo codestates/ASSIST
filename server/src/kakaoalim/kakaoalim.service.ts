@@ -202,7 +202,7 @@ export class KakaoAlimService {
       this.naverSensService.sendKakaoAlarm('M008', [form]);
     }
   }
-  async sendM009(data) {
+  async sendM019(data) {
     let arr = [];
     let arr2 = [];
     data.user_matchs.forEach((el) => {
@@ -213,15 +213,15 @@ export class KakaoAlimService {
       ) {
         const payload: M019dto = {
           matchId: data.id,
-          team: data.team.name,
+          team: data.team?.name,
           startTime: data.startTime,
           endTime: data.endTime,
           address: data.address,
           address2: data.address2,
           date: data.date,
-          name: el.user.name,
-          reason: el.reason,
-          to: el.user.phone,
+          name: el.user?.name,
+          reason: data?.reason,
+          to: el.user?.phone,
         };
         arr2.push(payload);
       }
@@ -239,7 +239,7 @@ export class KakaoAlimService {
     this.naverSensService.sendKakaoAlarm('U001', [form]);
   }
 
-  async sendM010(match, merceneryDto, user) {
+  async sendM020(match, merceneryDto, user) {
     console.log('유저의 가입경로', user?.provider);
     if (user?.provider === 'kakao') {
       const payload: M010dto = {
@@ -257,4 +257,6 @@ export class KakaoAlimService {
       this.naverSensService.sendKakaoAlarm('M020', [form]);
     }
   }
+
+  async sendT009() {}
 }
