@@ -1,7 +1,6 @@
 export default function getHangleDate(date = new Date().toISOString()) {
-  date = new Date(date).toISOString();
   const dayArr = ['일', '월', '화', '수', '목', '금', '토', '일'];
-  const day = dayArr[new Date().getDay()] + '요일';
+  const day = dayArr[new Date(date).getDay()] + '요일';
 
   const _year = date.substr(0, 4);
 
