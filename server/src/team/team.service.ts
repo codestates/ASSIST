@@ -71,7 +71,7 @@ export class TeamService {
       const form1 = this.makeT.T011(info.to, info);
       this.naverSensService.sendKakaoAlarm('T011', [form1]);
     }
-    
+
     if (team.leaderId?.provider === 'kakao') {
       const info2 = {
         teamId: team.id,
@@ -149,12 +149,12 @@ export class TeamService {
 
       if (leader.provider === 'kakao') {
         console.log('위임된친구의 provider', leader.provider);
-        let form2 = this.makeT.T004(leader.phone, {
+        let form2 = this.makeT.T014(leader.phone, {
           teamId: found.id,
           team: found.name,
           leader: user.name,
         });
-        await this.naverSensService.sendKakaoAlarm('T004', [form2]);
+        await this.naverSensService.sendKakaoAlarm('T014', [form2]);
       }
     }
 

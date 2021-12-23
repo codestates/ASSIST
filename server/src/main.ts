@@ -18,16 +18,19 @@ async function bootstrap() {
   );
   await app.listen(80);
 
-  // const scheduleService = new ScheduleService();
+  let am9 = schedule.scheduleJob('00 09 * * *', () => {
+    console.log('오전 9시 예약 시작');
+    axios.post(`${process.env.SERVER_URL}/kakaoalim/am9`, {}, { withCredentials: true });
+  });
 
-  // let pm8 = schedule.scheduleJob('13 22 * * *', () => {
-  //   console.log('여기');
-  //   axios.post('http://localhost/kakaoalim/8pm', {}, { withCredentials: true });
-  // });
+  let pm7 = schedule.scheduleJob('00 19 * * *', () => {
+    console.log('오후 7시 예약 시작');
+    axios.post(`${process.env.SERVER_URL}/kakaoalim/pm7`, {}, { withCredentials: true });
+  });
 
-  // let sendM007 = schedule.scheduleJob('00 09 * * *', () => {
-  //   scheduleService.sendM006();
-  //
-  // });
+  let pm8 = schedule.scheduleJob('00 20 * * *', () => {
+    console.log('오후 8시 예약 시작');
+    axios.post(`${process.env.SERVER_URL}/kakaoalim/pm8`, {}, { withCredentials: true });
+  });
 }
 bootstrap();

@@ -18,7 +18,7 @@ import { VoteMatchDto } from './dto/vote-dto';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
 import { MakeM } from 'src/common/naver_sens/make_M_template';
 import { AlimtalkDto } from 'src/common/naver_sens/dto/sendTalk.dto';
-import { getDate } from 'src/common/getDate';
+import { getDate, getTime } from 'src/common/getDate';
 import { KakaoAlimService } from 'src/kakaoalim/kakaoalim.service';
 
 @Injectable()
@@ -168,14 +168,30 @@ export class MatchService {
     if (!limit) limit = 5;
     const offset = page * limit - limit;
 
+    const update = await this.matchRepository
+      .createQueryBuilder()
+      .update(Match)
+      .set({
+        condition: '경기 완료',
+      })
+      .where('match.teamId = :teamId', { teamId })
+      .andWhere('match.condition IN (:...condition)', { condition: ['경기 확정', '인원 모집 중'] })
+      .andWhere(
+        'match.date < :date OR (match.teamId = :teamId and match.date = :date and match.endTime <= :endTime and match.condition != :condition2)',
+        {
+          date: getDate(),
+          endTime: getTime(),
+          condition2: '경기 취소',
+        },
+      )
+
+      .execute();
+
     const [lastMatchs, count] = await this.matchRepository.findAndCount({
       where: {
-        // date: Raw((alias) => `${alias} < :date`, {
-        //   date: getDate(),
-        // }),
         team: { id: teamId },
         condition: Raw((alias) => `${alias} IN (:condition)`, {
-          condition: ['경기 완료', '경기 취소'],
+          condition: ['경기 취소', '경기 완료'],
         }),
       },
       order: { date: 'DESC', endTime: 'DESC', id: 'DESC' },
@@ -186,14 +202,7 @@ export class MatchService {
     const totalPage = Math.ceil(count / limit);
 
     const payload = { lastMatchs, totalPage };
-    if (page === 1) {
-      lastMatchs.forEach(async (el) => {
-        if (el.condition === '경기 확정' || el.condition === '인원 모집 중') {
-          el.condition = '경기 완료';
-          await this.matchRepository.save(el);
-        }
-      });
-    }
+
     return payload;
   }
 
@@ -292,17 +301,16 @@ export class MatchService {
       .andWhere('match.condition = :condition', { condition: '인원 모집 중' })
       .getMany();
 
-    console.log(data);
     if (!data.length) return { message: '확정할 경기가 없습니다.' };
 
-    const teamIdarr = data.map((el) => el.id);
+    const matchIdarr = data.map((el) => el.id);
     const update = await this.matchRepository
       .createQueryBuilder()
       .update(Match)
       .set({
         condition: '경기 확정',
       })
-      .where('id IN (:id)', { id: teamIdarr })
+      .where('id IN (:id)', { id: matchIdarr })
       .execute();
 
     console.log('경기확정완료', update);
@@ -317,7 +325,6 @@ export class MatchService {
       { relations: ['team', 'team.leaderId'] },
     );
 
-    console.log(user, match.team.leaderId.id);
     if (user.id !== match.team.leaderId.id) {
       throw new BadRequestException('용병 구인은 팀장만 가능합니다.');
     }
@@ -328,15 +335,14 @@ export class MatchService {
 
     날짜 : ${match.date} ${match.day}
     시간 : ${match.startTime} ~ ${match.endTime}
-    장소 :${match.address}
-         ${match.address2}
+    장소 :${match.address} ${match.address2}
 
     주장이름 : ${match.team.leaderId.name}
     주장번호 : ${match.team.leaderId.phone}
     필요인원 ${merceneryDto.needNumber}명
     참가비 ${merceneryDto.money}원`;
 
-    // this.naverSensService.sendSMS(process.env.HOST_PHONE, template, 'LMS');
+    this.naverSensService.sendSMS(process.env.HOST_PHONE, template, 'LMS');
     this.kakaoAlimService.sendM020(match, merceneryDto, user);
     return { message: 'ok' };
   }

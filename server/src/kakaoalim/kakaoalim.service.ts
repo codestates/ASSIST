@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { getManager, getRepository } from 'typeorm';
 import { MakeM } from 'src/common/naver_sens/make_M_template';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
-import { MatchService } from 'src/match/match.service';
 import { getDate } from 'src/common/getDate';
-import { MatchRepository } from 'src/match/match.repository';
 import { Match } from 'src/match/match.entity';
-import { M019dto, M010dto } from 'src/common/naver_sens/dto/template.dto';
+import { M019dto, M010dto, T009dto } from 'src/common/naver_sens/dto/template.dto';
 import { MakeU } from 'src/common/naver_sens/make_U_template';
+import { MakeT } from 'src/common/naver_sens/make_T_template';
 
 @Injectable()
 export class KakaoAlimService {
   makeM = new MakeM();
+  makeT = new MakeT();
   naverSensService = new NaverSensService();
   async sendM012() {
     let nextday = getDate(1);
@@ -78,7 +78,6 @@ export class KakaoAlimService {
 
   async autoFixMatchSendM006(data) {
     let arr = [];
-    console.log(data);
 
     data.forEach((item) => {
       let attend = 0;
@@ -233,10 +232,10 @@ export class KakaoAlimService {
     this.naverSensService.sendKakaoAlarm('M019', arr);
   }
 
-  async sendU001(user) {
+  async sendU002(user) {
     let makeU = new MakeU();
-    let form = makeU.U001(user.phone);
-    this.naverSensService.sendKakaoAlarm('U001', [form]);
+    let form = makeU.U002(user.phone);
+    this.naverSensService.sendKakaoAlarm('U002', [form]);
   }
 
   async sendM020(match, merceneryDto, user) {
@@ -258,5 +257,28 @@ export class KakaoAlimService {
     }
   }
 
-  async sendT009() {}
+  async sendT009() {
+    let nextday = getDate(1).slice(-2);
+
+    const queryString = `SELECT t.name,t.accountBank,t.paymentDay,t.accountNumber,t.id,user.phone FROM assist.team as t
+    join user_team as ut on t.id = ut.teamId 
+    join user on user.id = ut.userId where paymentDay = ${nextday} and
+    accountBank != '' and accountNumber != '' and dues != '' and provider = 'kakao'`;
+
+    let data = await getManager().query(queryString);
+    let form;
+    let arr = data.map((el) => {
+      const payload: T009dto = {
+        teamId: el.id,
+        team: el.name,
+        date: getDate(1),
+        bank: el.accountBank,
+        accountNumber: el.accountNumber,
+      };
+
+      form = this.makeT.T009(el.phone, payload);
+      return form;
+    });
+    this.naverSensService.sendKakaoAlarm('T009', arr);
+  }
 }
