@@ -4,23 +4,30 @@ import { User_match } from 'src/others/user_match.entity';
 import { Alarm_schedule } from 'src/others/alarm.entity';
 import { User } from 'src/user/user.entity';
 import { Raw } from 'typeorm';
-import { getDate } from 'src/common/getDate';
+import { getDate, getTime } from 'src/common/getDate';
 @EntityRepository(Match)
 export class MatchRepository extends Repository<Match> {
   async getNextMatch(teamId: number, user: User) {
-    const nextMatch: any = await this.findOne({
+    const nextMatchs: any = await this.find({
       relations: ['user_matchs', 'user_matchs.user'],
       where: {
-        date: Raw((alias) => `${alias} >= :date`, {
-          date: getDate(),
-        }),
         team: { id: teamId },
         condition: Raw((alias) => `${alias} IN (:...condition)`, {
           condition: ['경기 확정', '인원 모집 중'],
         }),
+        date: Raw((alias) => `${alias} >= :date`, {
+          date: getDate(),
+        }),
       },
+      order: { date: 'ASC' },
     });
 
+    const nextMatch = nextMatchs.find((el) => {
+      if (el.date === getDate()) {
+        return el.startTime > getTime() ? true : false;
+      }
+      return true;
+    });
     if (nextMatch) {
       let find = nextMatch.user_matchs.find((el) => el.user?.id === user.id);
 
@@ -32,17 +39,6 @@ export class MatchRepository extends Repository<Match> {
         }
       }
       delete nextMatch.user_matchs;
-
-      if (nextMatch.condition === '인원 모집 중') {
-        const matchtime = new Date(nextMatch.date + 'T' + '19:00');
-
-        matchtime.setDate(matchtime.getDate() - 1);
-
-        if (matchtime < new Date()) {
-          nextMatch.condition = '경기 확정';
-          await this.save(nextMatch);
-        }
-      }
     }
     return nextMatch ? nextMatch : null;
   }

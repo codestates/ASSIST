@@ -2,7 +2,7 @@ import {
   T001dto,
   T002dto,
   T003dto,
-  T004dto,
+  T014dto,
   T005dto,
   T006dto,
   T007dto,
@@ -88,7 +88,7 @@ export class MakeT {
     return { to, content, buttons };
   }
 
-  T004(to: string, data: T004dto) {
+  T014(to: string, data: T014dto) {
     const content = `팀의 주장으로 임명 되었습니다. 축하드립니다!
 ◼︎ 팀 이름
 - ${data.team}
@@ -106,7 +106,7 @@ export class MakeT {
         linkPc: `${process.env.HOMEPAGE_URL}/User/Team/${data.teamId}`,
       },
     ];
-    return { to, content };
+    return { to, content, buttons };
   }
 
   T005(to: string, data: T005dto) {

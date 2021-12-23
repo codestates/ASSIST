@@ -6,20 +6,23 @@ import { KakaoAlimService } from './kakaoalim.service';
 @Controller('kakaoalim')
 export class KakaoalimController {
   constructor(private matchService: MatchService, private kakaoAlimService: KakaoAlimService) {}
-  @Post('m006/auto')
-  async autoFixMatch() {
-    return await this.matchService.autoFixMatch();
+
+  @Post('am9')
+  async am9() {
+    this.kakaoAlimService.sendM007();
+    return { message: 'ok' };
   }
 
-  @Post('/test')
-  async test() {
-    return await this.kakaoAlimService.sendM007();
+  @Post('pm7')
+  async pm7() {
+    this.matchService.autoFixMatch();
+    return { message: 'ok' };
   }
-
-  @Post('8pm')
+  @Post('pm8')
   async pm8() {
     this.kakaoAlimService.sendM012();
     this.kakaoAlimService.sendM003();
+    this.kakaoAlimService.sendT009();
 
     return { message: 'ok' };
   }

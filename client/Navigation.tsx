@@ -53,9 +53,6 @@ export default function Navigation() {
     },
   };
 
-  const linking2 = {
-    prefixes: [prefix],
-  };
   const rootNavigator = createStackNavigator();
 
   return (

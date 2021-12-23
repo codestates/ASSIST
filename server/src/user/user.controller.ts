@@ -102,7 +102,7 @@ export class UserController {
     await this.userService.deleteUser(userInfo);
     if (userInfo.provider === 'kakao') {
       const kakaoId = userInfo.password;
-      await this.kakaoAlimService.sendU001(userInfo);
+      await this.kakaoAlimService.sendU002(userInfo);
       await this.userService.deleteKakaoLink(kakaoId);
     }
     return { message: 'ok' };
