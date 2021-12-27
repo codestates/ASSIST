@@ -12,6 +12,7 @@ import CommonModalButton from '../../components/button/CommonModalButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import DeadLineTimer from '../../components/timer/DeadLineTimer';
 
 const MainTitleSpaceContents = styled.View`
   height: 35px;
@@ -164,6 +165,7 @@ export default function MatchVote_3({ route }: MatchVoteProps) {
           <TextSpaceText />
           <MatchInfoDetailStadium>{route.params?.data?.address2}</MatchInfoDetailStadium>
           <CardSpaceButton />
+          <DeadLineTimer deadLine={String(route.params?.data?.deadline)} />
           {leader && (
             <>
               <CommonModalButton
