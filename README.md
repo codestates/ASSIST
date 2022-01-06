@@ -7,3 +7,7 @@
 <p align="center">
 <img src="https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/GITHUB-HOW-TO-USE.jpg?raw=true" />
 </p>
+
+# 사용 스텍 및 시스템 아키텍처
+>### Tech Stack
+![](https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-TECH-STACK.jpg?raw=true)
