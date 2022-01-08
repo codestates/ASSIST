@@ -13,3 +13,6 @@
 ![](https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-TECH-STACK.jpg?raw=true)
 >### Architecture
 ![](https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-ARCHITECHTURE.png?raw=true)
+
+## Flow Chart
+![](https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-SERVER-FLOW-CHART.jpg?raw=true)
