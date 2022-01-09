@@ -14,5 +14,8 @@
 >### Architecture
 ![](https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-ARCHITECHTURE.png?raw=true)
 
+## DB Schema
+![](https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-SCHEMA.png?raw=true)
+
 ## Flow Chart
 ![](https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-SERVER-FLOW-CHART.jpg?raw=true)
