@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
@@ -229,6 +228,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
               placeholder="팀 이름을 입력 해 주세요"
               errorMessage={errorMessage}
               clearErrorMessage={clearErrorMessage}
+              type="teamName"
             />
           ) : (
             <LineSelect isFixed title="팀 이름" selected={data?.name} />

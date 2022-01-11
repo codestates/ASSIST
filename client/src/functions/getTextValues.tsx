@@ -1,6 +1,6 @@
 type getTextValuesProps = {
   text: string;
-  type?: 'phone' | 'money' | 'timer' | 'password' | 'date';
+  type?: 'phone' | 'money' | 'timer' | 'password' | 'date' | 'teamName';
 };
 
 export default function getTextValues({ text, type }: getTextValuesProps) {

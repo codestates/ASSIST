@@ -94,7 +94,7 @@ type LineInputProps = {
   placeholder: string;
   secureTextEntry?: boolean;
   clearErrorMessage: () => void;
-  type?: 'phone' | 'money' | 'timer' | 'password' | 'date';
+  type?: 'phone' | 'money' | 'timer' | 'password' | 'date' | 'teamName';
   setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
   marginTop?: string;
   phone?: string;
@@ -199,6 +199,7 @@ export default function LineInput({
     if (type === 'password') return 15;
     if (type === 'money') return 8;
     if (type === 'date') return 2;
+    if (type === 'teamName') return 14;
     return undefined;
   };
 
