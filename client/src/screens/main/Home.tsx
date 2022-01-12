@@ -9,7 +9,7 @@ import CardScrollView from '../../components/view/CardScrollView';
 import AddOnsCard from '../../components/card/AddOnsCard';
 import NoMatchCard from '../../components/card/NoMatchCard';
 import NextMatchCard from '../../components/card/NextMatchCard';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import { RootState } from '../../store/reducers';
 import { FirstTeam, NextMatch, TeamInfo } from '../../../@types/global/types';
@@ -26,43 +26,74 @@ export default function Home({ route }: TeamProps) {
   const [nextMatch, setNextMatch] = useState<NextMatch>(null);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener('focus', async () => {
       dispatch(clearAll());
-      if (selectedTeam.id === -1) {
-        getFirstTeam().catch((error) => console.log(error));
-      } else if (selectedTeam.id > 0) {
-        getTeamInfo(selectedTeam.id).catch((error) => console.log(error));
-      }
+      await getTeamInfo();
     });
     return unsubscribe;
   }, [navigation]);
 
-  const getFirstTeam = async () => {
-    const { data }: AxiosResponse<FirstTeam> = await axios.get(
-      `${ASSIST_SERVER_URL}/user/firstteam`,
-      {
-        headers: { authorization: `Bearer ${token}` },
-      },
-    );
-    if (data.id === -1) {
-      return navigation.replace('CreateOrJoin');
+  const getTeamInfo = async () => {
+    if (teamId && teamId !== selectedTeam.id) {
+      // 외부 URL로 접속 시
+      await getSelectedTeamInfo(teamId);
     } else {
-      dispatch(getSelectedTeam({ id: data.id, name: data.name, leader: data.leader }));
-      setNextMatch(data.nextMatch);
-      return navigation.replace('Team', { teamId: String(data.id) });
+      // 내부로 접속 시
+      if (selectedTeam.id === -1) {
+        // 로그인 시
+        await getFirstTeam();
+      } else {
+        // 로그인 정보가 저장되어 있을 시
+        if (teamId !== selectedTeam.id) {
+          await getSelectedTeamInfo(selectedTeam.id);
+        }
+      }
     }
   };
 
-  const getTeamInfo = async (teamId: number) => {
-    const { data }: AxiosResponse<TeamInfo> = await axios.get(
-      `${ASSIST_SERVER_URL}/team/${teamId}`,
-      {
-        headers: { authorization: `Bearer ${token}` },
-      },
-    );
-    const { name, leaderId } = data;
-    dispatch(getSelectedTeam({ id: teamId, name, leader: leaderId === Number(id) }));
-    setNextMatch(data.nextMatch);
+  const getFirstTeam = async () => {
+    try {
+      const { data }: AxiosResponse<FirstTeam> = await axios.get(
+        `${ASSIST_SERVER_URL}/user/firstteam`,
+        {
+          headers: { authorization: `Bearer ${token}` },
+        },
+      );
+      if (data.id === -1) {
+        return navigation.replace('CreateOrJoin');
+      } else {
+        dispatch(getSelectedTeam({ id: data.id, name: data.name, leader: data.leader }));
+        setNextMatch(data.nextMatch);
+        return navigation.replace('Team', { teamId: String(data.id) });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSelectedTeamInfo = async (teamId: number) => {
+    try {
+      const { data }: AxiosResponse<TeamInfo> = await axios.get(
+        `${ASSIST_SERVER_URL}/team/${teamId}`,
+        {
+          headers: { authorization: `Bearer ${token}` },
+        },
+      );
+      if (data) {
+        dispatch(
+          getSelectedTeam({ id: teamId, name: data.name, leader: data.leaderId === Number(id) }),
+        );
+        setNextMatch(data.nextMatch);
+        return navigation.replace('Team', { teamId: String(teamId) });
+      }
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response?.status === 404) {
+        await getFirstTeam();
+      } else {
+        console.log(err);
+      }
+    }
   };
 
   const getMatchCard = (nextMatch: NextMatch) => {
