@@ -11,7 +11,6 @@ import { RootState } from '../../store/reducers';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
 import CaptainMark from '../mark/CaptainMark';
-import { TeamInfo } from '../../../@types/global/types';
 import { modifyLeaderId } from '../../store/actions/propsAction';
 import { CommonModal, CommonModalTitle } from '../modal/CommonModal';
 import CommonModalButton from '../button/CommonModalButton';
