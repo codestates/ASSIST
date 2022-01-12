@@ -8,7 +8,6 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import CloseHeader from '../../components/header/CloseHeader';
 import CommonModalButton from '../../components/button/CommonModalButton';
-import useGoHome from '../../hooks/useGoHome';
 
 const MainTitleSpaceSubTitle = styled.View`
   width: 100%;
@@ -18,11 +17,6 @@ const MainTitleSpaceSubTitle = styled.View`
 const TitleSpaceButton = styled.View`
   width: 100%;
   height: 35px;
-`;
-
-const ButtonSpaceButton = styled.View`
-  width: 100%;
-  height: 8px;
 `;
 
 const ContentContainer = styled.View`
@@ -46,11 +40,6 @@ const CardSubTitle = styled(Regular)`
 
 export default function MercenaryInvite_1() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const goHome = useGoHome();
-
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
 
   const onPress = () => {
     navigation.navigate('MercenaryInvite_2');
@@ -59,7 +48,7 @@ export default function MercenaryInvite_1() {
   return (
     <>
       <CloseHeader color={colors.darkGray} />
-      <ColoredScrollView isCard={true} titleColor={colors.darkGray}>
+      <ColoredScrollView isCard isInvite titleColor={colors.darkGray}>
         <MainTitle marginBottom="15px">
           <MainTitleText>용병 초대 💪</MainTitleText>
         </MainTitle>
@@ -69,8 +58,6 @@ export default function MercenaryInvite_1() {
           <CardSubTitle>저희가 용병을 대신 구해드릴게요!</CardSubTitle>
           <TitleSpaceButton />
           <CommonModalButton color="blue" text="용병 초대하기" onPress={onPress} />
-          <ButtonSpaceButton />
-          <CommonModalButton color="transparent" text="돌아가기  >" onPress={() => goHome()} />
         </ContentContainer>
       </ColoredScrollView>
     </>

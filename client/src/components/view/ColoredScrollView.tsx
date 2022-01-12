@@ -3,6 +3,7 @@ import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
+import useGoHome from '../../hooks/useGoHome';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { RootState } from '../../store/reducers';
 import { colors } from '../../theme/colors';
@@ -71,6 +72,7 @@ type ColoredScrollViewProps = {
   isCard?: boolean;
   isMyPage?: boolean;
   isFinished?: boolean;
+  isInvite?: boolean;
 };
 
 export default function ColoredScrollView({
@@ -78,12 +80,30 @@ export default function ColoredScrollView({
   titleColor,
   isCard,
   isFinished,
+  isInvite,
 }: ColoredScrollViewProps) {
   const { width } = useWindowDimensions();
   const {
-    selectedTeam: { leader },
+    selectedTeam: { leader: isLeader },
   } = useSelector((state: RootState) => state.userReducer);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const goHome = useGoHome();
+
+  const getButton = () => {
+    if (isInvite) {
+      return <SkipButton color={colors.whiteSmoke} text="돌아가기  >" onPress={() => goHome()} />;
+    } else {
+      if (isCard && isLeader && !isFinished) {
+        return (
+          <SkipButton
+            color={colors.whiteSmoke}
+            text="경기 취소 하기  >"
+            onPress={() => navigation.navigate('CancelSelect')}
+          />
+        );
+      }
+    }
+  };
 
   return (
     <Container isCard={isCard} bounces={false} showsVerticalScrollIndicator={false}>
@@ -105,16 +125,10 @@ export default function ColoredScrollView({
         </>
       )}
       <BottomSpace />
-      {isCard && leader && !isFinished && (
-        <>
-          <SkipButton
-            color={colors.whiteSmoke}
-            text="경기 취소 하기  >"
-            onPress={() => navigation.navigate('CancelSelect')}
-          />
-          <BottomSpace />
-        </>
-      )}
+      <>
+        {getButton()}
+        <BottomSpace />
+      </>
     </Container>
   );
 }
