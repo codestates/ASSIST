@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
@@ -11,7 +10,7 @@ import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light, Regular } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
 import { RootState } from '../../store/reducers';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 
 const TitleSpaceContents = styled.View`
@@ -52,22 +51,12 @@ const MatchInfoContents = styled.View`
 
 export default function ScheduleManage_4() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const dispatch = useDispatch();
   const { scheduleManage } = useSelector((state: RootState) => state.propsReducer);
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
-
-  const [isPressed, setIsPressed] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isPressed]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSaveSchedule = () => {
+    setIsLoading(true);
     axios
       .post(
         `${ASSIST_SERVER_URL}/match`,
@@ -76,8 +65,13 @@ export default function ScheduleManage_4() {
           headers: { authorization: `Bearer ${token}` },
         },
       )
-      .then((el) => navigation.navigate('ScheduleManage_5', { matchId: el.data.id }))
-      .catch((err) => console.log(err));
+      .then((res: AxiosResponse<{ id: number }>) => {
+        navigation.navigate('ScheduleManage_5', { matchId: res.data.id });
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+      });
   };
 
   return (
@@ -111,7 +105,7 @@ export default function ScheduleManage_4() {
           </MatchInfoContainer>
         </Container>
       </NextPageView>
-      <NextButton disabled={false} text="팀 전체에 공지하기" onPress={handleSaveSchedule} />
+      <NextButton disabled={isLoading} text="팀 전체에 공지하기" onPress={handleSaveSchedule} />
     </>
   );
 }
