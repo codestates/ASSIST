@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { Bold } from '../../theme/fonts';
@@ -40,7 +39,7 @@ type CounterButtonProps = {
   text?: string;
   type: string;
   counter: number;
-  getCounter: (counter: number) => number;
+  getCounter: (counter: number) => void;
 };
 
 function CounterButton(props: CounterButtonProps) {

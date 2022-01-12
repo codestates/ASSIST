@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
@@ -47,18 +46,7 @@ export default function ScheduleManage_3() {
   const year = matchDate.getFullYear();
   const month = matchDate.getMonth();
   const day = matchDate.getDate();
-
-  const [isPressed, setIsPressed] = useState(false);
   const [counter, setCounter] = useState(1);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isPressed]);
 
   const onPress = () => {
     dispatch(

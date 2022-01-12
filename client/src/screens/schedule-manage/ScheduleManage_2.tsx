@@ -25,11 +25,7 @@ export default function ScheduleManage_2({ route }: ScheduleManageProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
 
-  const {
-    control,
-    getValues,
-    formState: { isValid },
-  } = useForm({
+  const { control, getValues } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
