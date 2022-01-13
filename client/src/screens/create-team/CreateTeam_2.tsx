@@ -1,52 +1,49 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
 import NextButton from '../../components/button/NextButton';
 import SkipButton from '../../components/button/SkipButton';
-import LineInput from '../../components/input/LineInput';
 import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCreateTeam } from '../../store/actions/propsAction';
 import { RootState } from '../../store/reducers';
 import { ASSIST_SERVER_URL } from '@env';
 import axios, { AxiosResponse } from 'axios';
 import { getSelectedTeam } from '../../store/actions/userAction';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import LineSelect from '../../components/input/LineSelect';
 
-const schema = yup.object({
-  date: yup
-    .string()
-    .matches(/^(0?[1-9]|[12][0-9])$/)
-    .required(),
-});
-1;
+type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_2'>;
 
-export default function CreateTeam_2() {
-  const {
-    control,
-    formState: { isValid },
-    getValues,
-  } = useForm({
-    mode: 'onChange',
-    resolver: yupResolver(schema),
-  });
+export default function CreateTeam_2({ route }: CreateTeamProps) {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
-  const [errorMessage, setErrorMessage] = useState('');
-  const clearErrorMessage = () => setErrorMessage('');
+  const [isPressed, setIsPressed] = useState(false);
   const state = useSelector((state: RootState) => state);
 
-  const goToNext = () => {
-    dispatch(addCreateTeam({ paymentDay: Number(getValues('date')) }));
-    navigation.navigate('CreateTeam_3');
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (isPressed) {
+        setIsPressed(false);
+      }
+    });
+    return unsubscribe;
+  }, [navigation, isPressed]);
+
+  const getDate = (value?: string) => {
+    if (value === '말일') {
+      return 32;
+    }
+    return Number(value?.slice(0, value.length - 1));
   };
 
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const goToNext = () => {
+    dispatch(addCreateTeam({ paymentDay: getDate(route.params?.paymentDay) }));
+    navigation.navigate('CreateTeam_3');
+  };
 
   const createTeam = () => {
     axios
@@ -62,6 +59,11 @@ export default function CreateTeam_2() {
       .catch((error) => console.log(error));
   };
 
+  const goToSelect = () => {
+    setIsPressed(true);
+    navigation.navigate('PaymentDaySelect', { name: 'CreateTeam_2' });
+  };
+
   return (
     <>
       <NextPageView>
@@ -75,28 +77,15 @@ export default function CreateTeam_2() {
         <SubTitle>
           <Light>회비 납부 1일 전, 팀원들에게 납부 알림을 보내드려요.</Light>
         </SubTitle>
-        <LineInput
-          type="date"
-          control={control}
-          title="매월"
-          name="date"
-          placeholder="일자를 입력해주세요"
-          errorMessage={errorMessage}
-          clearErrorMessage={clearErrorMessage}
-          conditions={[
-            {
-              name: '숫자',
-              regex: /^\d+$/,
-            },
-            {
-              name: '1~29 사이',
-              regex: /^(0?[1-9]|[12][0-9])$/,
-            },
-          ]}
+        <LineSelect
+          title="회비 납부일"
+          isPressed={isPressed}
+          selected={route.params?.paymentDay}
+          onPress={() => goToSelect()}
         />
       </NextPageView>
       <SkipButton onPress={() => createTeam()} />
-      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
+      <NextButton disabled={route.params?.paymentDay === undefined} onPress={() => goToNext()} />
     </>
   );
 }

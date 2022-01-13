@@ -10,14 +10,14 @@ export type RootStackParamList = {
   Landing: undefined;
   AddOns_1: undefined;
   AddOns_2: undefined | { teamId: string };
-  AddOns_3: undefined | { bank?: string; teamId: number };
+  AddOns_3: undefined | { bank?: string; paymentDay?: string; teamId: number };
   AddOns_4: { inviteCode: string | undefined };
   MyPage: undefined;
   Lobby: undefined;
   TeamSelect: undefined;
   CreateTeam: undefined;
   CreateTeam_1: undefined;
-  CreateTeam_2: undefined;
+  CreateTeam_2: undefined | { paymentDay: string };
   CreateTeam_3: undefined | { bank: string };
   CreateTeam_4: undefined;
   CreateTeam_5: undefined | { inviteCode: string };
@@ -47,7 +47,7 @@ export type RootStackParamList = {
   GenderSelect: undefined | { screenName: keyof RootStackParamList };
   GetStarted_Login: undefined | { email: string; name: string; phone: string };
   ScheduleManage: undefined;
-  ScheduleManage_1: undefined | { date: string; startTime: string; endTime: string };
+  ScheduleManage_1: undefined | { date?: string; startTime?: string; endTime?: string };
   ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
   ScheduleManage_3: undefined;
   ScheduleManage_4: undefined;
@@ -92,4 +92,5 @@ export type RootStackParamList = {
   LogOutSelect: undefined;
   DeleteAccount_1: undefined;
   DeleteAccount_2: undefined;
+  PaymentDaySelect: { name: keyof RootStackParamList };
 };

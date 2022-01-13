@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
@@ -48,13 +49,6 @@ const nameSchema = yup.object({
   name: yup.string().required(),
 });
 
-const dateSchema = yup.object({
-  date: yup
-    .string()
-    .matches(/^(0?[1-9]|[12][0-9])$/)
-    .required(),
-});
-
 const moneySchema = yup.object({
   money: yup.string().required(),
 });
@@ -73,7 +67,8 @@ export default function AddOns_3({ route }: AddOnsProps) {
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const { isLoading, data } = useTeamInfo();
 
-  const [isPressed, setIsPressed] = useState(false);
+  const [isBankPressed, setIsBankPressed] = useState(false);
+  const [isPaymentDayPressed, setIsPaymentDayPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -88,18 +83,6 @@ export default function AddOns_3({ route }: AddOnsProps) {
     mode: 'onChange',
     defaultValues: { name: '' },
     resolver: yupResolver(nameSchema),
-  });
-
-  const {
-    control: dateControl,
-    formState: { isValid: isDateValid },
-    getValues: getDate,
-    setValue: setDate,
-    watch: watchDate,
-  } = useForm({
-    mode: 'onChange',
-    defaultValues: { date: '' },
-    resolver: yupResolver(dateSchema),
   });
 
   const {
@@ -129,7 +112,6 @@ export default function AddOns_3({ route }: AddOnsProps) {
   useEffect(() => {
     if (data !== undefined) {
       setName('name', data.name);
-      setDate('date', data.paymentDay === 0 ? '' : String(data.paymentDay));
       setMoney('money', data.dues);
       setbankAccount('bankAccount', data.accountNumber);
     }
@@ -137,14 +119,30 @@ export default function AddOns_3({ route }: AddOnsProps) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
+      if (isBankPressed) {
+        setIsBankPressed(false);
+      } else if (isPaymentDayPressed) {
+        setIsPaymentDayPressed(false);
       }
     });
     return unsubscribe;
-  }, [navigation, isPressed]);
+  }, [navigation, isBankPressed, isPaymentDayPressed]);
 
   const clearErrorMessage = () => setErrorMessage('');
+
+  const getDate = (value?: string) => {
+    if (value === '말일') {
+      return 32;
+    }
+    return Number(value?.slice(0, value.length - 1));
+  };
+
+  const getDateData = (value?: number) => {
+    if (value === 32) {
+      return '말일';
+    }
+    return String(value) + '일';
+  };
 
   const handleModifyTeamInfo = async () => {
     try {
@@ -152,7 +150,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
         `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
         {
           name: getName('name'),
-          paymentDay: Number(getDate('date')) || 0,
+          paymentDay: getDate(route.params?.paymentDay),
           dues: getMoney('money'),
           accountNumber: getBankAccount('bankAccount'),
           accountBank: route.params?.bank,
@@ -167,9 +165,14 @@ export default function AddOns_3({ route }: AddOnsProps) {
     }
   };
 
-  const goToNext = () => {
-    setIsPressed(true);
+  const goBankSelect = () => {
+    setIsBankPressed(true);
     navigation.navigate('BankSelect', { name: 'AddOns_3' });
+  };
+
+  const goPaymentDaySelect = () => {
+    setIsPaymentDayPressed(true);
+    navigation.navigate('PaymentDaySelect', { name: 'AddOns_3' });
   };
 
   const handleOpenModal = () => {
@@ -183,7 +186,7 @@ export default function AddOns_3({ route }: AddOnsProps) {
   const checkValid = () => {
     if (data?.name !== watchName('name') && isNameValid) {
       return true;
-    } else if (String(data?.paymentDay) !== watchDate('date') && isDateValid) {
+    } else if (data?.paymentDay !== route.params?.paymentDay && route.params?.paymentDay) {
       return true;
     } else if (data?.dues !== watchMoney('money') && isMoneyValid) {
       return true;
@@ -193,6 +196,16 @@ export default function AddOns_3({ route }: AddOnsProps) {
       return true;
     } else {
       return false;
+    }
+  };
+
+  const getPaymentDay = () => {
+    if (route.params?.paymentDay !== undefined) {
+      return route.params.paymentDay;
+    } else if (data?.paymentDay !== 0) {
+      return getDateData(data?.paymentDay);
+    } else {
+      return '';
     }
   };
 
@@ -235,29 +248,16 @@ export default function AddOns_3({ route }: AddOnsProps) {
           )}
           <InputSpaceInput />
           {selectedTeam.leader ? (
-            <LineInput
-              name="date"
-              type="date"
-              control={dateControl}
-              title="팀 회비 납부일"
-              placeholder="납부일을 입력 해 주세요"
-              errorMessage={errorMessage}
-              clearErrorMessage={clearErrorMessage}
-              conditions={[
-                {
-                  name: '숫자',
-                  regex: /^\d+$/,
-                },
-                {
-                  name: '1~29 사이',
-                  regex: /^(0?[1-9]|[12][0-9])$/,
-                },
-              ]}
+            <LineSelect
+              title="회비 납부일"
+              isPressed={isPaymentDayPressed}
+              selected={getPaymentDay()}
+              onPress={() => goPaymentDaySelect()}
             />
           ) : (
             <LineSelect
-              title="팀 회비 납부일"
-              selected={data?.paymentDay !== 0 ? String(data?.paymentDay) : '미정'}
+              title="회비 납부일"
+              selected={data?.paymentDay !== 0 ? getDateData(data?.paymentDay) : '미정'}
               isFixed
             />
           )}
@@ -279,9 +279,9 @@ export default function AddOns_3({ route }: AddOnsProps) {
           {selectedTeam.leader ? (
             <LineSelect
               title="은행"
-              isPressed={isPressed}
+              isPressed={isBankPressed}
               selected={route.params?.bank || data?.accountBank}
-              onPress={() => goToNext()}
+              onPress={() => goBankSelect()}
             />
           ) : (
             <LineSelect title="은행" selected={data?.accountBank || '미정'} isFixed />

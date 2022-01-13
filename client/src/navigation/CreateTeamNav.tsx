@@ -8,6 +8,7 @@ import CreateTeam_4 from '../screens/create-team/CreateTeam_4';
 import BankSelect from '../screens/drawer-select/BankSelect';
 import CreateTeam_6 from '../screens/create-team/CreateTeam_6';
 import CreateTeam_5 from '../screens/create-team/CreateTeam_5';
+import PaymentDaySelect from '../screens/drawer-select/PaymentDaySelect';
 
 const CreateTeam = createStackNavigator();
 
@@ -59,6 +60,11 @@ export default function CreateTeamNav() {
       <CreateTeam.Screen
         name="BankSelect"
         component={BankSelect}
+        options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
+      />
+      <CreateTeam.Screen
+        name="PaymentDaySelect"
+        component={PaymentDaySelect}
         options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
       />
     </CreateTeam.Navigator>

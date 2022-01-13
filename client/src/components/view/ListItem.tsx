@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { Bold, Regular } from '../../theme/fonts';
 
-type TimeItemProps = {
+type ListItemProps = {
   text: string;
   onPress: () => void;
   length: number;
@@ -18,9 +18,9 @@ const Container = styled.TouchableOpacity`
   align-items: center;
 `;
 
-export default function TimeItem({ selectedIdx, index, text, onPress, length }: TimeItemProps) {
+export default function ListItem({ selectedIdx, index, text, onPress, length }: ListItemProps) {
   const disableTouch = () => {
-    if (index < 2 || index > length - 3) {
+    if (index < 2 || index > length + 1) {
       return true;
     }
     return false;

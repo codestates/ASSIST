@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import BottomDrawer from '../../components/drawer/BottomDrawer';
-import { Bold, Light } from '../../theme/fonts';
+import { Bold } from '../../theme/fonts';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { StackScreenProps } from '@react-navigation/stack';
 import { FlatList } from 'react-native';
 import BankItem from '../../components/view/BankItem';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const TitleContainer = styled.View`
   margin: 15px 0px;
@@ -21,13 +21,10 @@ const BankList = styled.View`
   height: 300px;
 `;
 
-const Bank = styled(Light)`
-  font-size: 15px;
-`;
-
 type BankSelectProps = StackScreenProps<RootStackParamList, 'BankSelect'>;
 
 export default function BankSelect({ route }: BankSelectProps) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const bankList = [
     '카카오뱅크',
     '농협',
@@ -50,7 +47,10 @@ export default function BankSelect({ route }: BankSelectProps) {
     '토스뱅크',
   ];
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const getNavigation = (bank: string) => {
+    navigation.navigate({ name: route.params.name, params: { bank }, merge: true });
+  };
+
   return (
     <BottomDrawer>
       <TitleContainer>
@@ -62,10 +62,7 @@ export default function BankSelect({ route }: BankSelectProps) {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item: bank }) => (
-            <BankItem
-              onPress={() => navigation.navigate(route.params?.name, { bank })}
-              name={bank}
-            />
+            <BankItem onPress={() => getNavigation(bank)} name={bank} />
           )}
           style={{ width: '100%', height: '100%', flexGrow: 0 }}
         />

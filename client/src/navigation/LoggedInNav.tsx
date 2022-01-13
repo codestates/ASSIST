@@ -3,7 +3,6 @@ import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
 import Home from '../screens/main/Home';
 import LoggedInHeader from '../components/header/LoggedInHeader';
 import TeamSelect from '../screens/drawer-select/TeamSelect';
-
 import CreateTeamNav from './CreateTeamNav';
 import LandingPageNav from './LandingPageNav';
 import JoinTeamNav from './JoinTeamNav';
@@ -18,6 +17,7 @@ import AddOns_4 from '../screens/add-ons/AddOns_4';
 import BankSelect from '../screens/drawer-select/BankSelect';
 import CreateOrJoin from '../screens/main/CreateOrJoin';
 import { RootStackParamList } from './RootStackParamList';
+import PaymentDaySelect from '../screens/drawer-select/PaymentDaySelect';
 
 const HomeStack = createStackNavigator();
 type UserProps = StackScreenProps<RootStackParamList, 'User'>;
@@ -82,10 +82,14 @@ export default function LoggedInNav({ route }: UserProps) {
       <HomeStack.Screen name="AddOns_2" component={AddOns_2} options={{ headerShown: false }} />
       <HomeStack.Screen name="AddOns_3" component={AddOns_3} options={{ headerShown: false }} />
       <HomeStack.Screen name="AddOns_4" component={AddOns_4} options={{ headerShown: false }} />
-
       <HomeStack.Screen
         name="BankSelect"
         component={BankSelect}
+        options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="PaymentDaySelect"
+        component={PaymentDaySelect}
         options={{ presentation: 'transparentModal', cardOverlayEnabled: true, headerShown: false }}
       />
     </HomeStack.Navigator>
