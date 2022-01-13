@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useRef, useState } from 'react';
-import { Dimensions, FlatList } from 'react-native';
+import React, { createRef, useState } from 'react';
+import { FlatList, ListRenderItem } from 'react-native';
 import styled from 'styled-components/native';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import BottomDrawer from '../../components/drawer/BottomDrawer';
-import TimeItem from '../../components/view/TimeItem';
+import ListPicker from '../../components/input/ListPicker';
+import ListItem from '../../components/view/ListItem';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Regular } from '../../theme/fonts';
 
@@ -42,13 +41,9 @@ export default function TimeSelect({ route }: TimeSelectProps) {
   const minutes: { value: string }[] = [...Array(60).keys()]
     .filter((minute) => minute % 5 === 0)
     .map((minute) => (`${minute}`.length === 1 ? { value: `0${minute}` } : { value: `${minute}` }));
-  const dummies = [{ value: '' }, { value: '' }];
-  const hoursData = [...dummies, ...hours, ...dummies];
-  const minutesData = [...dummies, ...minutes, ...dummies];
-
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const hoursRef = useRef<FlatList>(null);
-  const minutesRef = useRef<FlatList>(null);
+  const hoursRef = createRef<FlatList>();
+  const minutesRef = createRef<FlatList>();
   const [hourIndex, setHourIndex] = useState<number>(-1);
   const [minuteIndex, setMinuteIndex] = useState<number>(-1);
 
@@ -74,7 +69,7 @@ export default function TimeSelect({ route }: TimeSelectProps) {
       navigation.navigate({
         name: 'ScheduleManage_1',
         params: {
-          startTime: `${hoursData[hourIndex]['value']}:${minutesData[minuteIndex]['value']}`,
+          startTime: `${hours[hourIndex - 2]['value']}:${minutes[minuteIndex - 2]['value']}`,
         },
         merge: true,
       });
@@ -82,12 +77,32 @@ export default function TimeSelect({ route }: TimeSelectProps) {
       navigation.navigate({
         name: 'ScheduleManage_1',
         params: {
-          endTime: `${hoursData[hourIndex]['value']}:${minutesData[minuteIndex]['value']}`,
+          endTime: `${hours[hourIndex - 2]['value']}:${minutes[minuteIndex - 2]['value']}`,
         },
         merge: true,
       });
     }
   };
+
+  const renderHours: ListRenderItem<{ value: string }> = ({ item: { value }, index }) => (
+    <ListItem
+      index={index}
+      selectedIdx={hourIndex}
+      length={hours.length}
+      onPress={() => pressHour(index)}
+      text={value}
+    />
+  );
+
+  const renderMinutes: ListRenderItem<{ value: string }> = ({ item: { value }, index }) => (
+    <ListItem
+      index={index}
+      selectedIdx={minuteIndex}
+      length={minutes.length}
+      onPress={() => pressMinute(index)}
+      text={value}
+    />
+  );
 
   return (
     <BottomDrawer>
@@ -96,24 +111,7 @@ export default function TimeSelect({ route }: TimeSelectProps) {
           <Bold size={22}>{route.params?.time === 'start' ? '시작' : '종료'} 시간</Bold>
         </TitleContainer>
         <TimeContainer>
-          <FlatList
-            ref={hoursRef}
-            showsVerticalScrollIndicator={false}
-            data={hoursData}
-            style={{ width: '100%', height: '100%', flexGrow: 0 }}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item: { value }, index }) => (
-              <TimeItem
-                index={index}
-                selectedIdx={hourIndex}
-                length={hoursData.length}
-                onPress={() => pressHour(index)}
-                text={value}
-              />
-            )}
-            snapToAlignment="center"
-            snapToInterval={Dimensions.get('window').height / 5}
-          />
+          <ListPicker ref={hoursRef} data={hours} renderItem={renderHours} />
           {checkValid() ? (
             <Bold size={20} blue>
               :
@@ -123,24 +121,7 @@ export default function TimeSelect({ route }: TimeSelectProps) {
               :
             </Regular>
           )}
-          <FlatList
-            ref={minutesRef}
-            showsVerticalScrollIndicator={false}
-            data={minutesData}
-            style={{ width: '100%', height: '100%', flexGrow: 0 }}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item: { value }, index }) => (
-              <TimeItem
-                index={index}
-                selectedIdx={minuteIndex}
-                length={minutesData.length}
-                onPress={() => pressMinute(index)}
-                text={value}
-              />
-            )}
-            snapToAlignment="center"
-            snapToInterval={Dimensions.get('window').height / 5}
-          />
+          <ListPicker ref={minutesRef} data={minutes} renderItem={renderMinutes} />
         </TimeContainer>
         <ButtonContainer>
           <CommonModalButton
