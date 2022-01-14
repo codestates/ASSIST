@@ -52,6 +52,11 @@ export default function CustomerService_1() {
     }
   };
 
+  const handleKaKaoChat = () => {
+    window.Kakao.Channel.chat({
+      channelPublicId: '_lwFxdb',
+    });
+  };
   return (
     <>
       <ColoredScrollView titleColor={colors.whiteSmoke}>
@@ -67,7 +72,7 @@ export default function CustomerService_1() {
           </Regular>
           <DashedLine />
           <ButtonContainer>
-            <KakaoButton onPress={() => console.log('kakao')} text="카카오톡 상담  >" isKakao />
+            <KakaoButton onPress={() => handleKaKaoChat()} text="카카오톡 상담  >" isKakao />
             <CallButton onPress={() => handlePhoneCall()}>
               <Regular gray>전화 상담 &gt;</Regular>
             </CallButton>
