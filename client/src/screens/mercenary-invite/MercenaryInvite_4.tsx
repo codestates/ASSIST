@@ -31,7 +31,6 @@ const Container = styled.View`
 
 const MatchInfoContainer = styled.View`
   width: 100%;
-  height: 55%;
   background-color: ${colors.whiteSmoke};
   border: 1px solid ${colors.lightGray};
   padding: 35px;
