@@ -260,9 +260,25 @@ export class KakaoAlimService {
   async sendT009() {
     let nextday = getDate(1).slice(-2);
 
+    if (nextday[0] === '0') {
+      nextday = nextday.slice(1);
+    }
+
+    let checkLastDays = getDate(2).slice(-2) === '01';
+    let month = getDate().slice(5, 7);
+
+    let whereQuery = `= ${nextday}`;
+    if (month === '02' && nextday === '28' && checkLastDays) {
+      whereQuery = `IN (28,29,30,32)`;
+    } else if (month === '02' && nextday === '29' && checkLastDays) {
+      whereQuery = `IN (29,30,32)`;
+    } else if (checkLastDays) {
+      whereQuery = `IN (${nextday},32)`;
+    }
+
     const queryString = `SELECT t.name,t.accountBank,t.paymentDay,t.accountNumber,t.id,user.phone FROM assist.team as t
     join user_team as ut on t.id = ut.teamId 
-    join user on user.id = ut.userId where paymentDay = ${nextday} and
+    join user on user.id = ut.userId where paymentDay ${whereQuery} and
     accountBank != '' and accountNumber != '' and dues != '' and provider = 'kakao'`;
 
     let data = await getManager().query(queryString);
