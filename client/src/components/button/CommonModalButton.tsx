@@ -1,4 +1,5 @@
 import React from 'react';
+import { LayoutChangeEvent } from 'react-native';
 import { colors } from '../../theme/colors';
 import { Regular } from '../../theme/fonts';
 import CommonButton from './CommonButton';
@@ -11,6 +12,8 @@ type ButtonProps = {
   blueText?: boolean;
   grayText?: boolean;
   height?: number;
+  isFake?: boolean;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
 export default function CommonModalButton({
@@ -21,17 +24,20 @@ export default function CommonModalButton({
   blueText,
   grayText,
   height,
+  onLayout,
+  isFake,
 }: ButtonProps) {
   const backgroundColor =
     color === 'blue' ? colors.blue : color === 'transparent' ? 'transparent' : colors.whiteSmoke;
   return (
     <CommonButton
+      onLayout={onLayout}
       blueText={blueText}
       grayText={grayText}
       disabled={disabled}
       onPress={onPress}
       buttonRadius="15px"
-      buttonBgColor={disabled ? colors.gray : backgroundColor}
+      buttonBgColor={disabled && !isFake ? colors.gray : backgroundColor}
       width="100%"
       height={`${height || 50}px`}>
       <Regular

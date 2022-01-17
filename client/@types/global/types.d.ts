@@ -1,3 +1,5 @@
+import { LayoutRectangle } from 'react-native';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
   interface Window {
@@ -125,3 +127,12 @@ export type LastMatchs = Array<{
   deadline: string;
   reason: string;
 }>;
+
+export interface LayoutType extends LayoutRectangle {
+  top: number;
+  left: number;
+}
+
+export type LayoutProps = {
+  layout?: LayoutType;
+};

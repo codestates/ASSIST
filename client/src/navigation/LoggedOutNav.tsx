@@ -17,6 +17,7 @@ export default function LoggedOutNav() {
   const dispatch = useDispatch();
   const resetUser = useReset({ screenName: 'User' });
   const resetLanding = useReset({ screenName: 'Landing' });
+  const resetTips = useReset({ screenName: 'QuickTips' });
   const { token, role } = useSelector((state: RootState) => state.userReducer);
 
   useEffect(() => {
@@ -26,6 +27,8 @@ export default function LoggedOutNav() {
     if (token) {
       if (role === 'complete') {
         resetUser();
+      } else if (role === 'tips') {
+        resetTips();
       } else {
         resetLanding();
       }

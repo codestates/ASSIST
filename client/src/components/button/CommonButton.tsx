@@ -1,4 +1,5 @@
 import React from 'react';
+import { LayoutChangeEvent } from 'react-native';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 
@@ -27,6 +28,7 @@ type ButtonProps = {
   blueText?: boolean;
   grayText?: boolean;
   children: React.ReactNode;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 const CommonButton = ({
   onPress,
@@ -39,9 +41,11 @@ const CommonButton = ({
   disabled,
   blueText,
   grayText,
+  onLayout,
 }: ButtonProps) => {
   return (
     <ButtonContainer
+      onLayout={onLayout}
       blueText={blueText}
       grayText={grayText}
       disabled={disabled}

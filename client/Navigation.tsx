@@ -6,6 +6,7 @@ import LandingPageNav from './src/navigation/LandingPageNav';
 import * as Linking from 'expo-linking';
 import { createStackNavigator } from '@react-navigation/stack';
 import NotFound from './src/screens/main/NotFound';
+import QuickTipsNav from './src/navigation/QuickTipsNav';
 
 export default function Navigation() {
   const prefix = Linking.createURL('/');
@@ -16,6 +17,10 @@ export default function Navigation() {
         Landing: {
           path: 'Landing',
           screens: { Landing: 'LandingPage_1' },
+        },
+        QuickTips: {
+          path: 'QuickTips',
+          screens: { QuickTips: 'QuickTips_1' },
         },
         User: {
           path: 'User',
@@ -63,6 +68,7 @@ export default function Navigation() {
         }}>
         <rootNavigator.Screen name="Guest" component={LoggedOutNav} />
         <rootNavigator.Screen name="Landing" component={LandingPageNav} />
+        <rootNavigator.Screen name="QuickTips" component={QuickTipsNav} />
         <rootNavigator.Screen name="User" component={LoggedInNav} />
         <rootNavigator.Screen name="NotFound" component={NotFound} />
       </rootNavigator.Navigator>
