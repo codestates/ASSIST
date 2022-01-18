@@ -28,8 +28,8 @@ const DotIndicator = styled.View`
 
 const Wrapper = styled.View`
   width: 100%;
-  justify-content: ${(props: { isLanding?: boolean }) =>
-    props.isLanding ? 'center' : 'space-between'};
+  justify-content: ${(props: { isIntro?: boolean }) =>
+    props.isIntro ? 'center' : 'space-between'};
   flex-direction: row;
   padding: 15px 10px;
 `;
@@ -46,12 +46,12 @@ const ReturnText = styled(Regular)`
 type DotsHeaderProps = {
   current: number;
   total: number;
-  isLanding?: boolean;
+  isIntro?: boolean;
   reset?: keyof RootStackParamList;
   goHome?: boolean;
 };
 
-export default function DotsHeader({ reset, goHome, current, total, isLanding }: DotsHeaderProps) {
+export default function DotsHeader({ reset, goHome, current, total, isIntro }: DotsHeaderProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const navigateToHome = useGoHome();
 
@@ -67,8 +67,8 @@ export default function DotsHeader({ reset, goHome, current, total, isLanding }:
 
   return (
     <HeaderContainer>
-      <Wrapper isLanding={isLanding}>
-        {isLanding || (
+      <Wrapper isIntro={isIntro}>
+        {isIntro || (
           <ReturnButton onPress={() => getNavigation()}>
             <MaterialIcons name="keyboard-arrow-left" size={19} color={colors.gray} />
             <ReturnText>이전</ReturnText>

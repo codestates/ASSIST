@@ -52,7 +52,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
   const dispatch = useDispatch();
   const requestSms = useRequestSms({ phone: route.params?.phone });
   const resetUser = useReset({ screenName: 'User' });
-  const resetLanding = useReset({ screenName: 'Landing' });
+  const resetIntro = useReset({ screenName: 'Intro' });
   const resetTips = useReset({ screenName: 'QuickTips' });
 
   const setError = () => setErrorMessage(' ');
@@ -101,7 +101,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
       } else if (data.role === 'tips') {
         resetTips();
       } else {
-        resetLanding();
+        resetIntro();
       }
     } catch (error) {
       console.log(error);
