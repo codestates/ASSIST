@@ -48,7 +48,8 @@ export default function NotFound() {
     selectedTeam: { id },
   } = useSelector((state: RootState) => state.userReducer);
   const resetGuest = useReset({ screenName: 'Guest' });
-  const resetLanding = useReset({ screenName: 'Landing' });
+  const resetIntro = useReset({ screenName: 'Intro' });
+  const resetQuickTips = useReset({ screenName: 'QuickTips' });
   const resetUser = useReset({ screenName: 'User', params: { teamId: id } });
 
   const getNavigation = () => {
@@ -56,7 +57,9 @@ export default function NotFound() {
       resetGuest();
     } else {
       if (role.length === 0) {
-        resetLanding();
+        resetIntro();
+      } else if (role === 'tips') {
+        resetQuickTips();
       } else {
         resetUser();
       }

@@ -25,7 +25,7 @@ export default function GetStarted_6({ route }: GetStartedProps) {
         navigation.reset({
           routes: [
             {
-              name: 'Landing',
+              name: 'Intro',
             },
           ],
         });

@@ -46,7 +46,7 @@ export default function CreateTeamNav() {
       <CreateTeam.Screen
         name="CreateTeam_5"
         options={{
-          header: () => <DotsHeader isLanding current={0} total={0} />,
+          header: () => <DotsHeader isIntro current={0} total={0} />,
         }}
         component={CreateTeam_5}
       />

@@ -1,6 +1,6 @@
 type getTextValuesProps = {
   text: string;
-  type?: 'phone' | 'money' | 'timer' | 'password' | 'date' | 'teamName';
+  type?: 'phone' | 'money' | 'timer' | 'password' | 'teamName';
 };
 
 export default function getTextValues({ text, type }: getTextValuesProps) {
@@ -50,7 +50,6 @@ export default function getTextValues({ text, type }: getTextValuesProps) {
   } else if (type === 'password') {
     text = text.replace(/\s/, '');
     return text;
-  } else {
-    return text;
   }
+  return text;
 }

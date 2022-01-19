@@ -94,7 +94,7 @@ type LineInputProps = {
   placeholder: string;
   secureTextEntry?: boolean;
   clearErrorMessage: () => void;
-  type?: 'phone' | 'money' | 'timer' | 'password' | 'date' | 'teamName';
+  type?: 'phone' | 'money' | 'timer' | 'password' | 'teamName';
   setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
   marginTop?: string;
   phone?: string;
@@ -151,7 +151,7 @@ export default function LineInput({
   const TimerExpiredError = "'재전송'을 누르고, 새 번호를 입력해 주세요.";
 
   const getKeyboardType = () => {
-    if (type === 'phone' || type === 'money' || type === 'date') return 'number-pad';
+    if (type === 'phone' || type === 'money') return 'number-pad';
     return 'default';
   };
 
@@ -198,7 +198,6 @@ export default function LineInput({
     if (type === 'timer') return 6;
     if (type === 'password') return 15;
     if (type === 'money') return 8;
-    if (type === 'date') return 2;
     if (type === 'teamName') return 14;
     return undefined;
   };
@@ -219,8 +218,8 @@ export default function LineInput({
           autoCorrect={false}
           autoCompleteType="off"
           spellCheck={false}
-          value={getTextValues({ text: String(field.value), type })}
-          onChangeText={(text) => onChangeText(text)}
+          value={String(field.value)}
+          onChangeText={(text: string) => onChangeText(getTextValues({ text, type }))}
           maxLength={getMaxLength()}
         />
         <ClearButton
