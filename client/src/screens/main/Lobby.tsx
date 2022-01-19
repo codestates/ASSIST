@@ -59,7 +59,7 @@ const FontLogo = styled.Image`
   margin-left: 12px;
 `;
 
-const LandingImage = styled.Image`
+const Image = styled.Image`
   width: 100%;
   height: 100%;
   flex: 1;
@@ -98,7 +98,7 @@ export default function Lobby() {
   return (
     <Container>
       <TopView>
-        <LandingImage source={LobbyImage} resizeMode="contain" />
+        <Image source={LobbyImage} resizeMode="contain" />
         <TextContainer>
           <Title size={25}>풋살 팀 관리가</Title>
           <Title size={25}>편리 해 집니다.</Title>
