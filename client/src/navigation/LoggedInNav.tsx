@@ -4,7 +4,7 @@ import Home from '../screens/main/Home';
 import LoggedInHeader from '../components/header/LoggedInHeader';
 import TeamSelect from '../screens/drawer-select/TeamSelect';
 import CreateTeamNav from './CreateTeamNav';
-import LandingPageNav from './LandingPageNav';
+import IntroPageNav from './IntroPageNav';
 import JoinTeamNav from './JoinTeamNav';
 import ScheduleManageNav from './ScheduleManageNav';
 import MyPageNav from './MyPageNav';
@@ -58,8 +58,8 @@ export default function LoggedInNav({ route }: UserProps) {
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="LandingPage"
-        component={LandingPageNav}
+        name="IntroPage"
+        component={IntroPageNav}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen name="JoinTeam" component={JoinTeamNav} options={{ headerShown: false }} />
