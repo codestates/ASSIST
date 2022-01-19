@@ -1,5 +1,6 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
+import { LayoutChangeEvent } from 'react-native';
 import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { colors } from '../../theme/colors';
@@ -22,7 +23,11 @@ const Seperator = styled.View`
   height: 16px;
 `;
 
-export default function AddTeamCard() {
+type AddTeamCardProps = {
+  onLayout?: (event: LayoutChangeEvent) => void;
+};
+
+export default function AddTeamCard({ onLayout }: AddTeamCardProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Card>
@@ -35,6 +40,7 @@ export default function AddTeamCard() {
       />
       <Seperator />
       <CommonModalButton
+        onLayout={onLayout}
         blueText
         color="transparent"
         text="팀 가입하기"

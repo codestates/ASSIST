@@ -53,6 +53,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
   const requestSms = useRequestSms({ phone: route.params?.phone });
   const resetUser = useReset({ screenName: 'User' });
   const resetLanding = useReset({ screenName: 'Landing' });
+  const resetTips = useReset({ screenName: 'QuickTips' });
 
   const setError = () => setErrorMessage(' ');
   const clearError = () => setErrorMessage('');
@@ -98,7 +99,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
       if (data.role === 'complete') {
         resetUser();
       } else if (data.role === 'tips') {
-        // 팁으로 넘어가기
+        resetTips();
       } else {
         resetLanding();
       }

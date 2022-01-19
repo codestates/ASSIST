@@ -10,6 +10,7 @@ import { NextMatch } from '../../../@types/global/types';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { LayoutChangeEvent } from 'react-native';
 
 const TitleView = styled.View`
   flex-direction: row;
@@ -27,9 +28,10 @@ const SubtitleView = styled.View`
 type NextMatchCardProps = {
   conditions: '경기 확정' | '인원 모집 중' | '투표 완료';
   nextMatch: NextMatch;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
-export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardProps) {
+export default function NextMatchCard({ conditions, nextMatch, onLayout }: NextMatchCardProps) {
   const getMark = () => {
     if (conditions === '경기 확정') {
       return <ConfirmedMark />;
@@ -67,7 +69,7 @@ export default function NextMatchCard({ conditions, nextMatch }: NextMatchCardPr
   };
 
   return (
-    <Card>
+    <Card onLayout={onLayout}>
       <TitleView>
         <Bold size={20}>🗓 다음 경기</Bold>
         {getMark()}

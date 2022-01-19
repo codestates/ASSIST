@@ -35,12 +35,12 @@ const LastText = styled(Light)`
 
 export default function LandingPage_8() {
   const dispatch = useDispatch();
-  const editProfile = useEditProfile({ role: 'complete' });
-  const reset = useReset({ screenName: 'User' });
+  const editProfile = useEditProfile({ role: 'tips' });
+  const reset = useReset({ screenName: 'QuickTips' });
 
   const goToNext = async () => {
     await editProfile();
-    dispatch(changeRole('complete'));
+    dispatch(changeRole('tips'));
     reset();
   };
 

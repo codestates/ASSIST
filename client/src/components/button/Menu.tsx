@@ -7,12 +7,13 @@ import { RootState } from '../../store/reducers';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import CaptainMark from '../mark/CaptainMark';
+import { LayoutChangeEvent } from 'react-native';
 
 const Container = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  width: 35px;
-  height: 41px;
+  width: 40px;
+  height: 40px;
 `;
 
 const Mark = styled.View`
@@ -21,17 +22,29 @@ const Mark = styled.View`
   bottom: 5px;
 `;
 
-export default function Menu() {
+type MenuProps = {
+  isTestLeader?: boolean;
+  onLayout?: (event: LayoutChangeEvent) => void;
+};
+
+export default function Menu({ isTestLeader, onLayout }: MenuProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { leader } = useSelector((state: RootState) => state.userReducer.selectedTeam);
-  return (
-    <Container onPress={() => navigation.navigate('MyPage')}>
-      <Ionicons name="person-circle-outline" size={35} color={colors.blue} />
-      {leader && (
+
+  const getMark = () => {
+    if (leader || isTestLeader) {
+      return (
         <Mark>
           <CaptainMark size="small" />
         </Mark>
-      )}
+      );
+    }
+  };
+
+  return (
+    <Container onLayout={onLayout} onPress={() => navigation.navigate('MyPage')}>
+      <Ionicons name="person-circle-outline" size={35} color={colors.blue} />
+      {getMark()}
     </Container>
   );
 }

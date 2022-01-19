@@ -1,30 +1,41 @@
 import React from 'react';
-import { useWindowDimensions } from 'react-native';
+import { LayoutChangeEvent, useWindowDimensions } from 'react-native';
 import styled from 'styled-components/native';
+import { LayoutType } from '../../../@types/global/types';
 import { colors } from '../../theme/colors';
 
 type StyleProps = {
   width: number;
   margin?: number;
+  layout?: LayoutType;
 };
 
 const Container = styled.View`
-  box-shadow: 0px 5px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: ${(props: StyleProps) =>
+    props.layout ? `0px 0px 5px ${colors.white}` : '0px 5px 3px rgba(0, 0, 0, 0.2)'};
   background-color: ${colors.white};
   padding: ${(props: StyleProps) =>
     `${props.width * 0.08}px ${props.width * 0.08}px ${props.width * 0.1}px ${
       props.width * 0.08
     }px`};
   border-radius: 15px;
-  width: 100%;
+  width: ${(props: StyleProps) => (props.layout ? `${props.layout.width}px` : '100%')};
+  ${(props: StyleProps) =>
+    props.layout && `position: absolute; top: ${props.layout.top}px; left: ${props.layout.left}px;`}
 `;
 
 type CardProps = {
+  layout?: LayoutType;
   children: React.ReactNode;
   margin?: number;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
-export default function Card({ children }: CardProps) {
+export default function Card({ children, layout, onLayout }: CardProps) {
   const { width } = useWindowDimensions();
-  return <Container width={width}>{children}</Container>;
+  return (
+    <Container onLayout={onLayout} layout={layout} width={width}>
+      {children}
+    </Container>
+  );
 }

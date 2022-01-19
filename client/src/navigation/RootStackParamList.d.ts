@@ -7,7 +7,6 @@ export type RootStackParamList = {
   Guest: undefined;
   User: undefined | { teamId: string };
   Match: undefined;
-  Landing: undefined;
   AddOns_1: undefined;
   AddOns_2: undefined | { teamId: string };
   AddOns_3: undefined | { bank?: string; paymentDay?: string; teamId: number };
@@ -23,7 +22,7 @@ export type RootStackParamList = {
   CreateTeam_5: undefined | { inviteCode: string };
   CreateTeam_6: undefined;
   BankSelect: { name: keyof RootStackParamList };
-  landing: undefined;
+  Landing: undefined;
   LandingPage: undefined;
   LandingPage_1: undefined;
   LandingPage_2: undefined;
@@ -93,4 +92,17 @@ export type RootStackParamList = {
   DeleteAccount_1: undefined;
   DeleteAccount_2: undefined;
   PaymentDaySelect: { name: keyof RootStackParamList };
+  QuickTips: undefined;
+  QuickTips_1: undefined;
+  QuickTips_2: undefined;
+  QuickTips_3: undefined;
+  QuickTips_4: undefined;
+  QuickTips_5: undefined;
+  QuickTips_6: undefined;
+  QuickTips_7: undefined;
+  QuickTips_8: undefined;
+  QuickTips_9: undefined;
+  QuickTips_10: undefined;
+  QuickTips_11: undefined;
+  QuickTips_12: undefined;
 };

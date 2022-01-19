@@ -21,8 +21,6 @@ const Container = styled.SafeAreaView`
   justify-content: center;
   box-shadow: ${(props: HeaderProps) =>
     props.isLobby ? '0px 0px 20px rgba(0, 0, 0, 0.15)' : 'none'};
-  position: relative;
-  z-index: 5;
 `;
 
 type HeaderProps = {

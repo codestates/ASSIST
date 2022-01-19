@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components/native';
+import { LayoutType } from '../../../@types/global/types';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
 import CommonModalButton from '../button/CommonModalButton';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import Card from './Card';
-import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { LayoutChangeEvent } from 'react-native';
 
 const TitleText = styled(Bold)`
   font-size: 18px;
@@ -15,29 +13,24 @@ const TitleText = styled(Bold)`
 
 const SubtitleText = styled(Regular)`
   font-size: 13px;
-  margin-bottom: ${(props: NoMatchCardProps) => (props.isLeader ? '26px' : '0px')};
+  margin-bottom: ${(props: FakeNoMatchCardProps) => (props.isLeader ? '26px' : '0px')};
   color: ${colors.gray};
 `;
 
-type NoMatchCardProps = {
+type FakeNoMatchCardProps = {
   isLeader?: boolean;
-  onLayout?: (event: LayoutChangeEvent) => void;
+  layout?: LayoutType;
 };
 
-export default function NoMatchCard({ isLeader, onLayout }: NoMatchCardProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+export default function FakeNoMatchCard({ isLeader, layout }: FakeNoMatchCardProps) {
   return (
-    <Card onLayout={onLayout}>
+    <Card layout={layout}>
       <TitleText>예정된 경기가 없어요 🤔</TitleText>
       <SubtitleText isLeader={isLeader}>
         {isLeader ? '지금 새로운 경기 일정을 등록 해 보세요!' : '새로운 경기가 생기면 알려드릴게요'}
       </SubtitleText>
       {isLeader && (
-        <CommonModalButton
-          text="등록하기  >"
-          color="blue"
-          onPress={() => navigation.navigate('ScheduleManage')}
-        />
+        <CommonModalButton text="등록하기  >" disabled isFake color="blue" onPress={() => {}} />
       )}
     </Card>
   );

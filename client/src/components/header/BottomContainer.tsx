@@ -8,11 +8,13 @@ import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { useToast } from 'react-native-toast-notifications';
+import { LayoutChangeEvent } from 'react-native';
 
 const Container = styled.View`
   flex-direction: row;
   padding: 0px 20px;
   margin-bottom: 10px;
+  height: 30px;
 `;
 
 const TeamSelector = styled.TouchableOpacity`
@@ -30,22 +32,40 @@ const TeamName = styled(Bold)`
 
 type BottomContainerProps = {
   isNewTeam?: boolean;
+  isTestSelect?: boolean;
+  isTestTeam?: boolean;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
-export default function BottomContainer({ isNewTeam }: BottomContainerProps) {
+export default function BottomContainer({
+  isNewTeam,
+  isTestSelect,
+  isTestTeam,
+  onLayout,
+}: BottomContainerProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { name } = useSelector((state: RootState) => state.userReducer.selectedTeam);
   const toast = useToast();
+
+  const getTeamName = () => {
+    if (isTestSelect || isNewTeam) {
+      return '팀 선택';
+    } else if (isTestTeam) {
+      return 'FC 살쾡이';
+    } else {
+      return name;
+    }
+  };
 
   return (
     <Container>
       {
         <TeamSelector onPress={() => navigation.navigate('TeamSelect')}>
-          <TeamName>{isNewTeam ? '팀 선택' : name}</TeamName>
+          <TeamName>{getTeamName()}</TeamName>
           <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
         </TeamSelector>
       }
-      <TeamSelector>
+      <TeamSelector onLayout={onLayout}>
         <TeamName
           onPress={() => toast.show('아직 준비 중인 기능입니다.')}
           style={{ color: colors.lightGray }}>
