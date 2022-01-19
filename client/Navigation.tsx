@@ -2,11 +2,11 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
-import LandingPageNav from './src/navigation/LandingPageNav';
 import * as Linking from 'expo-linking';
 import { createStackNavigator } from '@react-navigation/stack';
 import NotFound from './src/screens/main/NotFound';
 import QuickTipsNav from './src/navigation/QuickTipsNav';
+import IntroPageNav from './src/navigation/IntroPageNav';
 
 export default function Navigation() {
   const prefix = Linking.createURL('/');
@@ -14,9 +14,9 @@ export default function Navigation() {
     prefixes: [prefix],
     config: {
       screens: {
-        Landing: {
-          path: 'Landing',
-          screens: { Landing: 'LandingPage_1' },
+        Intro: {
+          path: 'Intro',
+          screens: { Intro: 'IntroPage_1' },
         },
         QuickTips: {
           path: 'QuickTips',
@@ -67,7 +67,7 @@ export default function Navigation() {
           headerShown: false,
         }}>
         <rootNavigator.Screen name="Guest" component={LoggedOutNav} />
-        <rootNavigator.Screen name="Landing" component={LandingPageNav} />
+        <rootNavigator.Screen name="Intro" component={IntroPageNav} />
         <rootNavigator.Screen name="QuickTips" component={QuickTipsNav} />
         <rootNavigator.Screen name="User" component={LoggedInNav} />
         <rootNavigator.Screen name="NotFound" component={NotFound} />

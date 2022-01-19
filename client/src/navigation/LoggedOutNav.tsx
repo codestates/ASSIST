@@ -16,7 +16,7 @@ const LobbyStack = createStackNavigator();
 export default function LoggedOutNav() {
   const dispatch = useDispatch();
   const resetUser = useReset({ screenName: 'User' });
-  const resetLanding = useReset({ screenName: 'Landing' });
+  const resetIntro = useReset({ screenName: 'Intro' });
   const resetTips = useReset({ screenName: 'QuickTips' });
   const { token, role } = useSelector((state: RootState) => state.userReducer);
 
@@ -30,7 +30,7 @@ export default function LoggedOutNav() {
       } else if (role === 'tips') {
         resetTips();
       } else {
-        resetLanding();
+        resetIntro();
       }
     }
   }, []);
@@ -51,7 +51,7 @@ export default function LoggedOutNav() {
           } else if (data.role === 'tips') {
             // 팁으로 넘어가기
           } else {
-            resetLanding();
+            resetIntro();
           }
         })
         .catch((error) => console.log(error));
