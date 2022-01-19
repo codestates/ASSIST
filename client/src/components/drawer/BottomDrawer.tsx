@@ -2,12 +2,13 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useCardAnimation } from '@react-navigation/stack';
 import React from 'react';
 import { Animated } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { colors } from '../../theme/colors';
 import DismissKeyboard from '../view/DismissKeyboard';
 
-const Container = styled.KeyboardAvoidingView`
+const AvoidKeyboard = styled.KeyboardAvoidingView`
   flex: 1;
   justify-content: flex-end;
   align-items: center;
@@ -47,26 +48,31 @@ export default function BottomDrawer({ children }: BottomDrawerProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <Container behavior="padding">
-      <DismissDrawer onPress={() => navigation.goBack()}>
-        <DismissKeyboard>
-          <AnimatedView
-            style={{
-              transform: [
-                {
-                  translateY: current.progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [100, 0],
-                  }),
-                },
-              ],
-            }}>
-            <AvoidTouch>
-              <Wrapper>{children}</Wrapper>
-            </AvoidTouch>
-          </AnimatedView>
-        </DismissKeyboard>
-      </DismissDrawer>
-    </Container>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ flexGrow: 1 }}
+      scrollEnabled={false}>
+      <AvoidKeyboard behavior="padding">
+        <DismissDrawer onPress={() => navigation.goBack()}>
+          <DismissKeyboard>
+            <AnimatedView
+              style={{
+                transform: [
+                  {
+                    translateY: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [100, 0],
+                    }),
+                  },
+                ],
+              }}>
+              <AvoidTouch>
+                <Wrapper>{children}</Wrapper>
+              </AvoidTouch>
+            </AnimatedView>
+          </DismissKeyboard>
+        </DismissDrawer>
+      </AvoidKeyboard>
+    </ScrollView>
   );
 }
