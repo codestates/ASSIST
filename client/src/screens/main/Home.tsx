@@ -9,12 +9,13 @@ import CardScrollView from '../../components/view/CardScrollView';
 import AddOnsCard from '../../components/card/AddOnsCard';
 import NoMatchCard from '../../components/card/NoMatchCard';
 import NextMatchCard from '../../components/card/NextMatchCard';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import { RootState } from '../../store/reducers';
 import { FirstTeam, NextMatch, TeamInfo } from '../../../@types/global/types';
 import { getSelectedTeam } from '../../store/actions/userAction';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import { Platform } from 'react-native';
 
 type TeamProps = StackScreenProps<RootStackParamList, 'Team'>;
 
@@ -22,7 +23,7 @@ export default function Home({ route }: TeamProps) {
   const dispatch = useDispatch();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { token, selectedTeam, id } = useSelector((state: RootState) => state.userReducer);
-  const teamId = Number(route.params?.teamId);
+  const routeTeamId = Number(route.params?.teamId);
   const [nextMatch, setNextMatch] = useState<NextMatch>(null);
 
   useEffect(() => {
@@ -34,9 +35,9 @@ export default function Home({ route }: TeamProps) {
   }, [navigation]);
 
   const getTeamInfo = async () => {
-    if (teamId && teamId !== selectedTeam.id) {
+    if (routeTeamId && routeTeamId !== selectedTeam.id) {
       // 외부 URL로 접속 시
-      await getSelectedTeamInfo(teamId);
+      await getSelectedTeamInfo(routeTeamId);
     } else {
       // 내부로 접속 시
       if (selectedTeam.id === -1) {
@@ -44,9 +45,7 @@ export default function Home({ route }: TeamProps) {
         await getFirstTeam();
       } else {
         // 로그인 정보가 저장되어 있을 시
-        if (teamId !== selectedTeam.id) {
-          await getSelectedTeamInfo(selectedTeam.id);
-        }
+        await getSelectedTeamInfo(selectedTeam.id);
       }
     }
   };
@@ -62,9 +61,17 @@ export default function Home({ route }: TeamProps) {
       if (data.id === -1) {
         return navigation.replace('CreateOrJoin');
       } else {
-        dispatch(getSelectedTeam({ id: data.id, name: data.name, leader: data.leader }));
+        dispatch(
+          getSelectedTeam({
+            id: data.id,
+            name: data.name,
+            leader: data.leader,
+          }),
+        );
         setNextMatch(data.nextMatch);
-        return navigation.replace('Team', { teamId: String(data.id) });
+        if (Platform.OS === 'web') {
+          window.history.replaceState(null, 'ASSIST', String(data.id));
+        }
       }
     } catch (error) {
       console.log(error);
@@ -84,15 +91,12 @@ export default function Home({ route }: TeamProps) {
           getSelectedTeam({ id: teamId, name: data.name, leader: data.leaderId === Number(id) }),
         );
         setNextMatch(data.nextMatch);
-        return navigation.replace('Team', { teamId: String(teamId) });
+        if (Platform.OS === 'web') {
+          window.history.replaceState(null, 'ASSIST', String(teamId));
+        }
       }
     } catch (error) {
-      const err = error as AxiosError;
-      if (err.response?.status === 404) {
-        await getFirstTeam();
-      } else {
-        console.log(err);
-      }
+      console.log(error);
     }
   };
 

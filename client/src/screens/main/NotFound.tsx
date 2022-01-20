@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { Bold, Light } from '../../theme/fonts';
 import { colors } from '../../theme/colors';
 import KakaoButton from '../../components/button/KakaoButton';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import useReset from '../../hooks/useReset';
 import NotFoundImage from '../../assets/images/NotFound.png';
+import { getSelectedTeam } from '../../store/actions/userAction';
 
 const Container = styled.View`
   flex: 1;
@@ -51,6 +52,11 @@ export default function NotFound() {
   const resetIntro = useReset({ screenName: 'Intro' });
   const resetQuickTips = useReset({ screenName: 'QuickTips' });
   const resetUser = useReset({ screenName: 'User', params: { teamId: id } });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
+  }, []);
 
   const getNavigation = () => {
     if (token.length === 0) {

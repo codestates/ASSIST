@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import NextPageView from '../../components/view/NextPageView';
 import { Bold, Light } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';

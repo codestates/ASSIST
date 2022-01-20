@@ -1,10 +1,7 @@
 import { ASSIST_SERVER_URL } from '@env';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import axios, { AxiosResponse } from 'axios';
-import React from 'react';
 import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootStackParamList } from '../navigation/RootStackParamList';
 import { getAccessToken, getUserInfo, UserInfoType } from '../store/actions/userAction';
 import { RootState } from '../store/reducers';
 
@@ -17,7 +14,6 @@ type editProfileProps = {
 };
 
 export default function useEditProfile({ phone, role, password, name, gender }: editProfileProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token } = useSelector((state: RootState) => state.userReducer);
   const toast = useToast();
   const dispatch = useDispatch();
