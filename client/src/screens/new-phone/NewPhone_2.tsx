@@ -5,7 +5,6 @@ import { Bold, Light, Regular } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LineInput from '../../components/input/LineInput';
 import NextButton from '../../components/button/NextButton';
@@ -16,6 +15,7 @@ import CommonModalButton from '../../components/button/CommonModalButton';
 import styled from 'styled-components/native';
 import useVerifySms from '../../hooks/useVerifySms';
 import useEditProfile from '../../hooks/useEditProfile';
+import useReset from '../../hooks/useReset';
 
 const Line = styled.View`
   margin-top: 13px;
@@ -45,6 +45,7 @@ export default function NewPhone_2({ route }: NewPhoneProps) {
     phone: String(route.params?.phone),
     number: String(getValues('validation')),
   });
+  const reset = useReset({ screenName: 'MyPage_Main' });
 
   const showErrorModal = () => {
     setError();
@@ -62,6 +63,7 @@ export default function NewPhone_2({ route }: NewPhoneProps) {
     try {
       await verifySms();
       await editProfile();
+      reset();
     } catch (error) {
       console.log(error);
       showErrorModal();

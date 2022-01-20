@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { RadioButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components/native';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import { RootState } from '../../store/reducers';
 import { colors } from '../../theme/colors';
@@ -14,11 +14,12 @@ import CaptainMark from '../mark/CaptainMark';
 import { modifyLeaderId } from '../../store/actions/propsAction';
 import { CommonModal, CommonModalTitle } from '../modal/CommonModal';
 import CommonModalButton from '../button/CommonModalButton';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { useToast } from 'react-native-toast-notifications';
 import useGoHome from '../../hooks/useGoHome';
 import { getSelectedTeam } from '../../store/actions/userAction';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const Space = styled.View`
   width: 100%;
@@ -33,7 +34,7 @@ const Line = styled.View`
 const ContentTitleBox = styled.View`
   width: 100%;
   flex-direction: row;
-  padding-vertical: 16px;
+  padding: 16px 0px;
 `;
 
 const ContentRole = styled.View`
@@ -61,12 +62,12 @@ const ContentAction = styled.TouchableOpacity`
 `;
 
 const TeamDeleteText = styled(Regular)`
-  color: ${colors.gray}
+  color: ${colors.gray};
   font-size: 16px;
 `;
 
 const MemberRejectionText = styled(Regular)`
-  color: ${colors.red}
+  color: ${colors.red};
   font-size: 16px;
 `;
 
@@ -100,7 +101,7 @@ export default function TeamMemberCard({
   const dispatch = useDispatch();
   const toast = useToast();
   const goHome = useGoHome();
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { token, selectedTeam, id } = useSelector((state: RootState) => state.userReducer);
   const [expulsionMemberId, setExpulsionMemberId] = useState(0);
   const [teamDeleteVisible, setTeamDeleteVisible] = useState(false);
@@ -109,13 +110,18 @@ export default function TeamMemberCard({
   const [lastLeaveTeamVisible, setLastLeaveTeamVisible] = useState(false);
   const [expulsionVisible, setExpulsionVisible] = useState(false);
 
+  useEffect(() => {
+    if (selectedTeam.id === -1) {
+      goHome();
+    }
+  }, [selectedTeam.id]);
+
   const removeTeam = async () => {
     try {
       await axios.delete(`${ASSIST_SERVER_URL}/team/${teamId}`, {
         headers: { authorization: `Bearer ${token}` },
       });
       dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
-      goHome();
       toast.show('팀 삭제가 완료 되었습니다');
     } catch (err) {
       console.log(err);
@@ -128,7 +134,6 @@ export default function TeamMemberCard({
         headers: { authorization: `Bearer ${token}` },
       });
       dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
-      goHome();
       toast.show('팀 나가기가 완료 되었습니다.');
     } catch (err) {
       console.log(err);

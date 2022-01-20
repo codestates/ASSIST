@@ -4,9 +4,10 @@ import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
 import * as Linking from 'expo-linking';
 import { createStackNavigator } from '@react-navigation/stack';
-import NotFound from './src/screens/main/NotFound';
 import QuickTipsNav from './src/navigation/QuickTipsNav';
 import IntroPageNav from './src/navigation/IntroPageNav';
+import NotFound from './src/screens/main/NotFound';
+import axios, { AxiosError } from 'axios';
 
 export default function Navigation() {
   const prefix = Linking.createURL('/');
@@ -53,10 +54,22 @@ export default function Navigation() {
           path: 'Guest',
           screens: { Lobby: 'Lobby' },
         },
-        NotFound: '*',
+        NotFound: {
+          path: 'NotFound',
+          screens: { NotFound: 'NotFound' },
+        },
       },
     },
   };
+
+  axios.interceptors.response.use(
+    (response) => response,
+    async (error: AxiosError) => {
+      if (error.response?.status === 404) {
+        await Linking.openURL('/NotFound');
+      }
+    },
+  );
 
   const rootNavigator = createStackNavigator();
 
