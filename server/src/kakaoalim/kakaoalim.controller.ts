@@ -26,4 +26,8 @@ export class KakaoalimController {
 
     return { message: 'ok' };
   }
+  @Get('test')
+  test() {
+    this.kakaoAlimService.sendM007();
+  }
 }

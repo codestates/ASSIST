@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Raw } from 'typeorm';
-import { Alarm_schedule } from 'src/others/alarm.entity';
 import { TeamRepository } from 'src/team/team.repository';
 import { User } from 'src/user/user.entity';
 import { CreateMatchDto } from './dto/create-dto';
@@ -20,6 +19,7 @@ import { MakeM } from 'src/common/naver_sens/make_M_template';
 import { AlimtalkDto } from 'src/common/naver_sens/dto/sendTalk.dto';
 import { getDate, getTime } from 'src/common/getDate';
 import { KakaoAlimService } from 'src/kakaoalim/kakaoalim.service';
+import { convertSMS } from 'src/common/naver_sens/convert_SMS_template';
 
 @Injectable()
 export class MatchService {
@@ -80,23 +80,31 @@ export class MatchService {
     this.userMatchRepository.createQueryBuilder().insert().into(User_match).values(data).execute();
 
     const arr: AlimtalkDto[] = [];
+    const smsArr = [];
+
     users.forEach((user) => {
+      const message = this.makeM.M001(user.phone, {
+        matchId: match.id,
+        team: name,
+        startTime,
+        date,
+        endTime,
+        address,
+        address2,
+      });
       if (user?.provider === 'kakao') {
-        const message = this.makeM.M001(user.phone, {
-          matchId: match.id,
-          team: name,
-          startTime,
-          date,
-          endTime,
-          address,
-          address2,
-        });
         arr.push(message);
+      } else {
+        smsArr.push(convertSMS(message));
       }
     });
 
     if (arr.length) {
       this.naverSensService.sendKakaoAlarm('M001', arr);
+    }
+
+    if (smsArr.length) {
+      this.naverSensService.sendGroupSMS(smsArr);
     }
 
     return { id: match.id };
@@ -304,6 +312,7 @@ export class MatchService {
     if (!data.length) return { message: '확정할 경기가 없습니다.' };
 
     const matchIdarr = data.map((el) => el.id);
+
     const update = await this.matchRepository
       .createQueryBuilder()
       .update(Match)
