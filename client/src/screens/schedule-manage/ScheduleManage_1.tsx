@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
@@ -10,6 +9,7 @@ import LineSelect from '../../components/input/LineSelect';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import { addScheduleManage } from '../../store/actions/propsAction';
+import checkOverMidnight from '../../functions/checkOverMidnight';
 
 type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_1'>;
 
@@ -20,6 +20,7 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
   const [isCalendarPressed, setIsCalendarPressed] = useState(false);
   const [isStartPressed, setIsStartPressed] = useState(false);
   const [isEndPressed, setIsEndPressed] = useState(false);
+  const [endTime, setEndTime] = useState('');
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -36,17 +37,35 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
     return unsubscribe;
   }, [navigation, isCalendarPressed, isStartPressed, isEndPressed]);
 
+  useEffect(() => {
+    getNextDay();
+  }, [route.params?.startTime, route.params?.endTime]);
+
+  const getNextDay = () => {
+    if (route.params?.startTime && route.params?.endTime) {
+      if (checkOverMidnight(route.params?.startTime, route.params?.endTime)) {
+        setEndTime(`익일 ${route.params?.endTime}`);
+      } else {
+        setEndTime(route.params.endTime);
+      }
+    } else if (route.params?.endTime) {
+      setEndTime(route.params.endTime);
+    }
+  };
+
   const handleCalendar = () => {
     setIsCalendarPressed(true);
     navigation.navigate('CalendarSelect');
   };
+
   const handleStartTime = () => {
     setIsStartPressed(true);
-    navigation.navigate('TimeSelect', { time: 'start' });
+    navigation.navigate('TimeSelect', { time: 'start', endTime: route.params?.endTime });
   };
+
   const handleEndTime = () => {
     setIsEndPressed(true);
-    navigation.navigate('TimeSelect', { time: 'end' });
+    navigation.navigate('TimeSelect', { time: 'end', startTime: route.params?.startTime });
   };
 
   return (
@@ -73,7 +92,7 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
         <LineSelect
           title="종료 시간"
           isPressed={isEndPressed}
-          selected={route.params?.endTime}
+          selected={endTime}
           onPress={() => handleEndTime()}
         />
       </NextPageView>
@@ -88,7 +107,7 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
             addScheduleManage({
               date: String(route.params?.date),
               startTime: String(route.params?.startTime),
-              endTime: String(route.params?.endTime),
+              endTime,
             }),
           );
           navigation.navigate('ScheduleManage_2');

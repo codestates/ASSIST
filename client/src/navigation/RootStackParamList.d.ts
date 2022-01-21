@@ -49,7 +49,7 @@ export type RootStackParamList = {
   ScheduleManage_4: undefined;
   ScheduleManage_5: undefined | { matchId: string | number };
   CalendarSelect: undefined | { date: string };
-  TimeSelect: undefined | { time: 'start' | 'end' };
+  TimeSelect: undefined | { time: 'start' | 'end'; startTime?: string; endTime?: string };
   StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
   ChangePassword: undefined | { screenName?: keyof RootStackParamList; phone?: string };
   FindPassword:
