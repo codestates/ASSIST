@@ -30,7 +30,7 @@ export class MakeM {
  - ${data.address} ${data.address2}
     
  **해당 새로운 경기 등록 알림 메시지는 고객님의 알림신청에 의해 발송되었습니다.`;
-    
+
     const buttons = [
       {
         type: 'WL',
@@ -43,8 +43,8 @@ export class MakeM {
   }
 
   M012(to: string, data: M012dto) {
-    const content = `${data.name.slice(1)}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
-팀원들이 ${data.name.slice(1)}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
+    const content = `${data.name}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
+팀원들이 ${data.name}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
 
 ◼︎ 팀 이름
 - ${data.team}
@@ -113,8 +113,8 @@ export class MakeM {
   }
 
   M004(to: string, data: M004dto) {
-    const content = `${data.name.slice(1)}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
-팀원들이 ${data.name.slice(1)}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
+    const content = `${data.name}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
+팀원들이 ${data.name}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
 
 ◼︎ 팀 이름
 - ${data.team}

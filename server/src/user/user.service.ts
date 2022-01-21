@@ -23,6 +23,7 @@ import { TeamRepository } from 'src/team/team.repository';
 import { MakeT } from 'src/common/naver_sens/make_T_template';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
 import { getManager } from 'typeorm';
+import { convertSMS } from 'src/common/naver_sens/convert_SMS_template';
 
 @Injectable()
 export class UserService {
@@ -282,6 +283,9 @@ export class UserService {
 
     if (deleteTeam.leaderId.provider === 'kakao') {
       this.naverSensService.sendKakaoAlarm('T016', [form]);
+    } else {
+      let smsForm = convertSMS(form);
+      this.naverSensService.sendGroupSMS([smsForm]);
     }
 
     return { message: '완료 되었습니다.' };
