@@ -136,3 +136,7 @@ export interface LayoutType extends LayoutRectangle {
 export type LayoutProps = {
   layout?: LayoutType;
 };
+
+export type ListType = {
+  value: string;
+};
