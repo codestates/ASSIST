@@ -21,7 +21,7 @@ const Container = styled.View`
 
 const Text = styled(Regular)`
   color: ${(props: ContainerProps) => props.color};
-  font-size: ${(props: ContainerProps) => (props.layout?.height || 50) / 3.84};
+  font-size: ${(props: ContainerProps) => (props.layout?.height || 50) / 3.84}px;
 `;
 
 interface ContainerProps extends LayoutProps {

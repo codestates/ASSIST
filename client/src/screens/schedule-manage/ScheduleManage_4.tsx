@@ -12,15 +12,12 @@ import { colors } from '../../theme/colors';
 import { RootState } from '../../store/reducers';
 import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
+import getDayString from '../../functions/getDayString';
+import checkOverMidnight from '../../functions/checkOverMidnight';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
   height: 16px;
-`;
-
-const ContentsSpaceContents = styled.View`
-  width: 100%;
-  height: 35px;
 `;
 
 const TextSpaceText = styled.View`
@@ -38,10 +35,12 @@ const MatchInfoContainer = styled.View`
   background-color: ${colors.whiteSmoke};
   border: 1px solid ${colors.lightGray};
   padding: 32px;
+  border-radius: 15px;
 `;
 
 const MatchInfoTitle = styled.View`
   width: 100%;
+  margin-bottom: 26px;
 `;
 
 const MatchInfoContents = styled.View`
@@ -51,16 +50,31 @@ const MatchInfoContents = styled.View`
 
 export default function ScheduleManage_4() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { scheduleManage } = useSelector((state: RootState) => state.propsReducer);
+  const {
+    scheduleManage: { date, startTime, endTime, address, address2, deadline },
+  } = useSelector((state: RootState) => state.propsReducer);
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const [isLoading, setIsLoading] = useState(false);
+
+  const checkDayPassing = () => {
+    return checkOverMidnight(startTime, endTime);
+  };
 
   const handleSaveSchedule = () => {
     setIsLoading(true);
     axios
       .post(
         `${ASSIST_SERVER_URL}/match`,
-        { ...scheduleManage, teamId: selectedTeam.id },
+        {
+          date,
+          startTime,
+          endTime,
+          address,
+          address2,
+          deadline,
+          teamId: selectedTeam.id,
+          daypassing: checkDayPassing(),
+        },
         {
           headers: { authorization: `Bearer ${token}` },
         },
@@ -89,18 +103,17 @@ export default function ScheduleManage_4() {
             <MatchInfoTitle>
               <Bold size={20}>경기 정보</Bold>
             </MatchInfoTitle>
-            <ContentsSpaceContents />
             <MatchInfoContents>
-              <Regular size={20}>{scheduleManage.date}</Regular>
+              <Regular size={17}>{`${date} (${getDayString(date)})`}</Regular>
               <TextSpaceText />
-              <Bold size={20}>
-                시작 {scheduleManage.startTime} <AntDesign name="arrowright" size={20} />
-                {scheduleManage.endTime} 종료
+              <Bold size={17}>
+                시작 {startTime} → {checkDayPassing() && <Bold size={13}>익일 </Bold>}
+                {endTime} 종료
               </Bold>
               <TextSpaceText />
-              <Regular size={16}>{scheduleManage.address}</Regular>
+              <Regular gray>{address}</Regular>
               <TextSpaceText />
-              <Regular size={16}>{scheduleManage.address2}</Regular>
+              <Regular gray>{address2}</Regular>
             </MatchInfoContents>
           </MatchInfoContainer>
         </Container>

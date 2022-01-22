@@ -37,6 +37,7 @@ type LineSelectProps = {
   onPress?: () => void;
   isPressed?: boolean;
   isFixed?: boolean;
+  placeholder?: string;
 };
 
 export default function LineSelect({
@@ -45,6 +46,7 @@ export default function LineSelect({
   onPress,
   isPressed,
   isFixed,
+  placeholder,
 }: LineSelectProps) {
   const getInputColor = (title?: string) => {
     if (isPressed) {
@@ -68,11 +70,21 @@ export default function LineSelect({
     }
   };
 
+  const getSelected = () => {
+    if (selected) {
+      return selected;
+    } else if (placeholder) {
+      return placeholder;
+    } else {
+      return `${title}을 선택해주세요`;
+    }
+  };
+
   return (
     <Container>
       {<Title color={getInputColor(title)}>{title}</Title>}
       <SelectInput disabled={isFixed} onPress={onPress} color={getInputColor()}>
-        <Selected color={getSelectedColor()}>{selected || `${title}을 선택해주세요`}</Selected>
+        <Selected color={getSelectedColor()}>{getSelected()}</Selected>
         {isFixed || <MaterialIcons name="keyboard-arrow-down" size={23} color={getInputColor()} />}
       </SelectInput>
     </Container>

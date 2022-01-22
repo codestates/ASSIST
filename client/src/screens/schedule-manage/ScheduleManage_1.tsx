@@ -10,6 +10,7 @@ import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import { addScheduleManage } from '../../store/actions/propsAction';
 import checkOverMidnight from '../../functions/checkOverMidnight';
+import getDayString from '../../functions/getDayString';
 
 type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_1'>;
 
@@ -68,6 +69,12 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
     navigation.navigate('TimeSelect', { time: 'end', startTime: route.params?.startTime });
   };
 
+  const getDate = () => {
+    if (route.params?.date) {
+      return `${route.params.date} (${getDayString(route.params.date)})`;
+    }
+  };
+
   return (
     <>
       <NextPageView>
@@ -78,9 +85,10 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
           <Light size={22}>입력해주세요 🗓</Light>
         </MainTitle>
         <LineSelect
-          title="경기 일정"
+          title="경기 날짜"
+          placeholder="경기 날짜를 선택해주세요"
           isPressed={isCalendarPressed}
-          selected={route.params?.date}
+          selected={getDate()}
           onPress={() => handleCalendar()}
         />
         <LineSelect
@@ -107,7 +115,7 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
             addScheduleManage({
               date: String(route.params?.date),
               startTime: String(route.params?.startTime),
-              endTime,
+              endTime: String(route.params?.endTime),
             }),
           );
           navigation.navigate('ScheduleManage_2');
