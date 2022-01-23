@@ -26,6 +26,7 @@ export default function Navigation() {
         User: {
           path: 'User',
           screens: {
+            BankSelect: 'BankSelect',
             Team: 'Team/:teamId',
             MatchVote: {
               path: 'MatchVote/:matchId',
