@@ -97,12 +97,12 @@ const FooterPageNumber = styled(TouchableOpacity)`
 `;
 
 const PageNumber = styled(Regular)`
-  color:${colors.darkGray}
+  color: ${colors.darkGray};
   font-size: 16px;
 `;
 
 const SelectPageNumber = styled(Regular)`
-  color:${colors.darkGray}
+  color: ${colors.darkGray};
   font-size: 35px;
 `;
 
@@ -172,13 +172,13 @@ export default function AddOns_1() {
   return (
     <>
       <CloseHeader color={colors.whiteSmoke} />
-      <MainTitleContainer>
-        <MainTitle marginBottom="15px">
-          <Bold size={22}>지난 경기 기록</Bold>
-          <Regular size={17}>{selectedTeam.name}</Regular>
-        </MainTitle>
-      </MainTitleContainer>
       <CardScrollView color={colors.whiteSmoke}>
+        <MainTitleContainer>
+          <MainTitle marginBottom="15px">
+            <Bold size={22}>지난 경기 기록</Bold>
+            <Regular size={17}>{selectedTeam.name}</Regular>
+          </MainTitle>
+        </MainTitleContainer>
         <ContentsContainer>
           {lastMatch.lastMatchs?.length === 0 ? (
             <Card margin={16}>
