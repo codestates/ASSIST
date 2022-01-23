@@ -26,25 +26,26 @@ type BankSelectProps = StackScreenProps<RootStackParamList, 'BankSelect'>;
 export default function BankSelect({ route }: BankSelectProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const bankList = [
-    '카카오뱅크',
-    '농협',
-    '신한은행',
-    'IBK기업은행',
-    '국민은행',
-    'SC제일은행',
-    '부산은행',
-    '대구은행',
-    '광주은행',
-    '새마을금고',
-    '우체국',
-    '신협',
-    '수협',
-    '경남은행',
-    '전북은행',
-    '제주은행',
-    '산업은행',
-    '케이뱅크',
-    '토스뱅크',
+    { name: '카카오뱅크', dir: 'kakao' },
+    { name: '농협', dir: 'nonghyup' },
+    { name: '신한은행', dir: 'shinhan' },
+    { name: 'IBK기업은행', dir: 'IBK' },
+    { name: '국민은행', dir: 'kookmin' },
+    { name: '우리은행', dir: 'woori' },
+    { name: 'SC제일은행', dir: 'jeil' },
+    { name: '부산은행', dir: 'busan' },
+    { name: '대구은행', dir: 'daegu' },
+    { name: '광주은행', dir: 'gwanju' },
+    { name: '새마을금고', dir: 'saemaeul' },
+    { name: '우체국', dir: 'woochekuk' },
+    { name: '신협', dir: 'shinhyup' },
+    { name: '수협', dir: 'suhyup' },
+    { name: '경남은행', dir: 'busan' },
+    { name: '전북은행', dir: 'gwanju' },
+    { name: '제주은행', dir: 'shinhan' },
+    { name: '산업은행', dir: 'sanup' },
+    { name: '케이뱅크', dir: 'kbank' },
+    { name: '토스뱅크', dir: 'toss' },
   ];
 
   const getNavigation = (bank: string) => {
@@ -61,8 +62,12 @@ export default function BankSelect({ route }: BankSelectProps) {
           data={bankList}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item: bank }) => (
-            <BankItem onPress={() => getNavigation(bank)} name={bank} />
+          renderItem={({ item: bankList }) => (
+            <BankItem
+              onPress={() => getNavigation(bankList.name)}
+              name={bankList.name}
+              dir={bankList.dir}
+            />
           )}
           style={{ width: '100%', height: '100%', flexGrow: 0 }}
         />

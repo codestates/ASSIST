@@ -74,6 +74,10 @@ export default function PaymentDaySelect({ route }: PaymentDaySelectProps) {
     />
   );
 
+  const scrollToCenter = () => {
+    daysRef.current?.scrollToIndex({ animated: true, index: Math.floor(days.length / 2) });
+  };
+
   return (
     <BottomDrawer>
       <Wrapper>
@@ -81,7 +85,12 @@ export default function PaymentDaySelect({ route }: PaymentDaySelectProps) {
           <Bold size={22}>회비 납부일</Bold>
         </TitleContainer>
         <ItemContainer>
-          <ListPicker ref={daysRef} data={days} renderItem={renderDays} />
+          <ListPicker
+            scrollCenter={scrollToCenter}
+            ref={daysRef}
+            data={days}
+            renderItem={renderDays}
+          />
         </ItemContainer>
         <ButtonContainer>
           <CommonModalButton
