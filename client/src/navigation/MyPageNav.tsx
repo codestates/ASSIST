@@ -18,7 +18,7 @@ export default function MyPageNav() {
       <MyPageStack.Screen
         name="MyPage_Main"
         options={{
-          header: () => <CloseHeader />,
+          header: () => <CloseHeader goBack />,
         }}
         component={MyPage}
       />

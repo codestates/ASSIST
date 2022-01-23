@@ -15,6 +15,7 @@ import axios, { AxiosResponse } from 'axios';
 import { getSelectedTeam } from '../../store/actions/userAction';
 import { UserTeam, UserTeams } from '../../../@types/global/types';
 import { StackNavigationProp } from '@react-navigation/stack';
+import LoadingView from '../../components/view/LoadingView';
 
 const TitleContainer = styled.View`
   margin: 15px 0px;
@@ -57,6 +58,7 @@ const TextContainer = styled.View`
 `;
 
 export default function TeamSelect() {
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
@@ -70,6 +72,7 @@ export default function TeamSelect() {
   }, [navigation]);
 
   const getUserTeams = async () => {
+    setIsLoading(true);
     try {
       const { data }: AxiosResponse<UserTeams> = await axios.get(`${ASSIST_SERVER_URL}/user/team`, {
         headers: { authorization: `Bearer ${token}` },
@@ -78,6 +81,7 @@ export default function TeamSelect() {
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   const goToTeam = (team: UserTeam) => {
@@ -91,7 +95,13 @@ export default function TeamSelect() {
   };
 
   const ListTeams = (teams: UserTeams) => {
-    if (teams.length === 0) {
+    if (isLoading) {
+      return (
+        <TextContainer>
+          <LoadingView />
+        </TextContainer>
+      );
+    } else if (teams.length === 0 && !isLoading) {
       return (
         <TextContainer>
           <Regular gray>아직 소속된 팀이 없습니다.</Regular>
