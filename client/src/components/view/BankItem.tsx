@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from 'react';
+import { ImageSourcePropType } from 'react-native';
 import styled from 'styled-components/native';
 import { Regular } from '../../theme/fonts';
 
@@ -25,15 +26,15 @@ const Image = styled.Image`
 type BankItemProps = {
   name: string;
   onPress: () => void;
-  dir: string;
+  source: ImageSourcePropType;
 };
 
-export default function BankItem({ name, dir, onPress }: BankItemProps) {
+export default function BankItem({ name, source, onPress }: BankItemProps) {
   return (
     <Container onPress={onPress}>
       <Regular>{name}</Regular>
       <ImageFrame>
-        <Image resizeMode="center" source={require(`../../assets/images/bank-${dir}.png`)} />
+        <Image resizeMode="contain" source={source} />
       </ImageFrame>
     </Container>
   );

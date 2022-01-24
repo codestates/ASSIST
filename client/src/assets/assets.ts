@@ -27,7 +27,7 @@ export const imagesToLoad = [
   require('./images/NotFound.png'),
   require('./images/bank-busan.png'),
   require('./images/bank-daegu.png'),
-  require('./images/bank-gwanju.png'),
+  require('./images/bank-gwangju.png'),
   require('./images/bank-IBK.png'),
   require('./images/bank-jeil.png'),
   require('./images/bank-kakao.png'),
