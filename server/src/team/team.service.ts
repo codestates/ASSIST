@@ -17,9 +17,8 @@ import { Team } from './team.entity';
 import { getManager, getRepository, Raw } from 'typeorm';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
 import { MakeT } from 'src/common/naver_sens/make_T_template';
-import { getDate } from 'src/common/getDate';
 import { User_match } from 'src/others/user_match.entity';
-
+import { convertSMS } from 'src/common/naver_sens/convert_SMS_template';
 @Injectable()
 export class TeamService {
   makeT = new MakeT();
@@ -59,30 +58,42 @@ export class TeamService {
       });
     }
 
+    const info = {
+      teamId: team.id,
+      team: team.name,
+      code: team.inviteCode,
+      name: user.name,
+      leader: team.leaderId.name,
+      to: user.phone,
+    };
+
+    const form1 = this.makeT.T011(info.to, info);
+
+    const info2 = {
+      teamId: team.id,
+      team: team.name,
+      name: user.name,
+      to: team.leaderId.phone,
+    };
+
+    const form2 = this.makeT.T002(info2.to, info2);
+
+    const smsArr = [];
     if (user?.provider === 'kakao') {
-      const info = {
-        teamId: team.id,
-        team: team.name,
-        code: team.inviteCode,
-        name: user.name,
-        leader: team.leaderId.name,
-        to: user.phone,
-      };
-      const form1 = this.makeT.T011(info.to, info);
       this.naverSensService.sendKakaoAlarm('T011', [form1]);
+    } else {
+      smsArr.push(convertSMS(form1));
     }
 
     if (team.leaderId?.provider === 'kakao') {
-      const info2 = {
-        teamId: team.id,
-        team: team.name,
-        name: user.name,
-        to: team.leaderId.phone,
-      };
-      const form2 = this.makeT.T002(info2.to, info2);
       this.naverSensService.sendKakaoAlarm('T002', [form2]);
+    } else {
+      smsArr.push(convertSMS(form2));
     }
 
+    if (smsArr.length) {
+      this.naverSensService.sendGroupSMS(smsArr);
+    }
     return { id: team.id };
   }
 
@@ -137,24 +148,30 @@ export class TeamService {
     let returnData = await this.teamRepository.patchTeam(found, updateTeamDto);
 
     if (leader) {
-      if (user?.provider === 'kakao') {
-        console.log('위임한 친구의 provider', user.provider);
-        let form1 = this.makeT.T003(user.phone, {
-          teamId: found.id,
-          team: found.name,
-          leader: leader.name,
-        });
-        await this.naverSensService.sendKakaoAlarm('T003', [form1]);
-      }
+      let form1 = this.makeT.T003(user.phone, {
+        teamId: found.id,
+        team: found.name,
+        leader: leader.name,
+      });
+      let form2 = this.makeT.T014(leader.phone, {
+        teamId: found.id,
+        team: found.name,
+        leader: user.name,
+      });
 
+      let smsArr = [];
+      if (user?.provider === 'kakao') {
+        await this.naverSensService.sendKakaoAlarm('T003', [form1]);
+      } else {
+        smsArr.push(convertSMS(form1));
+      }
       if (leader.provider === 'kakao') {
-        console.log('위임된친구의 provider', leader.provider);
-        let form2 = this.makeT.T014(leader.phone, {
-          teamId: found.id,
-          team: found.name,
-          leader: user.name,
-        });
         await this.naverSensService.sendKakaoAlarm('T014', [form2]);
+      } else {
+        smsArr.push(convertSMS(form2));
+      }
+      if (smsArr.length) {
+        await this.naverSensService.sendGroupSMS(smsArr);
       }
     }
 
@@ -170,20 +187,26 @@ export class TeamService {
       throw new UnauthorizedException('팀 해체는 팀장만 할 수 있습니다.');
     }
 
-    let arr = [];
+    let kakaoArr = [];
+    let smsArr = [];
     for (let member of team.users) {
       console.log(member.provider);
       if (member.id === user.id) continue;
+      let form = this.makeT.T005(member.phone, { team: team.name });
       if (member.provider === 'kakao') {
-        let form = this.makeT.T005(member.phone, { team: team.name });
-        arr.push(form);
+        kakaoArr.push(form);
+      } else {
+        smsArr.push(convertSMS(form));
       }
     }
 
-    if (arr.length) {
-      this.naverSensService.sendKakaoAlarm('T005', arr);
+    if (kakaoArr.length) {
+      this.naverSensService.sendKakaoAlarm('T005', kakaoArr);
     }
 
+    if (smsArr.length) {
+      this.naverSensService.sendGroupSMS(smsArr);
+    }
     await this.teamRepository.delete({ id });
 
     return { message: '완료 되었습니다' };
@@ -227,18 +250,29 @@ export class TeamService {
     let kickUser = team.users.splice(index, 1)[0];
     await this.teamRepository.save(team);
 
+    let form1 = this.makeT.T007(user.phone, {
+      teamId: team.id,
+      team: team.name,
+      name: kickUser.name,
+    });
+    let form2 = this.makeT.T008(kickUser.phone, { team: team.name });
+
+    let smsArr = [];
+
     if (user?.provider === 'kakao') {
-      let form1 = this.makeT.T007(user.phone, {
-        teamId: team.id,
-        team: team.name,
-        name: kickUser.name,
-      });
       this.naverSensService.sendKakaoAlarm('T007', [form1]);
+    } else {
+      smsArr.push(convertSMS(form1));
     }
 
     if (kickUser.provider === 'kakao') {
-      let form2 = this.makeT.T008(kickUser.phone, { team: team.name });
       this.naverSensService.sendKakaoAlarm('T008', [form2]);
+    } else {
+      smsArr.push(convertSMS(form2));
+    }
+
+    if (smsArr.length) {
+      this.naverSensService.sendGroupSMS(smsArr);
     }
 
     return { message: '완료되었습니다.' };

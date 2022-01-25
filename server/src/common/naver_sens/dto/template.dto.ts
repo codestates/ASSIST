@@ -69,6 +69,7 @@ export class M019dto {
   name: string;
   reason: string;
   to: string;
+  provider?: string;
 }
 
 export class M010dto {

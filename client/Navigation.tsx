@@ -11,6 +11,7 @@ import NotFound from './src/screens/main/NotFound';
 import axios, { AxiosError } from 'axios';
 import { Platform } from 'react-native';
 
+
 export default function Navigation() {
   const prefix = Linking.createURL('/');
   const linking = {
