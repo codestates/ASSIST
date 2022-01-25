@@ -39,8 +39,9 @@ export class MatchController {
     @Param('id', ParseIntPipe) teamId: number,
     @Query('page') page: number,
     @Query('limit') limit: number,
+    @Req() req: Request,
   ): Promise<Match[]> {
-    return this.matchService.getlastMatchs(teamId, page, limit);
+    return this.matchService.getlastMatchs(teamId, page, limit, req.user);
   }
 
   @Patch('/:id')
