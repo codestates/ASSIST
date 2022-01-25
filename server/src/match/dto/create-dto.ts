@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateMatchDto {
   @IsNumber()
@@ -9,6 +9,9 @@ export class CreateMatchDto {
   address2: string;
   @IsString()
   date: string;
+  @IsOptional()
+  @IsBoolean()
+  daypassing: boolean;
   @IsString()
   startTime: string;
   @IsString()
