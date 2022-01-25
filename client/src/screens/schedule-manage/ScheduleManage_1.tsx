@@ -67,6 +67,7 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
   const handleEndTime = () => {
     setIsEndPressed(true);
     navigation.navigate('TimeSelect', { time: 'end', startTime: route.params?.startTime });
+
   };
 
   const getDate = () => {
@@ -115,7 +116,7 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
             addScheduleManage({
               date: String(route.params?.date),
               startTime: String(route.params?.startTime),
-              endTime: String(route.params?.endTime),
+              endTime,
             }),
           );
           navigation.navigate('ScheduleManage_2');
