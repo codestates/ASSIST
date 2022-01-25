@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, Route } from '@react-navigation/native';
 import LoggedInNav from './src/navigation/LoggedInNav';
 import LoggedOutNav from './src/navigation/LoggedOutNav';
 import * as Linking from 'expo-linking';
@@ -8,6 +9,8 @@ import QuickTipsNav from './src/navigation/QuickTipsNav';
 import IntroPageNav from './src/navigation/IntroPageNav';
 import NotFound from './src/screens/main/NotFound';
 import axios, { AxiosError } from 'axios';
+import { Platform } from 'react-native';
+
 
 export default function Navigation() {
   const prefix = Linking.createURL('/');
@@ -74,8 +77,99 @@ export default function Navigation() {
 
   const rootNavigator = createStackNavigator();
 
+  const formatter = (options?: Record<string, any>, route?: Route<string, object | undefined>) => {
+    const name = route?.name && route.name.split('_')[0];
+    if (Platform.OS !== 'web') {
+      return 'ASSIST';
+    } else if (name === 'Lobby' || name === 'Guest') {
+      return '편리한 풋살팀 관리 ASSIST';
+    } else if (name === 'GetStarted') {
+      if (route?.name === 'GetStarted_Login') {
+        return '로그인 | ASSIST';
+      } else if (route?.name === 'GetStarted' || route?.name === 'GetStarted_1') {
+        return '시작하기 | ASSIST';
+      }
+      return '회원가입 | ASSIST';
+    } else if (name === 'FindPassword') {
+      return '비밀번호 찾기 | ASSIST';
+    } else if (name === 'CreateOrJoin') {
+      return '팀 추가 | ASSIST';
+    } else if (name === 'TeamSelect') {
+      return '팀 선택 | ASSIST';
+    } else if (name === 'MyPage') {
+      return '마이페이지 | ASSIST';
+    } else if (name === 'NewPhone') {
+      return '번호 변경 | ASSIST';
+    } else if (name === 'MyProfile') {
+      return '내 프로필 | ASSIST';
+    } else if (name === 'CustomerService') {
+      return '고객센터 | ASSIST';
+    } else if (name === 'LogOutSelect') {
+      return '로그아웃 | ASSIST';
+    } else if (name === 'CreateTeam') {
+      return '팀 등록 | ASSIST';
+    } else if (name === 'ScheduleManage') {
+      return '경기 등록 | ASSIST';
+    } else if (name === 'CalendarSelect') {
+      return '날짜 선택 | ASSIST';
+    } else if (name === 'BankSelect') {
+      return '은행 선택 | ASSIST';
+    } else if (name === 'TimeSelect') {
+      return '시간 선택 | ASSIST';
+    } else if (name === 'StadiumSelect') {
+      return '경기장 선택 | ASSIST';
+    } else if (name === 'VoteSelect') {
+      return '투표하기 | ASSIST';
+    } else if (name === 'PaymentDaySelect') {
+      return '납부일 선택 | ASSIST';
+    } else if (name === 'ConfirmSelect') {
+      return '경기 확정 | ASSIST';
+    } else if (name === 'GenderSelect') {
+      return '성별 선택 | ASSIST';
+    } else if (name === 'CancelSelect') {
+      return '경기 취소 | ASSIST';
+    } else if (name === 'DeleteAccount') {
+      return '탈퇴하기 | ASSIST';
+    } else if (name === 'IntroPage') {
+      return '서비스 소개 | ASSIST';
+    } else if (name === 'NotFound') {
+      return '404 Error | ASSIST';
+    } else if (name === 'JoinTeam') {
+      return '팀 가입 | ASSIST';
+    } else if (name === 'MercenaryInvite') {
+      return '용병 초대 | ASSIST';
+    } else if (name === 'QuickTips') {
+      return '사용 안내 | ASSIST';
+    } else if (route?.name === 'AddOns_1') {
+      return '지난 경기 기록 | ASSIST';
+    } else if (route?.name === 'AddOns_2') {
+      return '팀 구성원 | ASSIST';
+    } else if (route?.name === 'AddOns_3') {
+      return '팀 정보 | ASSIST';
+    } else if (route?.name === 'AddOns_4') {
+      return '팀원 초대 | ASSIST';
+    } else if (route?.name === 'MatchVote_1') {
+      return '경기 정보 | ASSIST';
+    } else if (route?.name === 'MatchVote_2') {
+      return '투표 완료 | ASSIST';
+    } else if (route?.name === 'MatchVote_3') {
+      return '경기 확정 | ASSIST';
+    } else if (route?.name === 'MatchVote_4') {
+      return '경기 취소 | ASSIST';
+    } else if (route?.name === 'MatchVote_5') {
+      return '경기 완료 | ASSIST';
+    } else if (route?.name === 'MatchVote_6') {
+      return '참석 투표 현황 | ASSIST';
+    }
+    return 'ASSIST';
+  };
+
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer
+      linking={linking}
+      documentTitle={{
+        formatter,
+      }}>
       <rootNavigator.Navigator
         screenOptions={{
           headerShown: false,

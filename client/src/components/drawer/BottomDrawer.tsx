@@ -48,10 +48,7 @@ export default function BottomDrawer({ children }: BottomDrawerProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ flexGrow: 1 }}
-      scrollEnabled={false}>
+    <>
       <AvoidKeyboard behavior="padding">
         <DismissDrawer onPress={() => navigation.goBack()}>
           <DismissKeyboard>
@@ -73,6 +70,6 @@ export default function BottomDrawer({ children }: BottomDrawerProps) {
           </DismissKeyboard>
         </DismissDrawer>
       </AvoidKeyboard>
-    </ScrollView>
+    </>
   );
 }
