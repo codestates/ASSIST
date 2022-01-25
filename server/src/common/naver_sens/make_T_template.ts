@@ -6,7 +6,7 @@ import {
   T005dto,
   T006dto,
   T007dto,
-  T009dto,
+  T019dto,
 } from './dto/template.dto';
 import getHangleDate from './utlls/get_hangle_date';
 
@@ -198,13 +198,16 @@ export class MakeT {
     return { to, content, buttons };
   }
 
-  T009(to: string, data: T009dto) {
+  T019(to: string, data: T019dto) {
     const content = `내일은 [${data.team}] 팀의 회비 납부일 입니다.
 팀을 위해 늦지 않게 납부 해 주세요 🙏
       
 ◼︎ 팀 이름
 - ${data.team}
-      
+
+◼︎ 회비 금액
+- ${data.money}
+
 ◼︎ 회비 납부일
 - ${getHangleDate(data.date)}
       
