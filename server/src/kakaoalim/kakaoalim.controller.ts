@@ -9,7 +9,7 @@ export class KakaoalimController {
 
   @Post('am9')
   async am9() {
-    this.kakaoAlimService.sendM007();
+    this.kakaoAlimService.sendM017();
     return { message: 'ok' };
   }
 
@@ -22,12 +22,12 @@ export class KakaoalimController {
   async pm8() {
     this.kakaoAlimService.sendM012();
     this.kakaoAlimService.sendM003();
-    this.kakaoAlimService.sendT009();
+    this.kakaoAlimService.sendT019();
 
     return { message: 'ok' };
   }
   @Get('test')
   test() {
-    this.kakaoAlimService.sendM007();
+    this.kakaoAlimService.sendM017();
   }
 }
