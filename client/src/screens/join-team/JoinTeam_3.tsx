@@ -1,6 +1,4 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { RootStackParamList } from '../../navigation/RootStackParamList';
 import FinishPageView from '../../components/view/FinishPageView';
 import { Bold, Light } from '../../theme/fonts';
 import styled from 'styled-components/native';
@@ -8,6 +6,7 @@ import { colors } from '../../theme/colors';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import useGoHome from '../../hooks/useGoHome';
+import useReset from '../../hooks/useReset';
 
 const Container = styled.View`
   width: 100%;
@@ -22,12 +21,22 @@ const TeamName = styled(Container)`
   margin-top: 65px;
 `;
 
-export default function JoinTeam_6() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+export default function JoinTeam_3() {
   const goHome = useGoHome();
+  const goTeamTips = useReset({ screenName: 'TeamTips' });
   const { name } = useSelector((state: RootState) => state.propsReducer.joinTeam);
+  const { role } = useSelector((state: RootState) => state.userReducer);
+
+  const getNavigation = () => {
+    if (role === 'tips2') {
+      goTeamTips();
+    } else {
+      goHome();
+    }
+  };
+
   return (
-    <FinishPageView onPress={() => goHome()}>
+    <FinishPageView onPress={() => getNavigation()}>
       <Container>
         <Bold size={20}>팀 가입이 완료</Bold>
         <Light size={20}>되었어요!</Light>

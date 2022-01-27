@@ -23,16 +23,15 @@ const Mark = styled.View`
 `;
 
 type MenuProps = {
-  isTestLeader?: boolean;
   onLayout?: (event: LayoutChangeEvent) => void;
 };
 
-export default function Menu({ isTestLeader, onLayout }: MenuProps) {
+export default function Menu({ onLayout }: MenuProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { leader } = useSelector((state: RootState) => state.userReducer.selectedTeam);
 
   const getMark = () => {
-    if (leader || isTestLeader) {
+    if (leader) {
       return (
         <Mark>
           <CaptainMark size="small" />

@@ -25,7 +25,7 @@ export default function LoggedOutNav() {
       loginKakaoWeb();
     }
     if (token) {
-      if (role === 'complete') {
+      if (role === 'complete' || role === 'tips2') {
         resetUser();
       } else if (role === 'tips') {
         resetTips();

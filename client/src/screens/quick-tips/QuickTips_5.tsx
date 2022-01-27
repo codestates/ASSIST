@@ -23,7 +23,7 @@ export default function QuickTips_5() {
         <TopContainer>
           <Menu onLayout={onLayout} />
         </TopContainer>
-        <BottomContainer isTestSelect />
+        <BottomContainer isNewTeam />
       </HeaderContainer>
       <CardScrollView home>
         <AddTeamCard />

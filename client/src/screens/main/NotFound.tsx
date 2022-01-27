@@ -55,7 +55,9 @@ export default function NotFound() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
+    if (role !== 'tips2') {
+      dispatch(getSelectedTeam({ id: -1, name: '', leader: false }));
+    }
   }, []);
 
   const getNavigation = () => {

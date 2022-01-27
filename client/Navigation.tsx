@@ -10,6 +10,7 @@ import IntroPageNav from './src/navigation/IntroPageNav';
 import NotFound from './src/screens/main/NotFound';
 import axios, { AxiosError } from 'axios';
 import { Platform } from 'react-native';
+import TeamTipsNav from './src/navigation/TeamTipsNav';
 
 export default function Navigation() {
   const prefix = Linking.createURL('/');
@@ -175,6 +176,7 @@ export default function Navigation() {
         <rootNavigator.Screen name="Guest" component={LoggedOutNav} />
         <rootNavigator.Screen name="Intro" component={IntroPageNav} />
         <rootNavigator.Screen name="QuickTips" component={QuickTipsNav} />
+        <rootNavigator.Screen name="TeamTips" component={TeamTipsNav} />
         <rootNavigator.Screen name="User" component={LoggedInNav} />
         <rootNavigator.Screen name="NotFound" component={NotFound} />
       </rootNavigator.Navigator>

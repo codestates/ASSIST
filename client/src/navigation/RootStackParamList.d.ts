@@ -30,7 +30,7 @@ export type RootStackParamList = {
   IntroPage_4: undefined;
   IntroPage_5: undefined;
   JoinTeam: undefined;
-  JoinTeam_1: undefined | { reset: boolean; inviteCode: string };
+  JoinTeam_1: undefined | { reset: boolean; inviteCode?: string };
   JoinTeam_2: undefined;
   JoinTeam_3: undefined;
   GetStarted: undefined;
@@ -97,9 +97,10 @@ export type RootStackParamList = {
   QuickTips_5: undefined;
   QuickTips_6: undefined;
   QuickTips_7: undefined;
-  QuickTips_8: undefined;
-  QuickTips_9: undefined;
-  QuickTips_10: undefined;
-  QuickTips_11: undefined;
-  QuickTips_12: undefined;
+  TeamTips: undefined;
+  TeamTips_1: undefined;
+  TeamTips_2: undefined;
+  TeamTips_3: undefined;
+  TeamTips_4: undefined;
+  TeamTips_5: undefined;
 };

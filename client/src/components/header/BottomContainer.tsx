@@ -32,26 +32,17 @@ const TeamName = styled(Bold)`
 
 type BottomContainerProps = {
   isNewTeam?: boolean;
-  isTestSelect?: boolean;
-  isTestTeam?: boolean;
   onLayout?: (event: LayoutChangeEvent) => void;
 };
 
-export default function BottomContainer({
-  isNewTeam,
-  isTestSelect,
-  isTestTeam,
-  onLayout,
-}: BottomContainerProps) {
+export default function BottomContainer({ isNewTeam, onLayout }: BottomContainerProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { name } = useSelector((state: RootState) => state.userReducer.selectedTeam);
   const toast = useToast();
 
   const getTeamName = () => {
-    if (isTestSelect || isNewTeam) {
+    if (isNewTeam) {
       return '팀 선택';
-    } else if (isTestTeam) {
-      return 'FC 살쾡이';
     } else {
       return name;
     }

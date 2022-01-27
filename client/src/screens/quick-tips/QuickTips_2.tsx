@@ -15,7 +15,7 @@ export default function QuickTips_2() {
 
   return (
     <>
-      <LoggedInHeader isTestSelect />
+      <LoggedInHeader isNewTeam />
       <CardScrollView home>
         <AddTeamCard />
       </CardScrollView>

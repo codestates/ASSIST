@@ -15,16 +15,16 @@ const AvoidTouch = styled.View`
   position: absolute;
 `;
 
-export default function QuickTips_8() {
-  const goToNext = useReset({ screenName: 'QuickTips_9' });
+export default function TeamTips_1() {
+  const goToNext = useReset({ screenName: 'TeamTips_2' });
 
   useEffect(() => {
-    setTimeout(() => goToNext(), 1500);
+    setTimeout(() => goToNext(), 1000);
   });
 
   return (
     <>
-      <LoggedInHeader isTestTeam isTestLeader />
+      <LoggedInHeader />
       <CardScrollView home>
         <NoMatchCard isLeader />
         <AddOnsCard />

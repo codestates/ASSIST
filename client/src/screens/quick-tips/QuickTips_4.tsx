@@ -16,7 +16,7 @@ export default function QuickTips_4() {
 
   return (
     <>
-      <LoggedInHeader isTestSelect />
+      <LoggedInHeader isNewTeam />
       <CardScrollView home>
         <AddTeamCard onLayout={onLayout} />
       </CardScrollView>
