@@ -1,23 +1,23 @@
 import {
-  M001dto,
+  M011dto,
   M012dto,
   M003dto,
   M004dto,
   M005dto,
-  M006dto,
-  M007dto,
-  M008dto,
-  M019dto,
+  M016dto,
+  M017dto,
+  M018dto,
+  M029dto,
   M010dto,
 } from './dto/template.dto';
 import getHangleDate from './utlls/get_hangle_date';
 
 export class MakeM {
-  M001(to, data: M001dto) {
+  M011(to, data: M011dto) {
     let b = `[${data.team}]에 새로운 경기가 등록 되었어요 ⚽️
  지금 투표에 참여 해 보세요!
     
- ◼ 팀 이름
+ ◼︎ 팀 이름
  - ${data.team}
     
  ◼︎ 경기 일자
@@ -30,7 +30,7 @@ export class MakeM {
  - ${data.address} ${data.address2}
     
  **해당 새로운 경기 등록 알림 메시지는 고객님의 알림신청에 의해 발송되었습니다.`;
-    
+
     const buttons = [
       {
         type: 'WL',
@@ -43,8 +43,8 @@ export class MakeM {
   }
 
   M012(to: string, data: M012dto) {
-    const content = `${data.name.slice(1)}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
-팀원들이 ${data.name.slice(1)}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
+    const content = `${data.name}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
+팀원들이 ${data.name}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
 
 ◼︎ 팀 이름
 - ${data.team}
@@ -113,8 +113,8 @@ export class MakeM {
   }
 
   M004(to: string, data: M004dto) {
-    const content = `${data.name.slice(1)}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
-팀원들이 ${data.name.slice(1)}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
+    const content = `${data.name}님, 다음 풋살 경기 인원모집이 곧 마감됩니다 ⌛️
+팀원들이 ${data.name}님의 답을 기다리고 있어요. 이제 참석 여부를 확정 해 주세요!
 
 ◼︎ 팀 이름
 - ${data.team}
@@ -184,13 +184,13 @@ export class MakeM {
     return { to, content, buttons };
   }
 
-  M006(to: string, data: M006dto) {
+  M016(to: string, data: M016dto) {
     const content = `[${data.name}] 선수님, [${data.team}]의 다음 경기가 확정되었어요🎉🎉
 
 ◼︎ 팀 이름
 - ${data.team}
 
-◼ 경기 정보
+◼︎ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}
 - 주소 : ${data.address} ${data.address2}
@@ -210,10 +210,9 @@ export class MakeM {
     return { to, content, buttons };
   }
 
-  M007(to: string, data: M007dto) {
+  M017(to: string, data: M017dto) {
     let t = data.team;
     let l = data.leader;
-    let b;
 
     let c = `[${l}] 주장님, 오늘 19:00에 [${t}]의 다음 경기가 자동 '경기 확정' 될 예정입니다.
 
@@ -222,7 +221,7 @@ export class MakeM {
 ◼︎ 팀 이름
   - ${data.team}
     
-◼ 경기 정보
+◼︎ 경기 정보
   - 일자 : ${getHangleDate(data.date)}
   - 시간 : ${data.startTime} - ${data.endTime}
   - 주소 : ${data.address} ${data.address2}
@@ -242,7 +241,7 @@ export class MakeM {
     return { to, content: c, buttons };
   }
 
-  M008(to: string, data: M008dto) {
+  M018(to: string, data: M018dto) {
     const content = `아래 팀원이 경기 참석 의사를 변경했어요.
 
 ◼︎ 팀원 이름
@@ -254,7 +253,7 @@ export class MakeM {
 ◼︎ 팀 이름
 - ${data.team}
 
-◼ 경기 정보
+◼︎ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}
 - 주소 : ${data.address} ${data.address2}
@@ -280,13 +279,13 @@ export class MakeM {
     return { to, content, buttons };
   }
 
-  M019(to: string, data: M019dto) {
+  M029(to: string, data: M029dto) {
     const content = `[${data.name}]님, 아쉽게도 다음 경기가 취소 되었어요 😭
 
-◼ 팀 이름
+◼︎ 팀 이름
 - ${data.team}
      
-◼ 경기 정보
+◼︎ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}
 - 주소 : ${data.address} ${data.address2}
@@ -305,13 +304,13 @@ export class MakeM {
     return { to, content, buttons };
   }
 
-  M020(to: string, data: M010dto) {
+  M030(to: string, data: M010dto) {
     let a = `용병 구인 대행 신청이 완료 되었습니다. 1시간 뒤에 모집 결과를 알려드릴게요!
 
 ◼︎ 팀 이름
 - ${data.team}
 
-◼ 경기 정보
+◼︎ 경기 정보
 - 일자 : ${getHangleDate(data.date)}
 - 시간 : ${data.startTime} - ${data.endTime}
 - 주소 : ${data.address} ${data.address2}

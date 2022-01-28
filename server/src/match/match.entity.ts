@@ -37,6 +37,9 @@ export class Match extends BaseEntity {
   @Column()
   day: string;
 
+  @Column({ default: false })
+  dayPassing: boolean;
+
   @Column()
   startTime: string;
 

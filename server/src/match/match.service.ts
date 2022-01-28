@@ -5,8 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Raw } from 'typeorm';
-import { Alarm_schedule } from 'src/others/alarm.entity';
+import { getManager, Raw } from 'typeorm';
 import { TeamRepository } from 'src/team/team.repository';
 import { User } from 'src/user/user.entity';
 import { CreateMatchDto } from './dto/create-dto';
@@ -20,6 +19,7 @@ import { MakeM } from 'src/common/naver_sens/make_M_template';
 import { AlimtalkDto } from 'src/common/naver_sens/dto/sendTalk.dto';
 import { getDate, getTime } from 'src/common/getDate';
 import { KakaoAlimService } from 'src/kakaoalim/kakaoalim.service';
+import { convertSMS } from 'src/common/naver_sens/convert_SMS_template';
 
 @Injectable()
 export class MatchService {
@@ -44,7 +44,7 @@ export class MatchService {
     }
     const dayArr = ['일', '월', '화', '수', '목', '금', '토'];
 
-    const { date, startTime, endTime, address, address2 } = dto;
+    const { date, startTime, endTime, address, address2, daypassing } = dto;
     const alarmTime = new Date(date + ' ' + startTime);
     const day = dayArr[new Date(date).getDay()];
     alarmTime.setHours(alarmTime.getHours() - 1);
@@ -80,23 +80,31 @@ export class MatchService {
     this.userMatchRepository.createQueryBuilder().insert().into(User_match).values(data).execute();
 
     const arr: AlimtalkDto[] = [];
+    const smsArr = [];
+
     users.forEach((user) => {
+      const message = this.makeM.M011(user.phone, {
+        matchId: match.id,
+        team: name,
+        startTime,
+        date,
+        endTime,
+        address,
+        address2,
+      });
       if (user?.provider === 'kakao') {
-        const message = this.makeM.M001(user.phone, {
-          matchId: match.id,
-          team: name,
-          startTime,
-          date,
-          endTime,
-          address,
-          address2,
-        });
         arr.push(message);
+      } else {
+        smsArr.push(convertSMS(message));
       }
     });
 
     if (arr.length) {
-      this.naverSensService.sendKakaoAlarm('M001', arr);
+      this.naverSensService.sendKakaoAlarm('M011', arr);
+    }
+
+    if (smsArr.length) {
+      this.naverSensService.sendGroupSMS(smsArr);
     }
 
     return { id: match.id };
@@ -114,78 +122,87 @@ export class MatchService {
           'user.phone',
           'user.id',
           'match',
+          'team.id',
         ])
         .leftJoin('match.user_matchs', 'user_match')
         .leftJoin('user_match.user', 'user')
+        .leftJoin('match.team', 'team')
         .where('match.id = :matchId', { matchId })
         .getOne();
     } catch (err) {
       throw new InternalServerErrorException('database err');
     }
+    if (!data) throw new NotFoundException('해당 경기가 존재하지 않습니다.');
 
-    if (data) {
-      data.attend = [];
-      data.absent = [];
-      data.hold = [];
-      data.nonRes = [];
+    const checkMember = await this.teamRepository.checkMember(data.team.id, user.id);
+    if (!checkMember) throw new NotFoundException('해당 유저는 팀원이 아닙니다.');
 
-      data.user_matchs.forEach((el) => {
-        switch (el.condition) {
-          case '미응답':
-            if (el.user?.id === user.id) {
-              data.vote = 'nonRes';
-            }
-            data.nonRes.push(el);
-            break;
-          case '참석':
-            if (el.user?.id === user.id) {
-              data.vote = 'attend';
-            }
-            data.attend.push(el);
-            break;
-          case '불참':
-            if (el.user?.id === user.id) {
-              data.vote = 'absent';
-            }
-            data.absent.push(el);
-            break;
-          case '미정':
-            if (el.user?.id === user.id) {
-              data.vote = 'hold';
-            }
-            data.hold.push(el);
-            break;
-        }
-      });
-      delete data.user_matchs;
+    if (data.condition === '인원 모집 중' || data.condition === '경기 확정') {
+      if (
+        data.date < getDate() ||
+        (data.date === getDate() && data.daypassing === false && data.endTime < getTime()) ||
+        (data.date === getDate(-1) && data.daypassing === true && data.endTime < getTime())
+      ) {
+        data.condition = '경기 완료';
+        await this.matchRepository.save(data);
+      }
     }
+
+    data.attend = [];
+    data.absent = [];
+    data.hold = [];
+    data.nonRes = [];
+
+    console.log(data);
+
+    data.user_matchs.forEach((el) => {
+      switch (el.condition) {
+        case '미응답':
+          if (el.user?.id === user.id) {
+            data.vote = 'nonRes';
+          }
+          data.nonRes.push(el);
+          break;
+        case '참석':
+          if (el.user?.id === user.id) {
+            data.vote = 'attend';
+          }
+          data.attend.push(el);
+          break;
+        case '불참':
+          if (el.user?.id === user.id) {
+            data.vote = 'absent';
+          }
+          data.absent.push(el);
+          break;
+        case '미정':
+          if (el.user?.id === user.id) {
+            data.vote = 'hold';
+          }
+          data.hold.push(el);
+          break;
+      }
+    });
+    delete data.user_matchs;
 
     return data;
   }
 
-  async getlastMatchs(teamId: number, page: number, limit: number): Promise<any> {
+  async getlastMatchs(teamId: number, page: number, limit: number, user: User): Promise<any> {
+    const checkMember = await this.teamRepository.checkMember(teamId, user.id);
+    if (!checkMember) throw new NotFoundException('가입된 팀이 아닙니다.');
+
     if (!page) page = 1;
     if (!limit) limit = 5;
     const offset = page * limit - limit;
 
-    const update = await this.matchRepository
-      .createQueryBuilder()
-      .update(Match)
-      .set({
-        condition: '경기 완료',
-      })
-      .where('match.teamId = :teamId', { teamId })
-      .andWhere('match.condition IN (:...condition)', { condition: ['경기 확정', '인원 모집 중'] })
-      .andWhere(
-        'match.date < :date OR (match.teamId = :teamId and match.date = :date and match.endTime <= :endTime and match.condition != :condition2)',
-        {
-          date: getDate(),
-          endTime: getTime(),
-          condition2: '경기 취소',
-        },
-      )
-
-      .execute();
+    const queryString = `update assist.match as m set m.condition = '경기 완료' where 
+    (m.teamId = ${teamId} and m.condition in ('경기 확정', '인원 모집 중') and (date < '${getDate(
+      -1,
+    )}' or (endTime >= '${getTime()}' and ((date= '${getDate(
+      -1,
+    )}' and daypassing=true) or (date= '${getDate()}' and daypassing= false)))))`;
+    const update = await getManager().query(queryString);
 
     const [lastMatchs, count] = await this.matchRepository.findAndCount({
       where: {
@@ -239,11 +256,11 @@ export class MatchService {
     await this.matchRepository.save(match);
 
     if (updateMatchDto.condition === '경기 확정') {
-      this.kakaoAlimService.sendM006(match);
+      this.kakaoAlimService.sendM016(match);
     }
 
     if (updateMatchDto.condition === '경기 취소') {
-      this.kakaoAlimService.sendM019(match);
+      this.kakaoAlimService.sendM029(match);
     }
     return { message: 'ok' };
   }
@@ -283,7 +300,7 @@ export class MatchService {
       .execute();
 
     if (match.condition === '경기 확정') {
-      this.kakaoAlimService.sendM008(match, beforeCondi, afterCondi);
+      this.kakaoAlimService.sendM018(match, beforeCondi, afterCondi);
     }
 
     return { message: 'ok' };
@@ -304,6 +321,7 @@ export class MatchService {
     if (!data.length) return { message: '확정할 경기가 없습니다.' };
 
     const matchIdarr = data.map((el) => el.id);
+
     const update = await this.matchRepository
       .createQueryBuilder()
       .update(Match)
@@ -315,7 +333,7 @@ export class MatchService {
 
     console.log('경기확정완료', update);
 
-    this.kakaoAlimService.autoFixMatchSendM006(data);
+    this.kakaoAlimService.autoFixMatchSendM016(data);
     return data;
   }
 
@@ -343,7 +361,7 @@ export class MatchService {
     참가비 ${merceneryDto.money}원`;
 
     this.naverSensService.sendSMS(process.env.HOST_PHONE, template, 'LMS');
-    this.kakaoAlimService.sendM020(match, merceneryDto, user);
+    this.kakaoAlimService.sendM030(match, merceneryDto, user);
     return { message: 'ok' };
   }
 }

@@ -1,4 +1,4 @@
-export class M001dto {
+export class M011dto {
   matchId: number;
   team: string;
   startTime: string;
@@ -22,20 +22,20 @@ export class M012dto {
 export class M003dto extends M012dto {}
 export class M004dto extends M012dto {}
 
-export class M005dto extends M001dto {
+export class M005dto extends M011dto {
   attend: number;
   absent: number;
   hold: number;
   nonRes: number;
 }
 
-export class M006dto extends M001dto {
+export class M016dto extends M011dto {
   name: string;
   attend: number;
   absent: number;
 }
 
-export class M007dto extends M006dto {
+export class M017dto extends M016dto {
   leader: string;
 }
 
@@ -44,7 +44,7 @@ enum voteCondition {
   absent = '불참',
   hold = '미정',
 }
-export class M008dto {
+export class M018dto {
   matchId: string;
   team: string;
   startTime: string;
@@ -58,7 +58,7 @@ export class M008dto {
   after: voteCondition;
 }
 
-export class M019dto {
+export class M029dto {
   matchId: string;
   team: string;
   startTime: string;
@@ -69,6 +69,7 @@ export class M019dto {
   name: string;
   reason: string;
   to: string;
+  provider?: string;
 }
 
 export class M010dto {
@@ -125,10 +126,11 @@ export class T007dto {
   team: string;
   name: string;
 }
-export class T009dto {
+export class T019dto {
   teamId: number;
   team: string;
   date: string;
   bank: string;
+  money: string;
   accountNumber: string;
 }

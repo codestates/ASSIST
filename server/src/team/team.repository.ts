@@ -1,5 +1,5 @@
 import { Team } from './team.entity';
-import { EntityRepository, Repository, getRepository } from 'typeorm';
+import { EntityRepository, Repository, getManager } from 'typeorm';
 import { CreateTeamDto } from './dto/create-dto';
 import { v4 as uuid } from 'uuid';
 import { User } from 'src/user/user.entity';
@@ -69,5 +69,13 @@ export class TeamRepository extends Repository<Team> {
       where: { id: teamId, leaderId: userId },
     });
     return team ? true : false;
+  }
+
+  async checkMember(teamId: number, userId: number) {
+    const data: [] = await getManager().query(
+      `select * from user_team where teamId = ${teamId} and userId =${userId}`,
+    );
+
+    return data.length ? true : false;
   }
 }

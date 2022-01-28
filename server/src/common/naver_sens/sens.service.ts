@@ -40,6 +40,36 @@ export class NaverSensService {
       });
   }
 
+  async sendGroupSMS(arr) {
+    const url = `https://sens.apigw.ntruss.com/sms/v2/services/${process.env.SMS_SERVICEID}/messages`;
+    const body = {
+      type: 'LMS',
+      contentType: 'COMM',
+      countryCode: '82',
+      content: '테스트',
+      from: process.env.HOST_PHONE, // 발신자 번호
+      messages: arr,
+    };
+
+    const options = {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-ncp-iam-access-key': process.env.NCP_ACCESS,
+        'x-ncp-apigw-timestamp': Date.now().toString(),
+        'x-ncp-apigw-signature-v2': this.makeSignature(),
+      },
+    };
+    axios
+      .post(url, body, options)
+      .then(async (res) => {
+        console.log(`${body.messages?.length}명에게 문자보내기 성공`);
+      })
+      .catch((err) => {
+        console.error(err.response.data);
+        throw new InternalServerErrorException('문자보내기 실패');
+      });
+  }
+
   async sendKakaoAlarm(code: string, infoArr: AlimtalkDto[]): Promise<void> {
     const url = `https://sens.apigw.ntruss.com/alimtalk/v2/services/${process.env.KAKAOBIZ_SERVICEID}/messages`;
 
