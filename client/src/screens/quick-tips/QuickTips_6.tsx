@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components/native';
 import FakeTeamSelector from '../../components/button/FakeTeamSelector';
 import Menu from '../../components/button/Menu';
@@ -9,6 +9,7 @@ import TopContainer from '../../components/header/TopContainer';
 import BubbleView from '../../components/view/BubbleView';
 import CardScrollView from '../../components/view/CardScrollView';
 import ShadeView from '../../components/view/ShadeView';
+import useFadeAnim from '../../hooks/useFadeAnim';
 import useOnLayout from '../../hooks/useOnLayout';
 import useReset from '../../hooks/useReset';
 import { colors } from '../../theme/colors';
@@ -37,6 +38,21 @@ export default function QuickTips_6() {
   const { layout, onLayout } = useOnLayout();
   const goToNext = useReset({ screenName: 'QuickTips_7' });
   const goToPrevious = useReset({ screenName: 'QuickTips_5' });
+  const { fadeAnim, fadeIn, fadeOut } = useFadeAnim({ duration: 200 });
+
+  useEffect(() => {
+    fadeIn();
+  }, []);
+
+  const onPressNext = () => {
+    fadeOut();
+    setTimeout(() => goToNext(), 200);
+  };
+
+  const onPressPrevious = () => {
+    fadeOut();
+    setTimeout(() => goToPrevious(), 200);
+  };
 
   return (
     <>
@@ -59,8 +75,9 @@ export default function QuickTips_6() {
       </CardScrollView>
       {layout ? (
         <ShadeView>
-          <FakeTeamSelector layout={layout} />
+          <FakeTeamSelector fadeAnim={fadeAnim} layout={layout} />
           <BubbleView
+            fadeAnim={fadeAnim}
             layout={layout}
             title="4.용병활동"
             description={
@@ -70,8 +87,8 @@ export default function QuickTips_6() {
               </Regular>
             }
             pointerLeftVal={14}
-            onPressNext={goToNext}
-            onPressPrevious={goToPrevious}
+            onPressNext={onPressNext}
+            onPressPrevious={onPressPrevious}
           />
         </ShadeView>
       ) : (

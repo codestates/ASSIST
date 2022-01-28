@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AddOnsCard from '../../components/card/AddOnsCard';
 import FakeNoMatchCard from '../../components/card/FakeNoMatchCard';
 import NoMatchCard from '../../components/card/NoMatchCard';
@@ -6,6 +6,7 @@ import LoggedInHeader from '../../components/header/LoggedInHeader';
 import BubbleView from '../../components/view/BubbleView';
 import CardScrollView from '../../components/view/CardScrollView';
 import ShadeView from '../../components/view/ShadeView';
+import useFadeAnim from '../../hooks/useFadeAnim';
 import useOnLayout from '../../hooks/useOnLayout';
 import useReset from '../../hooks/useReset';
 import { Regular } from '../../theme/fonts';
@@ -14,6 +15,21 @@ export default function TeamTips_4() {
   const { layout, onLayout } = useOnLayout();
   const goToPrevious = useReset({ screenName: 'TeamTips_2' });
   const goToNext = useReset({ screenName: 'TeamTips_5' });
+  const { fadeAnim, fadeIn, fadeOut } = useFadeAnim({ duration: 200 });
+
+  useEffect(() => {
+    fadeIn();
+  }, []);
+
+  const onPressNext = () => {
+    fadeOut();
+    setTimeout(() => goToNext(), 200);
+  };
+
+  const onPressPrevious = () => {
+    fadeOut();
+    setTimeout(() => goToPrevious(), 200);
+  };
 
   return (
     <>
@@ -24,8 +40,9 @@ export default function TeamTips_4() {
       </CardScrollView>
       {layout ? (
         <ShadeView>
-          <FakeNoMatchCard layout={layout} />
+          <FakeNoMatchCard fadeAnim={fadeAnim} layout={layout} />
           <BubbleView
+            fadeAnim={fadeAnim}
             layout={layout}
             title="다음 경기: ① 등록 전"
             description={
@@ -35,8 +52,8 @@ export default function TeamTips_4() {
               </Regular>
             }
             pointerLeftVal={25}
-            onPressNext={goToNext}
-            onPressPrevious={goToPrevious}
+            onPressNext={onPressNext}
+            onPressPrevious={onPressPrevious}
           />
         </ShadeView>
       ) : (

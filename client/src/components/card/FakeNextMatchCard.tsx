@@ -5,6 +5,7 @@ import CommonModalButton from '../button/CommonModalButton';
 import GatheringMark from '../mark/GatheringMark';
 import Card from './Card';
 import { LayoutType } from '../../../@types/global/types';
+import { Animated } from 'react-native';
 
 const TitleView = styled.View`
   flex-direction: row;
@@ -21,11 +22,12 @@ const SubtitleView = styled.View`
 
 type FakeNextMatchCardProps = {
   layout?: LayoutType;
+  fadeAnim?: Animated.Value;
 };
 
-export default function FakeNextMatchCard({ layout }: FakeNextMatchCardProps) {
+export default function FakeNextMatchCard({ fadeAnim, layout }: FakeNextMatchCardProps) {
   return (
-    <Card layout={layout}>
+    <Card fadeAnim={fadeAnim} layout={layout}>
       <TitleView>
         <Bold size={20}>🗓 다음 경기</Bold>
         <GatheringMark />
@@ -36,7 +38,7 @@ export default function FakeNextMatchCard({ layout }: FakeNextMatchCardProps) {
         <Regular gray>서울특별시 용산구 용산대로12번길</Regular>
         <Regular gray>3, 4층</Regular>
       </SubtitleView>
-      <CommonModalButton onPress={() => {}} disabled isFake text="투표하기" color="blue" />
+      <CommonModalButton onPress={() => {}} disabled isFake text="투표하기  >" color="blue" />
     </Card>
   );
 }

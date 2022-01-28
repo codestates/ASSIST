@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { NextMatch } from '../../../@types/global/types';
 import AddOnsCard from '../../components/card/AddOnsCard';
@@ -9,6 +10,7 @@ import BubbleView from '../../components/view/BubbleView';
 import CardScrollView from '../../components/view/CardScrollView';
 import ShadeView from '../../components/view/ShadeView';
 import useEditProfile from '../../hooks/useEditProfile';
+import useFadeAnim from '../../hooks/useFadeAnim';
 import useOnLayout from '../../hooks/useOnLayout';
 import useReset from '../../hooks/useReset';
 import { changeRole } from '../../store/actions/userAction';
@@ -22,7 +24,17 @@ export default function TeamTips_5() {
   const goLeaderScreen = useReset({ screenName: 'TeamTips_3' });
   const goFollowerScreen = useReset({ screenName: 'TeamTips_4' });
   const editProfile = useEditProfile({ role: 'complete' });
-  const reset = useReset({ screenName: 'User' });
+  const goToNext = useReset({ screenName: 'TeamTips_6' });
+  const { fadeAnim, fadeIn, fadeOut } = useFadeAnim({ duration: 200 });
+
+  useEffect(() => {
+    fadeIn();
+  }, []);
+
+  const onPressPrevious = () => {
+    fadeOut();
+    setTimeout(() => goToPrevious(), 200);
+  };
 
   const goToPrevious = () => {
     if (isLeader) {
@@ -32,10 +44,13 @@ export default function TeamTips_5() {
     }
   };
 
-  const goToNext = async () => {
+  const onPressNext = async () => {
     await editProfile();
     dispatch(changeRole('complete'));
-    reset();
+    fadeOut();
+    setTimeout(() => {
+      goToNext();
+    }, 200);
   };
 
   const dummyData: NextMatch = {
@@ -61,8 +76,9 @@ export default function TeamTips_5() {
       </CardScrollView>
       {layout ? (
         <ShadeView>
-          <FakeNextMatchCard layout={layout} />
+          <FakeNextMatchCard fadeAnim={fadeAnim} layout={layout} />
           <BubbleView
+            fadeAnim={fadeAnim}
             layout={layout}
             title="다음 경기: ② 등록 후"
             description={
@@ -73,8 +89,8 @@ export default function TeamTips_5() {
               </Regular>
             }
             pointerLeftVal={25}
-            onPressNext={goToNext}
-            onPressPrevious={goToPrevious}
+            onPressNext={onPressNext}
+            onPressPrevious={onPressPrevious}
             nextBtnText="완료"
           />
         </ShadeView>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 import { LayoutType } from '../../../@types/global/types';
 import { colors } from '../../theme/colors';
@@ -20,11 +21,12 @@ const SubtitleText = styled(Regular)`
 type FakeNoMatchCardProps = {
   isLeader?: boolean;
   layout?: LayoutType;
+  fadeAnim?: Animated.Value;
 };
 
-export default function FakeNoMatchCard({ isLeader, layout }: FakeNoMatchCardProps) {
+export default function FakeNoMatchCard({ fadeAnim, isLeader, layout }: FakeNoMatchCardProps) {
   return (
-    <Card layout={layout}>
+    <Card fadeAnim={fadeAnim} layout={layout}>
       <TitleText>예정된 경기가 없어요 🤔</TitleText>
       <SubtitleText isLeader={isLeader}>
         {isLeader ? '지금 새로운 경기 일정을 등록 해 보세요!' : '새로운 경기가 생기면 알려드릴게요'}

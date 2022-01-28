@@ -1,11 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
+import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 import { LayoutType } from '../../../@types/global/types';
 import { colors } from '../../theme/colors';
 import { Bold } from '../../theme/fonts';
 
-const Container = styled.View`
+const Container = styled(Animated.View)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -26,11 +27,12 @@ const Title = styled(Bold)`
 type FakeTeamSelectorProps = {
   layout: LayoutType;
   teamName?: string;
+  fadeAnim?: Animated.Value;
 };
 
-export default function FakeTeamSelector({ layout, teamName }: FakeTeamSelectorProps) {
+export default function FakeTeamSelector({ fadeAnim, layout, teamName }: FakeTeamSelectorProps) {
   return (
-    <Container teamName={teamName} layout={layout}>
+    <Container style={{ opacity: fadeAnim }} teamName={teamName} layout={layout}>
       <Title teamName={teamName}>{teamName ? teamName : '용병활동'}</Title>
       {teamName && <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />}
     </Container>
