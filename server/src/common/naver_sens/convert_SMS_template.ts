@@ -1,6 +1,7 @@
 import { AlimtalkDto } from './dto/sendTalk.dto';
 
 export function convertSMS(form: AlimtalkDto) {
+  if (!form.to) return;
   const to = form.to.replace(/-/g, '');
   let content = form.content.replace(/◼|🎉/g, '') + '\n';
   content = content.replace(/🙏|⚽️|⌛️|😭|🤗/, '');
