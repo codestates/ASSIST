@@ -5,6 +5,7 @@ import TeamTips_3 from '../screens/team-tips/TeamTips_3';
 import TeamTips_2 from '../screens/team-tips/TeamTips_2';
 import TeamTips_4 from '../screens/team-tips/TeamTips_4';
 import TeamTips_5 from '../screens/team-tips/TeamTips_5';
+import TeamTips_6 from '../screens/team-tips/TeamTips_6';
 
 const TeamTips = createStackNavigator();
 
@@ -45,6 +46,13 @@ export default function TeamTipsNav() {
           headerShown: false,
         }}
         component={TeamTips_5}
+      />
+      <TeamTips.Screen
+        name="TeamTips_6"
+        options={{
+          headerShown: false,
+        }}
+        component={TeamTips_6}
       />
     </TeamTips.Navigator>
   );

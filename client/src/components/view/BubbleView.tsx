@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { Dimensions } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { LayoutType } from '../../../@types/global/types';
 import { colors } from '../../theme/colors';
@@ -13,7 +13,7 @@ const getTopLocation = (layout?: LayoutType) => {
   }
 };
 
-const Container = styled.View`
+const Container = styled(Animated.View)`
   width: ${width - 20}px;
   align-self: center;
   top: ${(props: { top?: number }) => (props.top ? `${props.top}px` : 'auto')};
@@ -88,6 +88,7 @@ interface BubbleViewProps extends PointerProps {
   isFirst?: boolean;
   onPressNext: () => void;
   onPressPrevious: () => void;
+  fadeAnim?: Animated.Value;
 }
 
 export default function BubbleView({
@@ -101,9 +102,10 @@ export default function BubbleView({
   onPressPrevious,
   pointerLeftVal,
   isPointerDown,
+  fadeAnim,
 }: BubbleViewProps) {
   return (
-    <Container top={getTopLocation(layout)}>
+    <Container style={{ opacity: fadeAnim }} top={getTopLocation(layout)}>
       <Bubble>
         <Title>
           <Bold size={18}>{title}</Bold>

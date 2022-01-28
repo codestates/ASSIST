@@ -1,10 +1,11 @@
 import React from 'react';
+import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 import { LayoutProps, LayoutType } from '../../../@types/global/types';
 import { colors } from '../../theme/colors';
 import { Regular } from '../../theme/fonts';
 
-const Container = styled.View`
+const Container = styled(Animated.View)`
   border-radius: 15px;
   position: absolute;
   align-items: center;
@@ -32,9 +33,10 @@ type FakeButtonProps = {
   text: string;
   color: string;
   layout: LayoutType;
+  fadeAnim?: Animated.Value;
 };
 
-export default function FakeButton({ text, color, layout }: FakeButtonProps) {
+export default function FakeButton({ fadeAnim, text, color, layout }: FakeButtonProps) {
   const getTextcolor = () => {
     if (color === 'blue') {
       return colors.white;
@@ -54,7 +56,7 @@ export default function FakeButton({ text, color, layout }: FakeButtonProps) {
   };
 
   return (
-    <Container layout={layout} color={getButtonColor()}>
+    <Container style={{ opacity: fadeAnim }} layout={layout} color={getButtonColor()}>
       <Text color={getTextcolor()}>{text}</Text>
     </Container>
   );

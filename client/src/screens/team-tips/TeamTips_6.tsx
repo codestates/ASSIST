@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import AddOnsCard from '../../components/card/AddOnsCard';
@@ -19,15 +20,23 @@ const AvoidTouch = styled.View`
   position: absolute;
 `;
 
-export default function TeamTips_1() {
+export default function TeamTips_6() {
   const { leader: isLeader } = useSelector((state: RootState) => state.userReducer.selectedTeam);
-  const goToNext = useReset({ screenName: 'TeamTips_2' });
-  const { fadeAnim, fadeIn } = useFadeAnim({ duration: 1000 });
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const reset = useReset({ screenName: 'User' });
+
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  };
 
   useEffect(() => {
-    fadeIn();
-    setTimeout(() => goToNext(), 1000);
-  });
+    fadeOut();
+    setTimeout(() => reset(), 1000);
+  }, []);
 
   return (
     <>

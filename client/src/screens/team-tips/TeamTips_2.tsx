@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import FakeTeamSelector from '../../components/button/FakeTeamSelector';
@@ -11,6 +11,7 @@ import TopContainer from '../../components/header/TopContainer';
 import BubbleView from '../../components/view/BubbleView';
 import CardScrollView from '../../components/view/CardScrollView';
 import ShadeView from '../../components/view/ShadeView';
+import useFadeAnim from '../../hooks/useFadeAnim';
 import useOnLayout from '../../hooks/useOnLayout';
 import useReset from '../../hooks/useReset';
 import { RootState } from '../../store/reducers';
@@ -43,6 +44,11 @@ export default function TeamTips_2() {
   const { leader: isLeader, name } = useSelector(
     (state: RootState) => state.userReducer.selectedTeam,
   );
+  const { fadeAnim, fadeIn, fadeOut } = useFadeAnim({ duration: 200 });
+
+  useEffect(() => {
+    fadeIn();
+  }, []);
 
   const goToNext = () => {
     if (isLeader) {
@@ -50,6 +56,11 @@ export default function TeamTips_2() {
     } else {
       goFollowerScreen();
     }
+  };
+
+  const onPressNext = () => {
+    fadeOut();
+    setTimeout(() => goToNext(), 200);
   };
 
   return (
@@ -69,13 +80,14 @@ export default function TeamTips_2() {
         </BottomContainer>
       </HeaderContainer>
       <CardScrollView home>
-        <NoMatchCard isLeader />
+        <NoMatchCard isLeader={isLeader} />
         <AddOnsCard />
       </CardScrollView>
       {layout ? (
         <ShadeView>
-          <FakeTeamSelector teamName={name} layout={layout} />
+          <FakeTeamSelector fadeAnim={fadeAnim} teamName={name} layout={layout} />
           <BubbleView
+            fadeAnim={fadeAnim}
             isFirst
             layout={layout}
             title="팀 선택"
@@ -86,7 +98,7 @@ export default function TeamTips_2() {
               </Regular>
             }
             pointerLeftVal={25}
-            onPressNext={goToNext}
+            onPressNext={onPressNext}
             onPressPrevious={() => {}}
           />
         </ShadeView>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutChangeEvent, useWindowDimensions } from 'react-native';
+import { Animated, LayoutChangeEvent, useWindowDimensions } from 'react-native';
 import styled from 'styled-components/native';
 import { LayoutType } from '../../../@types/global/types';
 import { colors } from '../../theme/colors';
@@ -10,7 +10,7 @@ type StyleProps = {
   layout?: LayoutType;
 };
 
-const Container = styled.View`
+const Container = styled(Animated.View)`
   box-shadow: ${(props: StyleProps) =>
     props.layout ? `0px 0px 5px ${colors.white}` : '0px 5px 3px rgba(0, 0, 0, 0.2)'};
   background-color: ${colors.white};
@@ -29,12 +29,13 @@ type CardProps = {
   children: React.ReactNode;
   margin?: number;
   onLayout?: (event: LayoutChangeEvent) => void;
+  fadeAnim?: Animated.Value;
 };
 
-export default function Card({ children, layout, onLayout }: CardProps) {
+export default function Card({ fadeAnim, children, layout, onLayout }: CardProps) {
   const { width } = useWindowDimensions();
   return (
-    <Container onLayout={onLayout} layout={layout} width={width}>
+    <Container style={{ opacity: fadeAnim }} onLayout={onLayout} layout={layout} width={width}>
       {children}
     </Container>
   );

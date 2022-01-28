@@ -103,4 +103,5 @@ export type RootStackParamList = {
   TeamTips_3: undefined;
   TeamTips_4: undefined;
   TeamTips_5: undefined;
+  TeamTips_6: undefined;
 };
