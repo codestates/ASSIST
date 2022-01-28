@@ -4,7 +4,7 @@ import { MakeM } from 'src/common/naver_sens/make_M_template';
 import { NaverSensService } from 'src/common/naver_sens/sens.service';
 import { getDate } from 'src/common/getDate';
 import { Match } from 'src/match/match.entity';
-import { M029dto, M010dto, T019dto } from 'src/common/naver_sens/dto/template.dto';
+import { M029dto, M010dto, T019dto, M005dto } from 'src/common/naver_sens/dto/template.dto';
 import { MakeU } from 'src/common/naver_sens/make_U_template';
 import { MakeT } from 'src/common/naver_sens/make_T_template';
 import { convertSMS } from 'src/common/naver_sens/convert_SMS_template';
@@ -127,6 +127,131 @@ export class KakaoAlimService {
     }
   }
 
+  async sendM004() {
+    let today = getDate();
+
+    const queryString = `SELECT b.name, b.phone,b.provider, d.name as team, c.id,c.date,c.startTime,c.endTime, c.deadline, c.address,c.address2
+      FROM user_match as a join user as b on b.id = a.userId
+      join assist.match as c on c.id = a.matchId join team as d on d.id = c.teamId 
+      where c.deadline = '${today}' and a.condition in ('미응답','미정') and c.condition = '인원 모집 중' `;
+
+    let data: [] = await getManager().query(queryString);
+
+    if (data.length) {
+      const kakaoArr = [];
+      const smsArr = [];
+      data.forEach(
+        ({
+          name,
+          phone,
+          team,
+          date,
+          startTime,
+          endTime,
+          deadline,
+          address,
+          address2,
+          id,
+          provider,
+        }) => {
+          const form = this.makeM.M004(phone, {
+            matchId: id,
+            name,
+            team,
+            date,
+            startTime,
+            endTime,
+            deadline,
+            address,
+            address2,
+          });
+
+          if (provider === 'kakao') {
+            kakaoArr.push(kakaoArr);
+          } else {
+            smsArr.push(convertSMS(form));
+          }
+        },
+      );
+
+      if (kakaoArr.length) {
+        this.naverSensService.sendKakaoAlarm('M004', kakaoArr);
+      }
+      if (smsArr.length) {
+        this.naverSensService.sendGroupSMS(smsArr);
+      }
+    }
+  }
+
+  async sendM005() {
+    let today = getDate();
+
+    let data: any = await getRepository(Match)
+      .createQueryBuilder('match')
+      .leftJoinAndSelect('match.team', 'team')
+      .leftJoinAndSelect('team.leaderId', 'leaderId')
+      .leftJoinAndSelect('match.user_matchs', 'user_match')
+      .leftJoinAndSelect('user_match.user', 'user')
+      .where('match.deadline = :deadline', { deadline: today })
+      .andWhere('match.condition = :condition', { condition: '인원 모집 중' })
+      .getMany();
+
+    if (!data.length) {
+      return { message: '마감 예정 경기가 없습니다.' };
+    }
+
+    let kakaoArr = [];
+    let smsArr = [];
+
+    data.forEach((item) => {
+      let attend = 0;
+      let absent = 0;
+      let hold = 0;
+      let nonRes = 0;
+      item.user_matchs.forEach((el) => {
+        if (el.condition === '참석') {
+          attend++;
+        } else if (el.condition === '불참') {
+          absent++;
+        } else if (el.condition === '미정') {
+          hold++;
+        } else {
+          nonRes++;
+        }
+      });
+      const payload: M005dto = {
+        matchId: item.id,
+        team: item.team?.name,
+        startTime: item.startTime,
+        endTime: item.endTime,
+        address: item.address,
+        address2: item.address2,
+        date: item.date,
+        to: item.team?.leaderId.phone,
+        provider: item.team?.leaderId.provider,
+        attend,
+        absent,
+        hold,
+        nonRes,
+      };
+      let form = this.makeM.M005(payload.to, payload);
+
+      if (payload.provider === 'kakao') {
+        kakaoArr.push(form);
+      } else {
+        smsArr.push(form);
+      }
+    });
+
+    if (kakaoArr.length) {
+      this.naverSensService.sendKakaoAlarm('M005', kakaoArr);
+    }
+
+    if (smsArr.length) {
+      this.naverSensService.sendGroupSMS(smsArr);
+    }
+  }
+
   async autoFixMatchSendM016(data) {
     let kakaoArr = [];
     let smsArr = [];
@@ -210,39 +335,38 @@ export class KakaoAlimService {
     data.forEach((item) => {
       let attend = 0;
       let absent = 0;
-      let arr2 = [];
       item.user_matchs.forEach((el) => {
-        const payload: any = {
-          matchId: item.id,
-          team: item.team.name,
-          startTime: item.startTime,
-          endTime: item.endTime,
-          address: item.address,
-          address2: item.address2,
-          date: item.date,
-          leader: item.team.leaderId.name,
-          to: item.team.leaderId.phone,
-          provider: el.user.provider,
-        };
-        arr2.push(payload);
-        if (el.condition === '찬성') {
+        if (el.condition === '참석') {
           attend++;
         } else {
           absent++;
         }
       });
-      arr2.forEach((el) => {
-        el.attend = attend;
-        el.absent = absent;
-        let form = this.makeM.M017(el.to, el);
+      const payload: any = {
+        matchId: item.id,
+        team: item.team?.name,
+        startTime: item.startTime,
+        endTime: item.endTime,
+        address: item.address,
+        address2: item.address2,
+        date: item.date,
+        leader: item.team?.leaderId.name,
+        to: item.team?.leaderId.phone,
+        provider: item.team?.leaderId.provider,
+        attend,
+        absent,
+      };
 
-        if (el.provider === 'kakao') {
+      if (payload.to) {
+        let form = this.makeM.M017(payload.to, payload);
+        if (payload.provider === 'kakao') {
           kakaoArr.push(form);
         } else {
           smsArr.push(convertSMS(form));
         }
-      });
+      }
     });
+
     if (kakaoArr.length) {
       this.naverSensService.sendKakaoAlarm('M017', kakaoArr);
     }

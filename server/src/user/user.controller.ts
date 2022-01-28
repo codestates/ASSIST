@@ -100,9 +100,10 @@ export class UserController {
   async deleteUser(@Req() req: Request) {
     const userInfo = req.user;
     await this.userService.deleteUser(userInfo);
+
+    await this.kakaoAlimService.sendU002(userInfo);
     if (userInfo.provider === 'kakao') {
       const kakaoId = userInfo.password;
-      await this.kakaoAlimService.sendU002(userInfo);
       await this.userService.deleteKakaoLink(kakaoId);
     }
     return { message: 'ok' };

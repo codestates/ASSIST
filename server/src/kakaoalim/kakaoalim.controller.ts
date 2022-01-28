@@ -12,9 +12,14 @@ export class KakaoalimController {
     this.kakaoAlimService.sendM017();
     return { message: 'ok' };
   }
-
+  @Post('pm6')
+  async pm6() {
+    this.kakaoAlimService.sendM004();
+    return { message: 'ok' };
+  }
   @Post('pm7')
   async pm7() {
+    this.kakaoAlimService.sendM005();
     this.matchService.autoFixMatch();
     return { message: 'ok' };
   }
@@ -26,8 +31,8 @@ export class KakaoalimController {
 
     return { message: 'ok' };
   }
-  @Get('test')
-  test() {
-    this.kakaoAlimService.sendM017();
-  }
+  // @Get('test')
+  // async test() {
+  //   return await this.kakaoAlimService.sendM017();
+  // }
 }

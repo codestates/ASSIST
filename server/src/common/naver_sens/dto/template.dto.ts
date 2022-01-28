@@ -23,6 +23,8 @@ export class M003dto extends M012dto {}
 export class M004dto extends M012dto {}
 
 export class M005dto extends M011dto {
+  to: string;
+  provider: string;
   attend: number;
   absent: number;
   hold: number;

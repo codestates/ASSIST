@@ -23,6 +23,11 @@ async function bootstrap() {
     axios.post(`${process.env.SERVER_URL}/kakaoalim/am9`, {}, { withCredentials: true });
   });
 
+  let pm6 = schedule.scheduleJob('00 18 * * *', () => {
+    console.log('오후 6시 예약 시작');
+    axios.post(`${process.env.SERVER_URL}/kakaoalim/pm6`, {}, { withCredentials: true });
+  });
+
   let pm7 = schedule.scheduleJob('00 19 * * *', () => {
     console.log('오후 7시 예약 시작');
     axios.post(`${process.env.SERVER_URL}/kakaoalim/pm7`, {}, { withCredentials: true });
