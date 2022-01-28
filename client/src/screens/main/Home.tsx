@@ -22,7 +22,7 @@ type TeamProps = StackScreenProps<RootStackParamList, 'Team'>;
 export default function Home({ route }: TeamProps) {
   const dispatch = useDispatch();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const { token, selectedTeam, id } = useSelector((state: RootState) => state.userReducer);
+  const { token, selectedTeam, id, role } = useSelector((state: RootState) => state.userReducer);
   const routeTeamId = Number(route.params?.teamId);
   const [nextMatch, setNextMatch] = useState<NextMatch>(null);
 
@@ -68,6 +68,9 @@ export default function Home({ route }: TeamProps) {
             leader: data.leader,
           }),
         );
+        if (role === 'tips2') {
+          return navigation.replace('TeamTips');
+        }
         setNextMatch(data.nextMatch);
         if (Platform.OS === 'web') {
           window.history.replaceState(null, 'ASSIST', String(data.id));
@@ -90,6 +93,9 @@ export default function Home({ route }: TeamProps) {
         dispatch(
           getSelectedTeam({ id: teamId, name: data.name, leader: data.leaderId === Number(id) }),
         );
+        if (role === 'tips2') {
+          navigation.replace('TeamTips');
+        }
         setNextMatch(data.nextMatch);
         if (Platform.OS === 'web') {
           window.history.replaceState(null, 'ASSIST', String(teamId));

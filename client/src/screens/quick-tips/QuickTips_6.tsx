@@ -24,7 +24,7 @@ const BottomContainer = styled.View`
 const TeamSelector = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  width: 85px;
+  margin-right: 15px;
 `;
 
 const TeamName = styled(Bold)`

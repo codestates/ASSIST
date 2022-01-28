@@ -24,7 +24,7 @@ export type UserInfoType = {
   provider: string;
 };
 
-type RoleType = '' | 'tips' | 'complete';
+type RoleType = '' | 'tips' | 'tips2' | 'complete';
 
 export type SelectedTeamType = {
   id: number;

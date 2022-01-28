@@ -7,11 +7,6 @@ import QuickTips_4 from '../screens/quick-tips/QuickTips_4';
 import QuickTips_5 from '../screens/quick-tips/QuickTips_5';
 import QuickTips_6 from '../screens/quick-tips/QuickTips_6';
 import QuickTips_7 from '../screens/quick-tips/QuickTips_7';
-import QuickTips_8 from '../screens/quick-tips/QuickTips_8';
-import QuickTips_9 from '../screens/quick-tips/QuickTips_9';
-import QuickTips_10 from '../screens/quick-tips/QuickTips_10';
-import QuickTips_11 from '../screens/quick-tips/QuickTips_11';
-import QuickTips_12 from '../screens/quick-tips/QuickTips_12';
 
 const QuickTips = createStackNavigator();
 
@@ -66,41 +61,6 @@ export default function QuickTipsNav() {
           headerShown: false,
         }}
         component={QuickTips_7}
-      />
-      <QuickTips.Screen
-        name="QuickTips_8"
-        options={{
-          headerShown: false,
-        }}
-        component={QuickTips_8}
-      />
-      <QuickTips.Screen
-        name="QuickTips_9"
-        options={{
-          headerShown: false,
-        }}
-        component={QuickTips_9}
-      />
-      <QuickTips.Screen
-        name="QuickTips_10"
-        options={{
-          headerShown: false,
-        }}
-        component={QuickTips_10}
-      />
-      <QuickTips.Screen
-        name="QuickTips_11"
-        options={{
-          headerShown: false,
-        }}
-        component={QuickTips_11}
-      />
-      <QuickTips.Screen
-        name="QuickTips_12"
-        options={{
-          headerShown: false,
-        }}
-        component={QuickTips_12}
       />
     </QuickTips.Navigator>
   );

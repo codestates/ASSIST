@@ -96,7 +96,7 @@ export default function GetStarted_Login({ route }: GetStartedProps) {
       });
       dispatch(getUserInfo(data));
       dispatch(getAccessToken(accessToken));
-      if (data.role === 'complete') {
+      if (data.role === 'complete' || data.role === 'tips2') {
         resetUser();
       } else if (data.role === 'tips') {
         resetTips();

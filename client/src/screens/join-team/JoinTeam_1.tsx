@@ -19,6 +19,8 @@ import axios, { AxiosResponse } from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { addJoinTeam } from '../../store/actions/propsAction';
+import useReset from '../../hooks/useReset';
+import { logOutUser } from '../../store/actions/userAction';
 
 const schema = yup.object({
   inviteCode: yup
@@ -49,6 +51,7 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
   const { token } = useSelector((state: RootState) => state.userReducer);
   const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const logoutUser = useReset({ screenName: 'Guest' });
   const [modalVisible, setModalVisible] = useState(false);
 
   const showErrorModal = () => {
@@ -65,11 +68,10 @@ export default function JoinTeam_1({ route }: JoinTeamProps) {
   const clearError = () => setErrorMessage('');
 
   useEffect(() => {
-    if (!token) {
-      return navigation.replace('Guest');
-    }
-
     const unsubscribe = navigation.addListener('focus', () => {
+      if (!token) {
+        return logOutUser();
+      }
       if (route.params?.reset) {
         reset({ inviteCode: '' });
       }

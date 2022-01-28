@@ -34,7 +34,7 @@ export default function QuickTips_3() {
 
   return (
     <>
-      <LoggedInHeader isTestSelect />
+      <LoggedInHeader isNewTeam />
       <CardScrollView home>
         <Card>
           <TitleText>소속팀을 추가해주세요 🤔</TitleText>

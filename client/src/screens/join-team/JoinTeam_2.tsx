@@ -10,7 +10,7 @@ import { colors } from '../../theme/colors';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import { getSelectedTeam } from '../../store/actions/userAction';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
@@ -59,7 +59,7 @@ export default function JoinTeam_2() {
         dispatch(getSelectedTeam({ id, name, leader: false }));
         navigation.navigate('JoinTeam_3');
       })
-      .catch((error) => {
+      .catch((error: AxiosError) => {
         console.log(error);
         if (error.response?.status === 409) {
           showErrorModal();

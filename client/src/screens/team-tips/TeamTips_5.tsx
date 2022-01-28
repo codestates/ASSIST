@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NextMatch } from '../../../@types/global/types';
 import AddOnsCard from '../../components/card/AddOnsCard';
 import FakeNextMatchCard from '../../components/card/FakeNextMatchCard';
@@ -12,14 +12,25 @@ import useEditProfile from '../../hooks/useEditProfile';
 import useOnLayout from '../../hooks/useOnLayout';
 import useReset from '../../hooks/useReset';
 import { changeRole } from '../../store/actions/userAction';
+import { RootState } from '../../store/reducers';
 import { Bold, Regular } from '../../theme/fonts';
 
-export default function QuickTips_12() {
+export default function TeamTips_5() {
   const { layout, onLayout } = useOnLayout();
   const dispatch = useDispatch();
-  const goToPrevious = useReset({ screenName: 'QuickTips_11' });
+  const { leader: isLeader } = useSelector((state: RootState) => state.userReducer.selectedTeam);
+  const goLeaderScreen = useReset({ screenName: 'TeamTips_3' });
+  const goFollowerScreen = useReset({ screenName: 'TeamTips_4' });
   const editProfile = useEditProfile({ role: 'complete' });
   const reset = useReset({ screenName: 'User' });
+
+  const goToPrevious = () => {
+    if (isLeader) {
+      goLeaderScreen();
+    } else {
+      goFollowerScreen();
+    }
+  };
 
   const goToNext = async () => {
     await editProfile();
@@ -43,7 +54,7 @@ export default function QuickTips_12() {
 
   return (
     <>
-      <LoggedInHeader isTestTeam />
+      <LoggedInHeader />
       <CardScrollView home>
         <NextMatchCard onLayout={onLayout} conditions="인원 모집 중" nextMatch={dummyData} />
         <AddOnsCard />

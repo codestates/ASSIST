@@ -18,12 +18,12 @@ export default function QuickTips_1() {
   const goToNext = useReset({ screenName: 'QuickTips_2' });
 
   useEffect(() => {
-    setTimeout(() => goToNext(), 1500);
+    setTimeout(() => goToNext(), 1000);
   });
 
   return (
     <>
-      <LoggedInHeader isTestSelect />
+      <LoggedInHeader isNewTeam />
       <CardScrollView home>
         <AddTeamCard />
       </CardScrollView>

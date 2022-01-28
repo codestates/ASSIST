@@ -1,5 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import FakeTeamSelector from '../../components/button/FakeTeamSelector';
 import Menu from '../../components/button/Menu';
@@ -12,6 +13,7 @@ import CardScrollView from '../../components/view/CardScrollView';
 import ShadeView from '../../components/view/ShadeView';
 import useOnLayout from '../../hooks/useOnLayout';
 import useReset from '../../hooks/useReset';
+import { RootState } from '../../store/reducers';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
 
@@ -25,7 +27,7 @@ const BottomContainer = styled.View`
 const TeamSelector = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  width: 113px;
+  margin-right: 15px;
 `;
 
 const TeamName = styled(Bold)`
@@ -34,20 +36,31 @@ const TeamName = styled(Bold)`
   margin-right: 2px;
 `;
 
-export default function QuickTips_9() {
+export default function TeamTips_2() {
   const { layout, onLayout } = useOnLayout();
-  const goToNext = useReset({ screenName: 'QuickTips_10' });
-  const goToPrevious = useReset({ screenName: 'QuickTips_7' });
+  const goLeaderScreen = useReset({ screenName: 'TeamTips_3' });
+  const goFollowerScreen = useReset({ screenName: 'TeamTips_4' });
+  const { leader: isLeader, name } = useSelector(
+    (state: RootState) => state.userReducer.selectedTeam,
+  );
+
+  const goToNext = () => {
+    if (isLeader) {
+      goLeaderScreen();
+    } else {
+      goFollowerScreen();
+    }
+  };
 
   return (
     <>
       <HeaderContainer>
         <TopContainer>
-          <Menu isTestLeader />
+          <Menu />
         </TopContainer>
         <BottomContainer>
           <TeamSelector onLayout={onLayout}>
-            <TeamName>FC 살쾡이</TeamName>
+            <TeamName>{name}</TeamName>
             <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.blue} />
           </TeamSelector>
           <TeamSelector>
@@ -61,8 +74,9 @@ export default function QuickTips_9() {
       </CardScrollView>
       {layout ? (
         <ShadeView>
-          <FakeTeamSelector isTeamSelect layout={layout} />
+          <FakeTeamSelector teamName={name} layout={layout} />
           <BubbleView
+            isFirst
             layout={layout}
             title="팀 선택"
             description={
@@ -73,7 +87,7 @@ export default function QuickTips_9() {
             }
             pointerLeftVal={25}
             onPressNext={goToNext}
-            onPressPrevious={goToPrevious}
+            onPressPrevious={() => {}}
           />
         </ShadeView>
       ) : (

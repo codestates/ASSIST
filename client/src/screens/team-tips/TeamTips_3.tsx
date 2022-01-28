@@ -8,30 +8,30 @@ import CardScrollView from '../../components/view/CardScrollView';
 import ShadeView from '../../components/view/ShadeView';
 import useOnLayout from '../../hooks/useOnLayout';
 import useReset from '../../hooks/useReset';
-import { Regular } from '../../theme/fonts';
+import { Bold, Regular } from '../../theme/fonts';
 
-export default function QuickTips_11() {
+export default function TeamTips_3() {
   const { layout, onLayout } = useOnLayout();
-  const goToPrevious = useReset({ screenName: 'QuickTips_10' });
-  const goToNext = useReset({ screenName: 'QuickTips_12' });
+  const goToPrevious = useReset({ screenName: 'TeamTips_2' });
+  const goToNext = useReset({ screenName: 'TeamTips_5' });
 
   return (
     <>
-      <LoggedInHeader isTestTeam />
+      <LoggedInHeader />
       <CardScrollView home>
-        <NoMatchCard onLayout={onLayout} />
+        <NoMatchCard onLayout={onLayout} isLeader />
         <AddOnsCard />
       </CardScrollView>
       {layout ? (
         <ShadeView>
-          <FakeNoMatchCard layout={layout} />
+          <FakeNoMatchCard isLeader layout={layout} />
           <BubbleView
             layout={layout}
             title="다음 경기: ① 등록 전"
             description={
               <Regular>
-                다음 경기 정보를 확인할 수 있어요!{'\n'}
-                아쉽게도 지금은 등록된 다음 경기가 없네요.
+                다음 경기 정보를 확인할 수 있어요.{'\n'}
+                지금처럼 경기가 없을 땐, <Bold>[등록하기]</Bold>를 눌러 경기를 등록 할 수 있어요!
               </Regular>
             }
             pointerLeftVal={25}
