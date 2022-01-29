@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
@@ -14,6 +13,11 @@ import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import getDayString from '../../functions/getDayString';
 import checkOverMidnight from '../../functions/checkOverMidnight';
+import checkStartTime from '../../functions/checkStartTime';
+import CommonModalTitle from '../../components/text/CommonModalTitle';
+import { CommonModal } from '../../components/modal/CommonModal';
+import CommonModalButton from '../../components/button/CommonModalButton';
+import useReset from '../../hooks/useReset';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -55,12 +59,14 @@ export default function ScheduleManage_4() {
   } = useSelector((state: RootState) => state.propsReducer);
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const reset = useReset({ screenName: 'ScheduleManage_1', params: { startTime, endTime, date } });
 
   const checkDayPassing = () => {
     return checkOverMidnight(startTime, endTime);
   };
 
-  const handleSaveSchedule = () => {
+  const saveSchedule = () => {
     setIsLoading(true);
     axios
       .post(
@@ -88,8 +94,39 @@ export default function ScheduleManage_4() {
       });
   };
 
+  const onPressNext = () => {
+    if (checkStartTime(date, startTime)) {
+      saveSchedule();
+    } else {
+      showErrorModal();
+    }
+  };
+
+  const showErrorModal = () => {
+    setModalVisible(true);
+  };
+
+  const hideErrorModal = () => {
+    setModalVisible(false);
+    reset();
+  };
+
+  const checkValid = () => {
+    if (isLoading || modalVisible) {
+      return false;
+    }
+    return true;
+  };
+
   return (
     <>
+      <CommonModal visible={modalVisible} setVisible={hideErrorModal}>
+        <CommonModalTitle
+          title="😱 경기시간을 확인 해 주세요."
+          subtitle="지나간 시간에 경기를 생성 할 수 없어요!"
+        />
+        <CommonModalButton text="돌아가기  >" onPress={hideErrorModal} />
+      </CommonModal>
       <NextPageView>
         <MainTitle>
           <Bold size={22}>
@@ -118,7 +155,7 @@ export default function ScheduleManage_4() {
           </MatchInfoContainer>
         </Container>
       </NextPageView>
-      <NextButton disabled={isLoading} text="팀 전체에 공지하기" onPress={handleSaveSchedule} />
+      <NextButton disabled={!checkValid()} text="팀 전체에 공지하기" onPress={onPressNext} />
     </>
   );
 }

@@ -138,7 +138,7 @@ export default function Navigation() {
       return '팀 가입 | ASSIST';
     } else if (name === 'MercenaryInvite') {
       return '용병 초대 | ASSIST';
-    } else if (name === 'QuickTips') {
+    } else if (name === 'QuickTips' || name === 'TeamTips') {
       return '사용 안내 | ASSIST';
     } else if (route?.name === 'AddOns_1') {
       return '지난 경기 기록 | ASSIST';

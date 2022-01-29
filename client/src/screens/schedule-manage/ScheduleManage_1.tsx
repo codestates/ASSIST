@@ -11,6 +11,10 @@ import { Bold, Light } from '../../theme/fonts';
 import { addScheduleManage } from '../../store/actions/propsAction';
 import checkOverMidnight from '../../functions/checkOverMidnight';
 import getDayString from '../../functions/getDayString';
+import { CommonModal } from '../../components/modal/CommonModal';
+import CommonModalButton from '../../components/button/CommonModalButton';
+import CommonModalTitle from '../../components/text/CommonModalTitle';
+import checkStartTime from '../../functions/checkStartTime';
 
 type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_1'>;
 
@@ -22,6 +26,9 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
   const [isStartPressed, setIsStartPressed] = useState(false);
   const [isEndPressed, setIsEndPressed] = useState(false);
   const [endTime, setEndTime] = useState('');
+  const [errStartTime, setErrStartTime] = useState(route.params?.startTime);
+  const [errDate, setErrDate] = useState(route.params?.date);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -75,8 +82,58 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
     }
   };
 
+  const showErrorModal = (date: string, startTime: string) => {
+    setErrDate(date);
+    setErrStartTime(startTime);
+    setModalVisible(true);
+  };
+
+  const hideErrorModal = () => {
+    setModalVisible(false);
+  };
+
+  const checkValid = () => {
+    if (
+      route.params?.date === undefined ||
+      route.params?.startTime === undefined ||
+      route.params?.endTime === undefined ||
+      (errDate === route.params?.date && errStartTime === route.params.startTime)
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  const goToNext = () => {
+    dispatch(
+      addScheduleManage({
+        date: String(route.params?.date),
+        startTime: String(route.params?.startTime),
+        endTime: String(route.params?.endTime),
+      }),
+    );
+    navigation.navigate('ScheduleManage_2');
+  };
+
+  const onPressNext = () => {
+    if (route.params?.date && route.params.startTime && route.params.endTime) {
+      if (checkStartTime(route.params.date, route.params.startTime)) {
+        goToNext();
+      } else {
+        showErrorModal(route.params.date, route.params.startTime);
+      }
+    }
+  };
+
   return (
     <>
+      <CommonModal visible={modalVisible} setVisible={hideErrorModal}>
+        <CommonModalTitle
+          title="😱 경기시간을 확인 해 주세요."
+          subtitle="지나간 시간에 경기를 생성 할 수 없어요!"
+        />
+        <CommonModalButton text="돌아가기  >" onPress={hideErrorModal} />
+      </CommonModal>
       <NextPageView>
         <MainTitle>
           <Bold size={22}>
@@ -104,23 +161,7 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
           onPress={() => handleEndTime()}
         />
       </NextPageView>
-      <NextButton
-        disabled={
-          route.params?.date === undefined ||
-          route.params?.startTime === undefined ||
-          route.params?.endTime === undefined
-        }
-        onPress={() => {
-          dispatch(
-            addScheduleManage({
-              date: String(route.params?.date),
-              startTime: String(route.params?.startTime),
-              endTime: String(route.params?.endTime),
-            }),
-          );
-          navigation.navigate('ScheduleManage_2');
-        }}
-      />
+      <NextButton disabled={!checkValid()} onPress={onPressNext} />
     </>
   );
 }
