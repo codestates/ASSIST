@@ -6,7 +6,7 @@ import LineInput from '../../components/input/LineInput';
 import MainTitle from '../../components/text/MainTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import { Bold, Light } from '../../theme/fonts';
+import { Bold, Light, Regular } from '../../theme/fonts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styled from 'styled-components/native';
@@ -16,6 +16,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
+import { colors } from '../../theme/colors';
+import { Linking } from 'react-native';
 
 const schema = yup.object({
   name: yup.string().required(),
@@ -23,6 +25,28 @@ const schema = yup.object({
 
 const Seperator = styled.View`
   height: 15px;
+`;
+
+const Agreement = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: ${colors.white};
+`;
+
+const InfoText = styled(Regular)`
+  color: ${colors.gray};
+  font-size: 14px;
+`;
+
+const Linked = styled.TouchableOpacity`
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: ${colors.gray};
+`;
+
+const Space = styled.View`
+  height: 2px;
 `;
 
 type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_5'>;
@@ -72,6 +96,18 @@ export default function GetStarted_5({ route }: GetStartedProps) {
       .catch((error) => console.log(error));
   };
 
+  const onPressUsage = async () => {
+    await Linking.openURL('https://foremost90.notion.site/2811a328d3564af39167d15e5804c699');
+  };
+
+  const onPressInfoSave = async () => {
+    await Linking.openURL('https://foremost90.notion.site/b68388ea82e04b4d8c6b887622d5cfc3');
+  };
+
+  const onPressInfoProvide = async () => {
+    await Linking.openURL('https://foremost90.notion.site/2c1179c0dc8f4aec89f4deb2c6ceb992');
+  };
+
   return (
     <>
       <NextPageView>
@@ -98,6 +134,32 @@ export default function GetStarted_5({ route }: GetStartedProps) {
           selected={route.params?.gender}
         />
       </NextPageView>
+      <Agreement>
+        <InfoText>
+          본인은 만 14세 이상이고,{' '}
+          {
+            <Linked onPress={onPressUsage}>
+              <InfoText>이용약관</InfoText>
+            </Linked>
+          }
+          ,{' '}
+          {
+            <Linked onPress={onPressInfoSave}>
+              <InfoText>개인정보 수집 및 이용</InfoText>
+            </Linked>
+          }
+          ,
+        </InfoText>
+        <Space />
+        <InfoText>
+          {
+            <Linked onPress={onPressInfoProvide}>
+              <InfoText>개인정보 제공내용</InfoText>
+            </Linked>
+          }
+          을 확인하였으며, 동의합니다.
+        </InfoText>
+      </Agreement>
       <NextButton
         text="가입 완료"
         disabled={!isValid || route.params?.gender === undefined || Boolean(errorMessage)}
