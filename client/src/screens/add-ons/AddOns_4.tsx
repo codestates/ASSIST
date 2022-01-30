@@ -123,7 +123,7 @@ export default function AddOns_4({ route }: AddOnsProps) {
           />
         </ButtonContainer>
       </NextPageView>
-      <SkipButton text="다음에 초대할게요" onPress={() => navigation.goBack()} />
+      <SkipButton text="돌아가기  >" onPress={() => navigation.goBack()} />
     </>
   );
 }
