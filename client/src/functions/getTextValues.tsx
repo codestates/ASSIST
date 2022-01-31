@@ -27,8 +27,8 @@ export default function getTextValues({ text, type }: getTextValuesProps) {
     let temp = '';
     if (text.length === 0) {
       return text;
-    } else if (text[0] === '0' && text.length > 1) {
-      return '₩0';
+    } else if (text[0] === '0' && text[1]) {
+      return '₩' + text[1];
     } else if (text.length < 4) {
       return '₩' + text;
     } else if (text.length < 5) {

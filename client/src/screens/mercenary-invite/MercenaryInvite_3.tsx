@@ -1,48 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import styled from 'styled-components/native';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import SubTitle from '../../components/text/SubTitle';
-import CounterButton from '../../components/button/CounterButton';
 import { useDispatch } from 'react-redux';
 import { addMercenaryMember } from '../../store/actions/propsAction';
-
-const TitleSpaceContents = styled.View`
-  width: 100%;
-  height: 64px;
-`;
-
-const CounterSpace = styled.View`
-  width: 15px;
-  height: 100%;
-`;
-
-const CounterContainer = styled.View`
-  height: 7%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-`;
+import CounterInput from '../../components/input/CounterInput';
 
 export default function MercenaryInvite_3() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
-  const [money, setMoney] = useState(0);
+  const { control, getValues } = useForm({ mode: 'onChange' });
 
   const getMercenaryMoney = () => {
-    dispatch(addMercenaryMember({ money: money }));
+    dispatch(addMercenaryMember({ money: String(getValues('money')) }));
     navigation.navigate('MercenaryInvite_4');
-  };
-
-  const getMoney = (money: number) => {
-    setMoney(money);
   };
 
   return (
@@ -57,12 +33,7 @@ export default function MercenaryInvite_3() {
         <SubTitle>
           <Light size={14}>1,000원 단위로 조정하거나 직접 입력 할 수 있어요.</Light>
         </SubTitle>
-        <TitleSpaceContents />
-        <CounterContainer>
-          <CounterSpace />
-          <CounterButton counter={money} getCounter={getMoney} type="money" />
-          <CounterSpace />
-        </CounterContainer>
+        <CounterInput marginTop={64} control={control} name="money" />
       </NextPageView>
       <NextButton disabled={false} onPress={() => getMercenaryMoney()} />
     </>
