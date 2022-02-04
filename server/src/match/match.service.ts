@@ -137,15 +137,40 @@ export class MatchService {
     const checkMember = await this.teamRepository.checkMember(data.team.id, user.id);
     if (!checkMember) throw new NotFoundException('해당 유저는 팀원이 아닙니다.');
 
-    if (data.condition === '인원 모집 중' || data.condition === '경기 확정') {
+    const change = checkCondi();
+
+    function checkCondi(): boolean {
       if (
-        data.date < getDate() ||
-        (data.date === getDate() && data.daypassing === false && data.endTime < getTime()) ||
-        (data.date === getDate(-1) && data.daypassing === true && data.endTime < getTime())
+        data.condition === '인원 모집 중' ||
+        data.condition === '경기 확정' ||
+        data.condition === '경기중'
       ) {
-        data.condition = '경기 완료';
-        await this.matchRepository.save(data);
+        if (
+          data.date < getDate(-1) ||
+          (data.date === getDate() && data.daypassing === false && data.endTime < getTime()) ||
+          (data.date === getDate(-1) &&
+            ((data.daypassing === true && data.endTime < getTime()) || data.daypassing === false))
+        ) {
+          data.condition = '경기 완료';
+          return true;
+        }
+
+        if (data.condition !== '경기중') {
+          if (data.date === getDate() && data.startTime < getTime()) {
+            data.condition = '경기중';
+            return true;
+          }
+          if (data.date === getDate(-1) && data.daypassing === true) {
+            data.condition = '경기중';
+            return true;
+          }
+        }
       }
+      return false;
+    }
+
+    if (change) {
+      await this.matchRepository.save(data);
     }
 
     data.attend = [];

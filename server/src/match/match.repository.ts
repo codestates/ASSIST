@@ -13,21 +13,42 @@ export class MatchRepository extends Repository<Match> {
       where: {
         team: { id: teamId },
         condition: Raw((alias) => `${alias} IN (:...condition)`, {
-          condition: ['경기 확정', '인원 모집 중'],
+          condition: ['경기 확정', '인원 모집 중', '경기중'],
         }),
-        date: Raw((alias) => `${alias} >= :date`, {
-          date: getDate(),
-        }),
+        date: Raw(
+          (alias) => `(${alias} >= :date or (${alias} = '${getDate(-1)}' and daypassing = true))`,
+          {
+            date: getDate(),
+          },
+        ),
       },
-      order: { date: 'ASC' },
+      order: { date: 'ASC', startTime: 'ASC' },
     });
 
     const nextMatch = nextMatchs.find((el) => {
-      if (el.date === getDate()) {
-        return el.startTime > getTime() ? true : false;
+      if (el.date === getDate(-1)) {
+        if (el.endTime > getTime()) {
+          if (el.condition !== '경기중') {
+            el.condition = '경기중';
+            this.save(el);
+          }
+        } else return false;
+      } else if (el.date === getDate()) {
+        if (!el.daypassing) {
+          if (el.endTime < getTime()) {
+            return false;
+          }
+        }
+        if (el.startTime < getTime()) {
+          if (el.condition !== '경기중') {
+            el.condition = '경기중';
+            this.save(el);
+          }
+        }
       }
       return true;
     });
+
     if (nextMatch) {
       let find = nextMatch.user_matchs.find((el) => el.user?.id === user.id);
 
