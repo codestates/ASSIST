@@ -50,7 +50,7 @@ Figma에서 [자세히 보기](https://www.figma.com/file/uv27gjC8TsCTu7vIBbx960
 
 </br>
 
-## Final App View
+## Final App View 👀
 #### 토글을 클릭하여 확인해주세요!
 
 </br>
