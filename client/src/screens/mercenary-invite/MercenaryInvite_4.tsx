@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
@@ -22,11 +19,6 @@ import getTextValues from '../../functions/getTextValues';
 const TitleSpaceContents = styled.View`
   width: 100%;
   height: 16px;
-`;
-
-const Container = styled.View`
-  width: 100%;
-  height: 100%;
 `;
 
 const MatchInfoContainer = styled.View`
@@ -53,10 +45,9 @@ const MatchInfoContents = styled.View`
 const MecenaryAttendContainer = styled.View`
   width: 100%;
   height: 50px;
-  background-color: ${colors.lightGray}
+  background-color: ${colors.lightGray};
   align-items: center;
   justify-content: center;
-
 `;
 
 export default function MercenaryInvite_4() {
@@ -67,10 +58,10 @@ export default function MercenaryInvite_4() {
 
   const handleRequest = () => {
     axios
-      .post(`${ASSIST_SERVER_URL}/match/${data?.id}/mercenery`, dto, {
+      .post(`${ASSIST_SERVER_URL}/match/${String(data?.id)}/mercenery`, dto, {
         headers: { authorization: `Bearer ${token}` },
       })
-      .then((el) => {
+      .then(() => {
         navigation.navigate('MercenaryInvite_5');
       })
       .catch((err) => {
@@ -91,29 +82,24 @@ export default function MercenaryInvite_4() {
           <Light size={14}>1시간 내로 초대 결과를 알려 드릴게요.</Light>
         </SubTitle>
         <TitleSpaceContents />
-        <Container>
-          <MatchInfoContainer>
-            <MatchInfoTitle>
-              <Bold size={20}>{selectedTeam?.name}</Bold>
-            </MatchInfoTitle>
-            <MatchInfoContents>
-              <Regular size={17}>
-                {data?.date} ({data?.day})
-              </Regular>
-              <Bold size={17}>
-                시작 {data?.startTime} <AntDesign name="arrowright" size={17} /> {data?.endTime}{' '}
-                종료
-              </Bold>
-              <Regular size={15}>{data?.address}</Regular>
-              <Regular size={15}>{data?.address2}</Regular>
-            </MatchInfoContents>
-            <MecenaryAttendContainer>
-              <Bold size={15}>
-                참가비 : {getTextValues({ text: `${dto.money}`, type: 'money' })}
-              </Bold>
-            </MecenaryAttendContainer>
-          </MatchInfoContainer>
-        </Container>
+        <MatchInfoContainer>
+          <MatchInfoTitle>
+            <Bold size={20}>{selectedTeam?.name}</Bold>
+          </MatchInfoTitle>
+          <MatchInfoContents>
+            <Regular size={17}>
+              {data?.date} ({data?.day})
+            </Regular>
+            <Bold size={17}>
+              시작 {data?.startTime} <AntDesign name="arrowright" size={17} /> {data?.endTime} 종료
+            </Bold>
+            <Regular size={15}>{data?.address}</Regular>
+            <Regular size={15}>{data?.address2}</Regular>
+          </MatchInfoContents>
+          <MecenaryAttendContainer>
+            <Bold size={15}>참가비 : {getTextValues({ text: `${dto.money}`, type: 'money' })}</Bold>
+          </MecenaryAttendContainer>
+        </MatchInfoContainer>
       </NextPageView>
       <NextButton disabled={false} text="구인 신청  >" onPress={() => handleRequest()} />
     </>
