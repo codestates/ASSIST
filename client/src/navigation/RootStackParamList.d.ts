@@ -19,8 +19,9 @@ export type RootStackParamList = {
   CreateTeam_2: undefined | { paymentDay: string };
   CreateTeam_3: undefined | { bank: string };
   CreateTeam_4: undefined;
-  CreateTeam_5: undefined | { inviteCode: string };
-  CreateTeam_6: undefined;
+  CreateTeam_5: undefined;
+  CreateTeam_6: undefined | { inviteCode: string };
+  CreateTeam_7: undefined;
   BankSelect: { name: keyof RootStackParamList };
   Intro: undefined;
   IntroPage: undefined;

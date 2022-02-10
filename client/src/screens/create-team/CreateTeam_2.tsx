@@ -7,12 +7,8 @@ import SubTitle from '../../components/text/SubTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addCreateTeam } from '../../store/actions/propsAction';
-import { RootState } from '../../store/reducers';
-import { ASSIST_SERVER_URL } from '@env';
-import axios, { AxiosResponse } from 'axios';
-import { getSelectedTeam } from '../../store/actions/userAction';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import LineSelect from '../../components/input/LineSelect';
 
@@ -22,7 +18,6 @@ export default function CreateTeam_2({ route }: CreateTeamProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const [isPressed, setIsPressed] = useState(false);
-  const state = useSelector((state: RootState) => state);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -45,23 +40,14 @@ export default function CreateTeam_2({ route }: CreateTeamProps) {
     navigation.navigate('CreateTeam_3');
   };
 
-  const createTeam = () => {
-    axios
-      .post(
-        `${ASSIST_SERVER_URL}/team`,
-        { ...state.propsReducer.createTeam },
-        { headers: { authorization: `Bearer ${state.userReducer.token}` } },
-      )
-      .then(({ data: { id, inviteCode } }: AxiosResponse<{ id: number; inviteCode: string }>) => {
-        dispatch(getSelectedTeam({ id, name: state.propsReducer.createTeam.name, leader: true }));
-        navigation.reset({ routes: [{ name: 'CreateTeam_5', params: { inviteCode } }] });
-      })
-      .catch((error) => console.log(error));
-  };
-
   const goToSelect = () => {
     setIsPressed(true);
     navigation.navigate('PaymentDaySelect', { name: 'CreateTeam_2' });
+  };
+
+  const skipToEnd = () => {
+    dispatch(addCreateTeam({ paymentDay: 0, accountBank: '', accountNumber: '', dues: '' }));
+    navigation.navigate('CreateTeam_5');
   };
 
   return (
@@ -84,8 +70,8 @@ export default function CreateTeam_2({ route }: CreateTeamProps) {
           onPress={() => goToSelect()}
         />
       </NextPageView>
-      <SkipButton onPress={() => createTeam()} />
-      <NextButton disabled={route.params?.paymentDay === undefined} onPress={() => goToNext()} />
+      <SkipButton onPress={skipToEnd} />
+      <NextButton disabled={route.params?.paymentDay === undefined} onPress={goToNext} />
     </>
   );
 }
