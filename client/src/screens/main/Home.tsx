@@ -110,7 +110,7 @@ export default function Home({ route }: TeamProps) {
     if (!nextMatch) {
       return <NoMatchCard isLeader={selectedTeam.leader} />;
     }
-    let conditions: '인원 모집 중' | '경기 확정' | '투표 완료' = nextMatch.condition;
+    let conditions: '인원 모집 중' | '경기 확정' | '투표 완료' | '경기중' = nextMatch.condition;
     if (nextMatch.condition === '인원 모집 중' && nextMatch.vote) {
       conditions = '투표 완료';
     }

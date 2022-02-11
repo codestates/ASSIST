@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useEffect, useState } from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import React from 'react';
 import styled from 'styled-components/native';
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
@@ -11,20 +7,11 @@ import CloseHeader from '../../components/header/CloseHeader';
 import VotePercentCard from '../../components/card/VotePercentCard';
 import VoteStatusCard from '../../components/card/VoteStatueCard';
 import { StackScreenProps } from '@react-navigation/stack';
-import { MatchDetail, NextMatch } from '../../../@types/global/types';
-import axios, { AxiosResponse } from 'axios';
-import { ASSIST_SERVER_URL } from '@env';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/reducers';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LoadingView from '../../components/view/LoadingView';
+import useMatchDetail from '../../hooks/useMatchDetail';
 import { Dimensions } from 'react-native';
-
-// const PercentBarSpace = styled.View`
-//   width: 1%;
-//   height: 100%;
-// `;
 
 const BarSpaceContent = styled.View`
   width: 100%;
@@ -38,42 +25,10 @@ const CardSpaceCard = styled.View`
   align-self: center;
 `;
 
-const Space = styled.View`
-  width: 100%;
-  height: 35px;
-`;
-
 const ContentContainer = styled.View`
   width: 100%;
   margin-bottom: 30px;
 `;
-
-// const VotePercentBar = styled.View`
-//   width: 100%;
-//   height: 16px;
-//   flex-direction: row;
-// `;
-
-// const VoteAttend = styled.View`
-//   width: 46%;
-//   background-color: ${colors.blue};
-//   border-top-left-radius: 8px;
-//   border-bottom-left-radius: 8px;
-// `;
-// const VoteNonAttend = styled.View`
-//   width: 30%;
-//   background-color: ${colors.darkGray};
-// `;
-// const VoteUndefined = styled.View`
-//   width: 10%;
-//   background-color: ${colors.gray};
-// `;
-// const VoteNonResponse = styled.View`
-//   width: 10%;
-//   background-color: ${colors.lightGray};
-//   border-top-right-radius: 8px;
-//   border-bottom-right-radius: 8px;
-// `;
 
 const VotePercentContents = styled.View`
   height: 180px;
@@ -84,50 +39,18 @@ const VotePercentContents = styled.View`
 type MatchVoteProps = StackScreenProps<RootStackParamList, 'MatchVote_6'>;
 
 export default function MatchVote_6({ route }: MatchVoteProps) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { token } = useSelector((state: RootState) => state.userReducer);
-
-  const [teamDetailMatch, setTeamDetailMatch] = useState<MatchDetail>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    getDetailMatch().catch((err) => {
-      console.log('실패');
-      navigation.navigate('NotFound');
-    });
-  }, []);
-
-  const getDetailMatch = async () => {
-    try {
-      const { data }: AxiosResponse<NextMatch> = await axios.get(
-        `${ASSIST_SERVER_URL}/match/${route.params?.matchId}`,
-        { headers: { authorization: `Bearer ${token}` } },
-      );
-      setTeamDetailMatch(data);
-      setIsLoading(false);
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
+  const { data, isLoading } = useMatchDetail({ matchId: Number(route.params?.matchId) });
 
   const voteUserNum = (userNum: number) => {
-    const allUsersNum: number =
-      teamDetailMatch?.attend.length +
-      teamDetailMatch?.absent.length +
-      teamDetailMatch?.hold.length +
-      teamDetailMatch?.nonRes.length;
-
+    if (!data) return '0';
+    const allUsersNum =
+      data?.attend.length + data?.absent.length + data?.hold.length + data?.nonRes.length;
     return !allUsersNum ? '0' : `${Math.round((userNum / allUsersNum) * 100)}`;
   };
 
-  if (isLoading) {
-    return <LoadingView />;
-  }
-
-  return (
+  return isLoading || !data ? (
+    <LoadingView />
+  ) : (
     <>
       <CloseHeader
         navigate={{ screenName: 'MatchVote_Main', params: { matchId: route.params?.matchId } }}
@@ -137,51 +60,44 @@ export default function MatchVote_6({ route }: MatchVoteProps) {
         <MainTitle marginBottom="15px">
           <Bold size={22}>참석 투표 현황</Bold>
           <Regular size={17}>
-            {`${teamDetailMatch?.date} (${teamDetailMatch?.day}) ${teamDetailMatch?.startTime} ~ ${teamDetailMatch?.endTime}`}
+            {`${data.date} (${data.day}) ${data.startTime} ~ ${data.daypassing ? '익일 ' : ''}${
+              data.endTime
+            }`}
           </Regular>
         </MainTitle>
         <ContentContainer>
-          {/* <VotePercentBar>
-            <VoteAttend />
-            <PercentBarSpace />
-            <VoteNonAttend />
-            <PercentBarSpace />
-            <VoteUndefined />
-            <PercentBarSpace />
-            <VoteNonResponse />
-          </VotePercentBar> */}
           <BarSpaceContent />
           <VotePercentContents>
             <VotePercentCard
               blockColor={colors.blue}
               title="참석"
-              person={teamDetailMatch?.attend.length}
-              percent={voteUserNum(teamDetailMatch?.attend.length)}
+              person={data.attend.length}
+              percent={voteUserNum(data.attend.length)}
             />
             <VotePercentCard
               blockColor={colors.darkGray}
               title="불참"
-              person={teamDetailMatch?.absent.length}
-              percent={voteUserNum(teamDetailMatch?.absent.length)}
+              person={data.absent.length}
+              percent={voteUserNum(data.absent.length)}
             />
             <VotePercentCard
               blockColor={colors.gray}
               title="미정"
-              person={teamDetailMatch?.hold.length}
-              percent={voteUserNum(teamDetailMatch?.hold.length)}
+              person={data.hold.length}
+              percent={voteUserNum(data.hold.length)}
             />
             <VotePercentCard
               blockColor={colors.lightGray}
               title="미응답"
-              person={teamDetailMatch?.nonRes.length}
-              percent={voteUserNum(teamDetailMatch?.nonRes.length)}
+              person={data.nonRes.length}
+              percent={voteUserNum(data.nonRes.length)}
             />
           </VotePercentContents>
           <CardSpaceCard />
-          <VoteStatusCard title="참석" data={teamDetailMatch?.attend} />
-          <VoteStatusCard title="불참" data={teamDetailMatch?.absent} />
-          <VoteStatusCard title="미정" data={teamDetailMatch?.hold} />
-          <VoteStatusCard title="미응답" data={teamDetailMatch?.nonRes} />
+          <VoteStatusCard title="참석" data={data.attend} />
+          <VoteStatusCard title="불참" data={data.absent} />
+          <VoteStatusCard title="미정" data={data.hold} />
+          <VoteStatusCard title="미응답" data={data.nonRes} />
         </ContentContainer>
       </ColoredScrollView>
     </>
