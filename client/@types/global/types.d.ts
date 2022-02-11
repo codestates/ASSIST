@@ -41,6 +41,7 @@ export type NextMatch =
       endTime: string;
       deadline: string;
       vote: false;
+      daypassing: boolean;
     }
   | null
   | undefined;
@@ -67,11 +68,16 @@ export type FirstTeam = {
   nextMatch: NextMatch;
 };
 
+export type User = {
+  id: number;
+  name: string;
+  phone: string;
+};
+
 export type VoteUser = {
   id: number;
   condition: string;
-  reason: string | null;
-  user: { name: string; phone: string };
+  user: User;
 };
 
 export type VoteChoice = 'attend' | 'absent' | 'hold' | 'nonRes';
@@ -88,11 +94,13 @@ export type MatchInfo =
       startTime: string;
       endTime: string;
       deadline: string;
+      daypassing: boolean;
       vote: VoteChoice;
       attend: VoteUser[];
       absent: VoteUser[];
       hold: VoteUser[];
       nonRes: VoteUser[];
+      team: { id: number };
     }
   | null
   | undefined;
@@ -100,20 +108,10 @@ export type MatchInfo =
 export type UserTeams = { id: number; name: string; leader: boolean }[];
 export type UserTeam = { id: number; name: string; leader: boolean };
 
-export type User = {
-  id: number;
-  condition: string;
-  reason: string;
-  user: Array<{
-    name: string;
-    phone: string;
-  }>;
-};
-
 export type TeamLastMatchs = {
   totalPage: number;
   lastMatchs: LastMatchs;
-};
+} | null;
 
 export type LastMatchs = Array<{
   id: number;
@@ -126,6 +124,7 @@ export type LastMatchs = Array<{
   endTime: string;
   deadline: string;
   reason: string;
+  daypassing: boolean;
 }>;
 
 export interface LayoutType extends LayoutRectangle {

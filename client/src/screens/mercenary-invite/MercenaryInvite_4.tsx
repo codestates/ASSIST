@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
@@ -18,6 +14,7 @@ import { RootState } from '../../store/reducers';
 import axios from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import getTextValues from '../../functions/getTextValues';
+import LoadingView from '../../components/view/LoadingView';
 
 const TitleSpaceContents = styled.View`
   width: 100%;
@@ -53,24 +50,25 @@ const MatchInfoContents = styled.View`
 const MecenaryAttendContainer = styled.View`
   width: 100%;
   height: 50px;
-  background-color: ${colors.lightGray}
+  background-color: ${colors.lightGray};
   align-items: center;
   justify-content: center;
-
 `;
 
 export default function MercenaryInvite_4() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { selectedTeam, token } = useSelector((state: RootState) => state.userReducer);
   const dto = useSelector((state: RootState) => state.propsReducer.mercenaryInvite);
-  const { data } = useNextMatch({ teamId: selectedTeam?.id });
+  const { data, isLoading } = useNextMatch({ teamId: selectedTeam.id });
+
+  if (!data || isLoading) return <LoadingView />;
 
   const handleRequest = () => {
     axios
-      .post(`${ASSIST_SERVER_URL}/match/${data?.id}/mercenery`, dto, {
+      .post(`${ASSIST_SERVER_URL}/match/${data.id}/mercenery`, dto, {
         headers: { authorization: `Bearer ${token}` },
       })
-      .then((el) => {
+      .then(() => {
         navigation.navigate('MercenaryInvite_5');
       })
       .catch((err) => {
@@ -94,18 +92,18 @@ export default function MercenaryInvite_4() {
         <Container>
           <MatchInfoContainer>
             <MatchInfoTitle>
-              <Bold size={20}>{selectedTeam?.name}</Bold>
+              <Bold size={20}>{selectedTeam.name}</Bold>
             </MatchInfoTitle>
             <MatchInfoContents>
               <Regular size={17}>
-                {data?.date} ({data?.day})
+                {data.date} ({data.day})
               </Regular>
               <Bold size={17}>
-                시작 {data?.startTime} <AntDesign name="arrowright" size={17} /> {data?.endTime}{' '}
-                종료
+                시작 {data.startTime} → {data.daypassing && <Bold size={13}>익일 </Bold>}
+                {data.endTime} 종료
               </Bold>
-              <Regular size={15}>{data?.address}</Regular>
-              <Regular size={15}>{data?.address2}</Regular>
+              <Regular size={15}>{data.address}</Regular>
+              <Regular size={15}>{data.address2}</Regular>
             </MatchInfoContents>
             <MecenaryAttendContainer>
               <Bold size={15}>

@@ -71,7 +71,7 @@ export type RootStackParamList = {
   MatchVote_2: undefined | { data: MatchInfo };
   MatchVote_3: undefined | { data: MatchInfo };
   MatchVote_4: undefined | { data: MatchInfo };
-  MatchVote_5: undefined | { data: MatchInfo };
+  MatchVote_5: undefined | { data: MatchInfo; inGame?: boolean };
   MatchVote_6: undefined | { matchId?: number | string };
   VoteSelect: undefined | { vote: VoteChoice; matchId?: number };
   CancelSelect: undefined | { matchId?: number };

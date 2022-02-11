@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
@@ -70,10 +69,10 @@ export default function MatchVote_4({ route }: MatchVoteProps) {
     navigation.navigate('MatchVote_6');
   };
 
-  let attendLength = route.params?.data?.attend.length || 0;
-  let absentLength = route.params?.data?.absent.length || 0;
-  let holdLength = route.params?.data?.hold.length || 0;
-  let nonResLendgth = route.params?.data?.nonRes.length || 0;
+  const attendLength = route.params?.data?.attend.length || 0;
+  const absentLength = route.params?.data?.absent.length || 0;
+  const holdLength = route.params?.data?.hold.length || 0;
+  const nonResLendgth = route.params?.data?.nonRes.length || 0;
 
   const getAttendView = () => {
     if (route.params?.data?.vote === 'attend') {
@@ -131,8 +130,9 @@ export default function MatchVote_4({ route }: MatchVoteProps) {
             {route.params?.data?.date}({route.params?.data?.day})
           </Regular>
           <TextSpaceText />
-          <Bold gray size={17}>
-            시작 {route.params?.data?.startTime} <AntDesign name="arrowright" size={17} />{' '}
+          <Bold size={17}>
+            시작 {route.params?.data?.startTime} →{' '}
+            {route.params?.data?.daypassing && <Bold size={13}>익일 </Bold>}
             {route.params?.data?.endTime} 종료
           </Bold>
           <TextSpaceText />

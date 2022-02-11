@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
@@ -26,11 +25,6 @@ const CardSpaceButton = styled.View`
 
 const ContentContainer = styled.View`
   width: 100%;
-`;
-
-const MainTitleText = styled(Bold)`
-  font-size: 22px;
-  color: ${colors.white};
 `;
 
 const MatchInfoDetailStadium = styled(Regular)`
@@ -70,10 +64,10 @@ export default function MatchVote_5({ route }: MatchVoteProps) {
     navigation.navigate('MatchVote_6');
   };
 
-  let attendLength = route.params?.data?.attend.length || 0;
-  let absentLength = route.params?.data?.absent.length || 0;
-  let holdLength = route.params?.data?.hold.length || 0;
-  let nonResLendgth = route.params?.data?.nonRes.length || 0;
+  const attendLength = route.params?.data?.attend.length || 0;
+  const absentLength = route.params?.data?.absent.length || 0;
+  const holdLength = route.params?.data?.hold.length || 0;
+  const nonResLendgth = route.params?.data?.nonRes.length || 0;
 
   const getAttendView = () => {
     if (route.params?.data?.vote === 'attend') {
@@ -111,13 +105,22 @@ export default function MatchVote_5({ route }: MatchVoteProps) {
     }
   };
 
+  const getColor = () => (route.params?.inGame ? colors.yellow : colors.blue);
+
+  const getTitle = () =>
+    route.params?.inGame ? (
+      <Bold size={22}>경기 중 💬</Bold>
+    ) : (
+      <Bold white size={22}>
+        경기 완료 ✅
+      </Bold>
+    );
+
   return (
     <>
-      <CloseHeader color={colors.blue} />
-      <ColoredScrollView isFinished isCard titleColor={colors.blue}>
-        <MainTitle marginBottom="15px">
-          <MainTitleText size={22}>경기 완료 ✅</MainTitleText>
-        </MainTitle>
+      <CloseHeader color={getColor()} />
+      <ColoredScrollView isFinished isCard titleColor={getColor()}>
+        <MainTitle marginBottom="15px">{getTitle()}</MainTitle>
         <ContentContainer>
           <Bold size={20}>경기 정보</Bold>
           <MainTitleSpaceContents />
@@ -126,7 +129,8 @@ export default function MatchVote_5({ route }: MatchVoteProps) {
           </Regular>
           <TextSpaceText />
           <Bold size={17}>
-            시작 {route.params?.data?.startTime} <AntDesign name="arrowright" size={17} />{' '}
+            시작 {route.params?.data?.startTime} →{' '}
+            {route.params?.data?.daypassing && <Bold size={13}>익일 </Bold>}
             {route.params?.data?.endTime} 종료
           </Bold>
           <TextSpaceText />

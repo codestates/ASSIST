@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { LayoutChangeEvent } from 'react-native';
+import InGameMark from '../mark/InGameMark';
 
 const TitleView = styled.View`
   flex-direction: row;
@@ -26,7 +27,7 @@ const SubtitleView = styled.View`
 `;
 
 type NextMatchCardProps = {
-  conditions: '경기 확정' | '인원 모집 중' | '투표 완료';
+  conditions: '경기 확정' | '인원 모집 중' | '투표 완료' | '경기중';
   nextMatch: NextMatch;
   onLayout?: (event: LayoutChangeEvent) => void;
 };
@@ -39,6 +40,8 @@ export default function NextMatchCard({ conditions, nextMatch, onLayout }: NextM
       return <GatheringMark />;
     } else if (conditions === '투표 완료') {
       return <VotedMark />;
+    } else if (conditions === '경기중') {
+      return <InGameMark />;
     }
   };
 
@@ -79,7 +82,8 @@ export default function NextMatchCard({ conditions, nextMatch, onLayout }: NextM
           {nextMatch?.date} ({nextMatch?.day})
         </Regular>
         <Bold size={17}>
-          시작 {nextMatch?.startTime} → {nextMatch?.endTime} 종료
+          시작 {nextMatch?.startTime} → {nextMatch?.daypassing && <Bold size={13}>익일 </Bold>}
+          {nextMatch?.endTime} 종료
         </Bold>
         <Regular gray>{nextMatch?.address}</Regular>
         <Regular gray>{nextMatch?.address2}</Regular>

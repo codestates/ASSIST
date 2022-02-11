@@ -5,9 +5,10 @@ import styled from 'styled-components/native';
 import { Bold, Regular } from '../../theme/fonts';
 import LoadingView from '../view/LoadingView';
 import { RootState } from '../../store/reducers';
+import { User, VoteUser } from '../../../@types/global/types';
 const Space = styled.View`
   width: 16px;
-  height; 100%;
+  height: 100%;
 `;
 
 const VoteStatusContainer = styled.View`
@@ -35,36 +36,25 @@ const UserNameContainer = styled.View`
 const VoteStatusMember = styled.TouchableOpacity`
   flex-direction: row;
   width: 100%;
-  padding-vertical: 6px;
+  padding: 6px 0px;
   margin: 8px 8px 8px 0;
 `;
 
-type UserProps = {
-  id: number;
-  name: string;
-  phone: string;
-};
-type DataProps = {
-  condition: string;
-  id: number;
-  user: UserProps;
-};
-
 type VoteStatusCardProps = {
   title: string;
-  data: DataProps[];
+  data: VoteUser[];
 };
 
 export default function VoteStatusCard({ title, data }: VoteStatusCardProps) {
   const { id } = useSelector((state: RootState) => state.userReducer);
-  const handlePhoneCall = (user: UserProps) => {
+  const handlePhoneCall = (user: User) => {
     if (Platform.OS === 'ios') {
       Linking.openURL(`tel://${user.phone}`).catch((err) => console.log(err));
     } else {
       Linking.openURL(`tel:${user.phone}`).catch((err) => console.log(err));
     }
   };
-  
+
   if (!data) {
     return <LoadingView />;
   }

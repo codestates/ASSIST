@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -37,6 +35,8 @@ export default function MatchVote_Main({ route }: MatchVoteProps) {
       navigation.replace('MatchVote_4', { data });
     } else if (data?.condition === '경기 완료') {
       navigation.replace('MatchVote_5', { data });
+    } else if (data?.condition === '경기중') {
+      navigation.replace('MatchVote_5', { data, inGame: true });
     }
     return null;
   };
