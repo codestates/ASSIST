@@ -67,7 +67,7 @@ export default function CreateTeam_1() {
           ]}
         />
       </NextPageView>
-      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={() => goToNext()} />
+      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={goToNext} />
     </>
   );
 }
