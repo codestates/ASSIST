@@ -2,6 +2,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { createRef, useEffect, useState } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components/native';
 import { ListType } from '../../../@types/global/types';
 import CommonModalButton from '../../components/button/CommonModalButton';
@@ -9,7 +10,9 @@ import BottomDrawer from '../../components/drawer/BottomDrawer';
 import ListPicker from '../../components/input/ListPicker';
 import ListItem from '../../components/view/ListItem';
 import checkOverMidnight from '../../functions/checkOverMidnight';
+import useProps from '../../hooks/useProps';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { addScheduleManage } from '../../store/actions/propsAction';
 import { Bold, Regular } from '../../theme/fonts';
 
 const TimeContainer = styled.View`
@@ -44,15 +47,14 @@ export default function TimeSelect({ route }: TimeSelectProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const hoursRef = createRef<FlatList>();
   const minutesRef = createRef<FlatList>();
+  const dispatch = useDispatch();
+
+  const {
+    scheduleManage: { startTime, endTime },
+  } = useProps();
   const [hourIndex, setHourIndex] = useState<number>(-1);
   const [minuteIndex, setMinuteIndex] = useState<number>(-1);
   const [selectedTime, setSelectedTime] = useState('');
-
-  useEffect(() => {
-    if (hourIndex > 0 && minuteIndex > 0) {
-      setSelectedTime(`${hours[hourIndex - 2]['value']}:${minutes[minuteIndex - 2]['value']}`);
-    }
-  }, [hourIndex, minuteIndex]);
 
   const getHours = (time?: string) => {
     const end = 24;
@@ -67,13 +69,13 @@ export default function TimeSelect({ route }: TimeSelectProps) {
         ),
       );
     }
-    if (route.params?.endTime) {
+    if (endTime) {
       return [...range.slice(1, range.length), range[0]].reverse();
     }
     return range;
   };
 
-  const hours: ListType[] = getHours(route.params?.startTime || route.params?.endTime);
+  const hours: ListType[] = getHours(startTime || endTime);
   const minutes: ListType[] = [...Array(60).keys()]
     .filter((minute) => minute % 5 === 0)
     .map((minute) => (`${minute}`.length === 1 ? { value: `0${minute}` } : { value: `${minute}` }));
@@ -82,6 +84,12 @@ export default function TimeSelect({ route }: TimeSelectProps) {
     hoursRef.current?.scrollToIndex({ animated: true, index: index - 2 });
     setHourIndex(index);
   };
+
+  useEffect(() => {
+    if (hourIndex > 0 && minuteIndex > 0) {
+      setSelectedTime(`${hours[hourIndex - 2]['value']}:${minutes[minuteIndex - 2]['value']}`);
+    }
+  }, [hours, minutes, hourIndex, minuteIndex]);
 
   const pressMinute = (index: number) => {
     minutesRef.current?.scrollToIndex({ animated: true, index: index - 2 });
@@ -97,21 +105,11 @@ export default function TimeSelect({ route }: TimeSelectProps) {
 
   const getNavigation = () => {
     if (route.params?.time === 'start') {
-      navigation.navigate({
-        name: 'ScheduleManage_1',
-        params: {
-          startTime: selectedTime,
-        },
-        merge: true,
-      });
-    } else {
-      navigation.navigate({
-        name: 'ScheduleManage_1',
-        params: {
-          endTime: selectedTime,
-        },
-        merge: true,
-      });
+      dispatch(addScheduleManage({ startTime: selectedTime }));
+      navigation.navigate('ScheduleManage_1');
+    } else if (route.params?.time === 'end') {
+      dispatch(addScheduleManage({ endTime: selectedTime }));
+      navigation.navigate('ScheduleManage_1');
     }
   };
 
@@ -154,17 +152,17 @@ export default function TimeSelect({ route }: TimeSelectProps) {
   const scrollMinutesIndex = () => {
     minutesRef.current?.scrollToIndex({
       animated: true,
-      index: getMinuteIndex(route.params?.startTime || route.params?.endTime),
+      index: getMinuteIndex(startTime || endTime),
     });
   };
 
   const scrollHours = () => {
     if (route.params?.time === 'start') {
-      if (!route.params.endTime) {
+      if (!endTime) {
         scrollHoursCenter();
       }
     } else if (route.params?.time === 'end') {
-      if (!route.params.startTime) {
+      if (!startTime) {
         scrollHoursCenter();
       }
     }
@@ -172,13 +170,13 @@ export default function TimeSelect({ route }: TimeSelectProps) {
 
   const scrollMinutes = () => {
     if (route.params?.time === 'start') {
-      if (route.params.endTime) {
+      if (endTime) {
         scrollMinutesIndex();
       } else {
         scrollMinutesCenter();
       }
     } else if (route.params?.time === 'end') {
-      if (route.params.startTime) {
+      if (startTime) {
         scrollMinutesIndex();
       } else {
         scrollMinutesCenter();
@@ -188,7 +186,7 @@ export default function TimeSelect({ route }: TimeSelectProps) {
 
   const getNextDay = () => {
     if (route.params?.time === 'end') {
-      return checkOverMidnight(route.params.startTime, selectedTime);
+      return checkOverMidnight(startTime, selectedTime);
     }
   };
 
@@ -207,7 +205,7 @@ export default function TimeSelect({ route }: TimeSelectProps) {
             </NoWrap>
           )}
           <ListPicker
-            isInverted={Boolean(route.params?.endTime)}
+            isInverted={Boolean(endTime)}
             scrollCenter={scrollHours}
             ref={hoursRef}
             data={hours}

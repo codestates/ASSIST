@@ -52,6 +52,7 @@ export default function Navigation() {
               },
             },
             AddOns_2: 'AddOns_2/:teamId',
+            AddOns_1: 'AddOns_1',
           },
         },
         Guest: {

@@ -25,6 +25,8 @@ import nonghyup from '../../assets/images/bank-nonghyup.png';
 import sanup from '../../assets/images/bank-sanup.png';
 import kbank from '../../assets/images/bank-kbank.png';
 import toss from '../../assets/images/bank-toss.png';
+import { useDispatch } from 'react-redux';
+import { addAddOns, addCreateTeam } from '../../store/actions/propsAction';
 
 const TitleContainer = styled.View`
   margin: 15px 0px;
@@ -43,6 +45,7 @@ type BankSelectProps = StackScreenProps<RootStackParamList, 'BankSelect'>;
 
 export default function BankSelect({ route }: BankSelectProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
   const bankList = [
     { name: '카카오뱅크', source: kakao },
     { name: '농협', source: nonghyup },
@@ -66,8 +69,14 @@ export default function BankSelect({ route }: BankSelectProps) {
     { name: '토스뱅크', source: toss },
   ];
 
-  const getNavigation = (bank: string) => {
-    navigation.navigate({ name: route.params.name, params: { bank }, merge: true });
+  const getNavigation = (accountBank: string) => {
+    const screenName = route.params.name;
+    if (screenName === 'CreateTeam_3') {
+      dispatch(addCreateTeam({ accountBank }));
+    } else if (screenName === 'AddOns_3') {
+      dispatch(addAddOns({ accountBank }));
+    }
+    navigation.navigate(screenName);
   };
 
   return (

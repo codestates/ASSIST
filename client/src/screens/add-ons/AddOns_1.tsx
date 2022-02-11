@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import React, { useState, useEffect, useRef } from 'react';
-import { NavigationProp, useNavigation, useScrollToTop } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
+import React, { useState, useEffect } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
@@ -20,6 +17,9 @@ import ConfirmedMark from '../../components/mark/ConfirmedMark';
 import GatheringMark from '../../components/mark/GatheringMark';
 import VotedMark from '../../components/mark/VotedMark';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { ListRenderItem } from 'react-native';
+import CanceledMark from '../../components/mark/CanceledMark';
+import FinishedMark from '../../components/mark/FinishedMark';
 
 const CardSpaceCard = styled.View`
   width: 100%;
@@ -33,13 +33,11 @@ const TextSpaceText = styled.View`
 
 const MainTitleContainer = styled.View`
   width: 100%;
-  padding-top: 20px;
-  padding-horizontal: 20px;
+  padding: 0px 20px;
 `;
 
 const ContentsContainer = styled.View`
-  width: 100%;
-  height: 100%;
+  flex-grow: 1;
   background-color: ${colors.whiteSmoke};
   margin-bottom: 30px;
 `;
@@ -51,27 +49,6 @@ const CardTitleContainer = styled.View`
   margin-bottom: 26px;
 `;
 
-const CardTitleRedBox = styled.View`
-  width: 25%;
-  height: 100%;
-  background-color: ${colors.red};
-  align-items: center;
-  justify-content: center;
-`;
-
-const CardTitleBlueBox = styled.View`
-  width: 25%;
-  height: 100%;
-  background-color: ${colors.blue};
-  align-items: center;
-  justify-content: center;
-`;
-
-const CardTitleText = styled(Regular)`
-  font-size: 15px;
-  color: ${colors.white};
-`;
-
 const CardTitleButtonBox = styled(TouchableOpacity)`
   width: 100%;
   height: 100%;
@@ -79,10 +56,6 @@ const CardTitleButtonBox = styled(TouchableOpacity)`
   background-color: transparent;
 `;
 
-const CardTitleButtonText = styled(Regular)`
-  font-size: 15px;
-  color: ${colors.gray};
-`;
 const MatchInfoDetailStadium = styled(Regular)`
   font-size: 15px;
   color: ${colors.gray};
@@ -101,17 +74,27 @@ const PageNumber = styled(Regular)`
   font-size: 16px;
 `;
 
-const SelectPageNumber = styled(Regular)`
-  color: ${colors.darkGray};
-  font-size: 35px;
+const Selected = styled(Bold)`
+  color: ${colors.white};
+  font-size: 16px;
+`;
+
+const Circle = styled.View`
+  width: 35px;
+  height: 35px;
+  background-color: ${colors.blue};
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
 `;
 
 export default function AddOns_1() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
-  const [lastMatch, setLastMatch] = useState<TeamLastMatchs>({});
-  const [dummyArr, setDummyArr] = useState<any>([]);
+  const [lastMatch, setLastMatch] = useState<TeamLastMatchs>(null);
+  const [dummyArr, setDummyArr] = useState<string[]>([]);
   const [selectPage, setSelectPage] = useState(1);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       getLastMatch().catch((error) => console.log(error));
@@ -128,15 +111,15 @@ export default function AddOns_1() {
         },
       );
       setLastMatch(data);
-      setDummyArr(new Array(data.totalPage).fill(''));
+      setDummyArr(new Array(data?.totalPage).fill(''));
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handlePage = (index: number) => {
+  const handlePage = async (index: number) => {
     setSelectPage(index);
-    getLastMatch(index);
+    await getLastMatch(index);
   };
 
   const getConditionMark = (condition: string) => {
@@ -147,26 +130,57 @@ export default function AddOns_1() {
     } else if (condition === '경기 확정') {
       return <ConfirmedMark />;
     } else if (condition === '경기 취소') {
-      return (
-        <CardTitleRedBox>
-          <CardTitleText>경기 취소</CardTitleText>
-        </CardTitleRedBox>
-      );
+      return <CanceledMark />;
     } else {
-      return (
-        <CardTitleBlueBox>
-          <CardTitleText>경기 완료</CardTitleText>
-        </CardTitleBlueBox>
-      );
+      return <FinishedMark />;
     }
-  };
-
-  const onSubmit = (data: string) => {
-    console.log(data);
   };
 
   const handleDetailVote = (id: number) => {
     navigation.navigate('MatchVote', { matchId: id });
+  };
+
+  const renderPageSelector: ListRenderItem<string[]> = ({ item, index }) => {
+    if (lastMatch && lastMatch?.totalPage === 1) {
+      return null;
+    }
+    if (lastMatch && lastMatch?.totalPage <= 5) {
+      if (index + 1 === selectPage) {
+        return (
+          <FooterPageNumber>
+            <Circle>
+              <Selected>{index + 1}</Selected>
+            </Circle>
+          </FooterPageNumber>
+        );
+      } else {
+        return (
+          <FooterPageNumber onPress={() => handlePage(index + 1)}>
+            <PageNumber>{index + 1}</PageNumber>
+          </FooterPageNumber>
+        );
+      }
+    } else {
+      if (selectPage - 2 <= index + 1 && index + 1 <= selectPage + 2) {
+        if (index + 1 === selectPage) {
+          return (
+            <FooterPageNumber>
+              <Circle>
+                <Selected>{index + 1}</Selected>
+              </Circle>
+            </FooterPageNumber>
+          );
+        } else {
+          return (
+            <FooterPageNumber onPress={() => handlePage(index + 1)}>
+              <PageNumber>{index + 1}</PageNumber>
+            </FooterPageNumber>
+          );
+        }
+      } else {
+        return null;
+      }
+    }
   };
 
   return (
@@ -180,7 +194,7 @@ export default function AddOns_1() {
           </MainTitle>
         </MainTitleContainer>
         <ContentsContainer>
-          {lastMatch.lastMatchs?.length === 0 ? (
+          {lastMatch?.lastMatchs?.length === 0 ? (
             <Card margin={16}>
               <CardTitleContainer>
                 <Bold size={18}>지난 경기가 없어요 🤔</Bold>
@@ -188,7 +202,7 @@ export default function AddOns_1() {
               <Regular size={13}>새로운 경기를 생성해주세요!</Regular>
             </Card>
           ) : (
-            lastMatch.lastMatchs?.map((el) => (
+            lastMatch?.lastMatchs?.map((el) => (
               <>
                 <Card key={el.id} margin={16}>
                   <CardTitleContainer>
@@ -197,13 +211,14 @@ export default function AddOns_1() {
                       onPress={() => {
                         handleDetailVote(el.id);
                       }}>
-                      <CardTitleButtonText>자세히 보기</CardTitleButtonText>
+                      <Regular gray>자세히 보기</Regular>
                     </CardTitleButtonBox>
                   </CardTitleContainer>
                   <Regular size={17}>{el.date}</Regular>
                   <TextSpaceText />
                   <Bold size={17}>
-                    시작 {el.startTime} <AntDesign name="arrowright" size={17} /> {el.endTime} 종료
+                    시작 {el.startTime} → {el.daypassing && <Bold size={13}>익일 </Bold>}
+                    {el.endTime} 종료
                   </Bold>
                   <TextSpaceText />
                   <MatchInfoDetailStadium>{el.address}</MatchInfoDetailStadium>
@@ -225,44 +240,8 @@ export default function AddOns_1() {
             pagingEnabled={true}
             horizontal={true}
             data={dummyArr}
-            renderItem={({ item, index }) => {
-              if (lastMatch?.totalPage === 1) {
-                return <></>;
-              }
-              if (lastMatch?.totalPage <= 5) {
-                if (index + 1 === selectPage) {
-                  return (
-                    <FooterPageNumber>
-                      <SelectPageNumber>{index + 1}</SelectPageNumber>
-                    </FooterPageNumber>
-                  );
-                } else {
-                  return (
-                    <FooterPageNumber onPress={() => handlePage(index + 1)}>
-                      <PageNumber>{index + 1}</PageNumber>
-                    </FooterPageNumber>
-                  );
-                }
-              } else {
-                if (selectPage - 2 <= index + 1 && index + 1 <= selectPage + 2) {
-                  if (index + 1 === selectPage) {
-                    return (
-                      <FooterPageNumber>
-                        <SelectPageNumber>{index + 1}</SelectPageNumber>
-                      </FooterPageNumber>
-                    );
-                  } else {
-                    return (
-                      <FooterPageNumber onPress={() => handlePage(index + 1)}>
-                        <PageNumber>{index + 1}</PageNumber>
-                      </FooterPageNumber>
-                    );
-                  }
-                } else {
-                  return <></>;
-                }
-              }
-            }}
+            renderItem={renderPageSelector}
+            keyExtractor={(_, index) => index.toString()}
           />
         </ContentsContainer>
       </CardScrollView>

@@ -40,15 +40,16 @@ export const propsState = {
   findPassword: {
     phone: '',
   },
-  matchId: -1,
   teamMembers: [{ name: '', phone: '' }],
-
-  newLeader: {
-    nowLeaderId: 0,
-  },
-
   mercenaryInvite: {
     needNumber: 0,
     money: '',
+  },
+  addOns: {
+    paymentDay: 0,
+    accountBank: '',
+  },
+  newLeader: {
+    nowLeaderId: 0,
   },
 };

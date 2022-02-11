@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
@@ -15,70 +13,53 @@ import { CommonModal } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import CommonModalTitle from '../../components/text/CommonModalTitle';
 import checkStartTime from '../../functions/checkStartTime';
+import useProps from '../../hooks/useProps';
+import useLineSelect from '../../hooks/useLineSelect';
 
-type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_1'>;
-
-export default function ScheduleManage_1({ route }: ScheduleManageProps) {
+export default function ScheduleManage_1() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const dispatch = useDispatch();
+  const {
+    scheduleManage: { startTime, endTime, date },
+  } = useProps();
 
-  const [isCalendarPressed, setIsCalendarPressed] = useState(false);
-  const [isStartPressed, setIsStartPressed] = useState(false);
-  const [isEndPressed, setIsEndPressed] = useState(false);
-  const [endTime, setEndTime] = useState('');
-  const [errStartTime, setErrStartTime] = useState(route.params?.startTime);
-  const [errDate, setErrDate] = useState(route.params?.date);
+  const { isPressed: isCalendarPressed, onPress: onCalendarPress } = useLineSelect();
+  const { isPressed: isStartTimePressed, onPress: onStartTimePress } = useLineSelect();
+  const { isPressed: isEndTimePressed, onPress: onEndTimePress } = useLineSelect();
+
+  const [errStartTime, setErrStartTime] = useState(startTime);
+  const [errDate, setErrDate] = useState(date);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isCalendarPressed) {
-        setIsCalendarPressed(false);
-      }
-      if (isStartPressed) {
-        setIsStartPressed(false);
-      }
-      if (isEndPressed) {
-        setIsEndPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isCalendarPressed, isStartPressed, isEndPressed]);
-
-  useEffect(() => {
-    getNextDay();
-  }, [route.params?.startTime, route.params?.endTime]);
-
-  const getNextDay = () => {
-    if (route.params?.startTime && route.params?.endTime) {
-      if (checkOverMidnight(route.params?.startTime, route.params?.endTime)) {
-        setEndTime(`익일 ${route.params?.endTime}`);
+  const getNextDay = (startTime: string, endTime: string) => {
+    if (startTime && endTime) {
+      if (checkOverMidnight(startTime, endTime)) {
+        return `익일 ${endTime}`;
       } else {
-        setEndTime(route.params.endTime);
+        return endTime;
       }
-    } else if (route.params?.endTime) {
-      setEndTime(route.params.endTime);
+    } else if (endTime) {
+      return endTime;
     }
   };
 
   const handleCalendar = () => {
-    setIsCalendarPressed(true);
+    onCalendarPress();
     navigation.navigate('CalendarSelect');
   };
 
   const handleStartTime = () => {
-    setIsStartPressed(true);
-    navigation.navigate('TimeSelect', { time: 'start', endTime: route.params?.endTime });
+    onStartTimePress();
+    navigation.navigate('TimeSelect', { time: 'start' });
   };
 
   const handleEndTime = () => {
-    setIsEndPressed(true);
-    navigation.navigate('TimeSelect', { time: 'end', startTime: route.params?.startTime });
+    onEndTimePress();
+    navigation.navigate('TimeSelect', { time: 'end' });
   };
 
   const getDate = () => {
-    if (route.params?.date) {
-      return `${route.params.date} (${getDayString(route.params.date)})`;
+    if (date) {
+      return `${date} (${getDayString(date)})`;
     }
   };
 
@@ -93,34 +74,22 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
   };
 
   const checkValid = () => {
-    if (
-      route.params?.date === undefined ||
-      route.params?.startTime === undefined ||
-      route.params?.endTime === undefined ||
-      (errDate === route.params?.date && errStartTime === route.params.startTime)
-    ) {
+    if (!date || !startTime || !endTime || (errDate === date && errStartTime === startTime)) {
       return false;
     }
     return true;
   };
 
   const goToNext = () => {
-    dispatch(
-      addScheduleManage({
-        date: String(route.params?.date),
-        startTime: String(route.params?.startTime),
-        endTime: String(route.params?.endTime),
-      }),
-    );
     navigation.navigate('ScheduleManage_2');
   };
 
   const onPressNext = () => {
-    if (route.params?.date && route.params.startTime && route.params.endTime) {
-      if (checkStartTime(route.params.date, route.params.startTime)) {
+    if (date && startTime && endTime) {
+      if (checkStartTime(date, startTime)) {
         goToNext();
       } else {
-        showErrorModal(route.params.date, route.params.startTime);
+        showErrorModal(date, startTime);
       }
     }
   };
@@ -147,18 +116,21 @@ export default function ScheduleManage_1({ route }: ScheduleManageProps) {
           isPressed={isCalendarPressed}
           selected={getDate()}
           onPress={() => handleCalendar()}
+          reset={addScheduleManage({ date: '' })}
         />
         <LineSelect
           title="시작 시간"
-          isPressed={isStartPressed}
-          selected={route.params?.startTime}
+          isPressed={isStartTimePressed}
+          selected={startTime}
           onPress={() => handleStartTime()}
+          reset={addScheduleManage({ startTime: '' })}
         />
         <LineSelect
           title="종료 시간"
-          isPressed={isEndPressed}
-          selected={endTime}
+          isPressed={isEndTimePressed}
+          selected={getNextDay(startTime, endTime)}
           onPress={() => handleEndTime()}
+          reset={addScheduleManage({ endTime: '' })}
         />
       </NextPageView>
       <NextButton disabled={!checkValid()} onPress={onPressNext} />

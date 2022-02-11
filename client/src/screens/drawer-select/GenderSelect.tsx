@@ -5,6 +5,8 @@ import { Bold, Light } from '../../theme/fonts';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useDispatch } from 'react-redux';
+import { addGetStarted } from '../../store/actions/propsAction';
 
 const TitleContainer = styled.View`
   margin: 20px 0px;
@@ -31,8 +33,13 @@ type GenderSelectProps = StackScreenProps<RootStackParamList, 'GenderSelect'>;
 
 export default function GenderSelect({ route }: GenderSelectProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const getScreenToGo = (gender: string, screenName?: keyof RootStackParamList) => {
-    if (screenName) {
+  const dispatch = useDispatch();
+
+  const getScreenToGo = (gender: string, screenName: keyof RootStackParamList) => {
+    if (screenName === 'GetStarted_5') {
+      dispatch(addGetStarted({ gender }));
+      navigation.navigate(screenName);
+    } else if (screenName === 'MyProfile_1') {
       navigation.navigate(screenName, { gender });
     }
   };
@@ -45,7 +52,7 @@ export default function GenderSelect({ route }: GenderSelectProps) {
       {GenderList.map((gender) => (
         <GenderContainer
           key={gender}
-          onPress={() => getScreenToGo(gender, route.params?.screenName)}>
+          onPress={() => getScreenToGo(gender, route.params.screenName)}>
           <Gender>{gender}</Gender>
         </GenderContainer>
       ))}

@@ -5,7 +5,6 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
@@ -14,39 +13,48 @@ import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light } from '../../theme/fonts';
 import LineInput from '../../components/input/LineInput';
 import { addScheduleManage } from '../../store/actions/propsAction';
+import useProps from '../../hooks/useProps';
+import useLineSelect from '../../hooks/useLineSelect';
 
 const schema = yup.object({
-  detailAddr: yup.string(),
+  address2: yup.string(),
 });
 
-type ScheduleManageProps = StackScreenProps<RootStackParamList, 'ScheduleManage_2'>;
-
-export default function ScheduleManage_2({ route }: ScheduleManageProps) {
+export default function ScheduleManage_2() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
-
+  const {
+    scheduleManage: { address },
+  } = useProps();
+  const { isPressed, onPress } = useLineSelect();
   const { control, getValues } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
 
-  const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isPressed]);
 
   const clearErrorMessage = () => setErrorMessage('');
 
   const handleStadium = () => {
-    setIsPressed(true);
-    navigation.navigate('StadiumSelect', { modal: true, stadiumAddr: '' });
+    onPress();
+    navigation.navigate('StadiumSelect', { modal: true });
+  };
+
+  const goToNext = () => {
+    dispatch(
+      addScheduleManage({
+        address2: String(getValues('address2')),
+      }),
+    );
+    navigation.navigate('ScheduleManage_3');
+  };
+
+  const checkValid = () => {
+    if (!errorMessage && address) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -61,30 +69,20 @@ export default function ScheduleManage_2({ route }: ScheduleManageProps) {
         <LineSelect
           title="주소"
           isPressed={isPressed}
-          selected={route.params?.stadiumAddr}
+          selected={address}
           onPress={() => handleStadium()}
+          reset={addScheduleManage({ address: '' })}
         />
         <LineInput
           control={control}
           title="상세주소"
-          name="detailAddr"
+          name="address2"
           placeholder="직접입력"
           errorMessage={errorMessage}
           clearErrorMessage={clearErrorMessage}
         />
       </NextPageView>
-      <NextButton
-        disabled={!route.params?.stadiumAddr || Boolean(errorMessage)}
-        onPress={() => {
-          dispatch(
-            addScheduleManage({
-              address: String(route.params?.stadiumAddr),
-              address2: String(getValues('detailAddr')),
-            }),
-          );
-          navigation.navigate('ScheduleManage_3');
-        }}
-      />
+      <NextButton disabled={!checkValid()} onPress={goToNext} />
     </>
   );
 }

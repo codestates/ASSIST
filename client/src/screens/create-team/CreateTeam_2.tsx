@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NextButton from '../../components/button/NextButton';
 import SkipButton from '../../components/button/SkipButton';
 import MainTitle from '../../components/text/MainTitle';
@@ -7,46 +7,38 @@ import SubTitle from '../../components/text/SubTitle';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { Bold, Light } from '../../theme/fonts';
-import { useDispatch } from 'react-redux';
-import { addCreateTeam } from '../../store/actions/propsAction';
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationProp } from '@react-navigation/stack';
 import LineSelect from '../../components/input/LineSelect';
+import useLineSelect from '../../hooks/useLineSelect';
+import useProps from '../../hooks/useProps';
+import { addCreateTeam } from '../../store/actions/propsAction';
 
-type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_2'>;
-
-export default function CreateTeam_2({ route }: CreateTeamProps) {
+export default function CreateTeam_2() {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const dispatch = useDispatch();
-  const [isPressed, setIsPressed] = useState(false);
+  const {
+    createTeam: { paymentDay },
+  } = useProps();
+  const { isPressed, onPress } = useLineSelect();
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isPressed]);
-
-  const getDate = (value?: string) => {
-    if (value === '말일') {
-      return 32;
+  const getDate = (value: number) => {
+    if (!value) {
+      return undefined;
+    } else if (value === 32) {
+      return '말일';
     }
-    return Number(value?.slice(0, value.length - 1));
+    return `${value}일`;
   };
 
   const goToNext = () => {
-    dispatch(addCreateTeam({ paymentDay: getDate(route.params?.paymentDay) }));
     navigation.navigate('CreateTeam_3');
   };
 
   const goToSelect = () => {
-    setIsPressed(true);
+    onPress();
     navigation.navigate('PaymentDaySelect', { name: 'CreateTeam_2' });
   };
 
   const skipToEnd = () => {
-    dispatch(addCreateTeam({ paymentDay: 0, accountBank: '', accountNumber: '', dues: '' }));
     navigation.navigate('CreateTeam_5');
   };
 
@@ -66,12 +58,13 @@ export default function CreateTeam_2({ route }: CreateTeamProps) {
         <LineSelect
           title="회비 납부일"
           isPressed={isPressed}
-          selected={route.params?.paymentDay}
+          selected={getDate(paymentDay)}
+          reset={addCreateTeam({ paymentDay: 0 })}
           onPress={() => goToSelect()}
         />
       </NextPageView>
       <SkipButton onPress={skipToEnd} />
-      <NextButton disabled={route.params?.paymentDay === undefined} onPress={goToNext} />
+      <NextButton disabled={false} onPress={goToNext} />
     </>
   );
 }

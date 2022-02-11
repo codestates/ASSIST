@@ -10,6 +10,8 @@ import styled from 'styled-components/native';
 import { Direction } from 'react-native-calendars/src/types';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import getDayString from '../../functions/getDayString';
+import { useDispatch } from 'react-redux';
+import { addScheduleManage } from '../../store/actions/propsAction';
 
 const Header = styled.View`
   margin-bottom: 17px;
@@ -65,8 +67,10 @@ LocaleConfig.defaultLocale = 'ko';
 
 export default function CalendarSelect() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState('');
   const [markedDates, setMarkedDates] = useState({});
+
   const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
   const currentTime = new Date();
   const utc = currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000;
@@ -122,11 +126,8 @@ export default function CalendarSelect() {
   );
 
   const getNavigation = () => {
-    navigation.navigate({
-      name: 'ScheduleManage_1',
-      params: { date: selectedDate },
-      merge: true,
-    });
+    dispatch(addScheduleManage({ date: selectedDate }));
+    navigation.navigate('ScheduleManage_1');
   };
 
   return (

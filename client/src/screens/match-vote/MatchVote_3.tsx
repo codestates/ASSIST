@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import MainTitle from '../../components/text/MainTitle';
 import { colors } from '../../theme/colors';
@@ -157,7 +156,8 @@ export default function MatchVote_3({ route }: MatchVoteProps) {
           </Regular>
           <TextSpaceText />
           <Bold size={17}>
-            시작 {route.params?.data?.startTime} <AntDesign name="arrowright" size={17} />
+            시작 {route.params?.data?.startTime} →{' '}
+            {route.params?.data?.daypassing && <Bold size={13}>익일 </Bold>}
             {route.params?.data?.endTime} 종료
           </Bold>
           <TextSpaceText />

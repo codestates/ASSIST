@@ -25,6 +25,9 @@ import { ASSIST_SERVER_URL } from '@env';
 import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import { useToast } from 'react-native-toast-notifications';
+import useProps from '../../hooks/useProps';
+import useLineSelect from '../../hooks/useLineSelect';
+import { addAddOns } from '../../store/actions/propsAction';
 
 const InputSpaceInput = styled.View`
   width: 100%;
@@ -66,9 +69,6 @@ export default function AddOns_3({ route }: AddOnsProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const { isLoading, data } = useTeamInfo();
-
-  const [isBankPressed, setIsBankPressed] = useState(false);
-  const [isPaymentDayPressed, setIsPaymentDayPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -109,6 +109,13 @@ export default function AddOns_3({ route }: AddOnsProps) {
     resolver: yupResolver(bankAccountSchema),
   });
 
+  const {
+    addOns: { paymentDay, accountBank },
+  } = useProps();
+
+  const { isPressed: isPaymentDayPressed, onPress: onPressPaymentDay } = useLineSelect();
+  const { isPressed: isAccountBankPressed, onPress: onPressAccountBank } = useLineSelect();
+
   useEffect(() => {
     if (data !== undefined) {
       setName('name', data.name);
@@ -117,29 +124,13 @@ export default function AddOns_3({ route }: AddOnsProps) {
     }
   }, [data]);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isBankPressed) {
-        setIsBankPressed(false);
-      } else if (isPaymentDayPressed) {
-        setIsPaymentDayPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isBankPressed, isPaymentDayPressed]);
-
   const clearErrorMessage = () => setErrorMessage('');
-
-  const getDate = (value?: string) => {
-    if (value === '말일') {
-      return 32;
-    }
-    return Number(value?.slice(0, value.length - 1));
-  };
 
   const getDateData = (value?: number) => {
     if (value === 32) {
       return '말일';
+    } else if (!value) {
+      return undefined;
     }
     return String(value) + '일';
   };
@@ -150,10 +141,10 @@ export default function AddOns_3({ route }: AddOnsProps) {
         `${ASSIST_SERVER_URL}/team/${selectedTeam.id}`,
         {
           name: getName('name'),
-          paymentDay: getDate(route.params?.paymentDay),
+          paymentDay,
           dues: getMoney('money'),
           accountNumber: getBankAccount('bankAccount'),
-          accountBank: route.params?.bank,
+          accountBank,
         },
         { headers: { authorization: `Bearer ${token}` } },
       );
@@ -166,12 +157,12 @@ export default function AddOns_3({ route }: AddOnsProps) {
   };
 
   const goBankSelect = () => {
-    setIsBankPressed(true);
+    onPressAccountBank();
     navigation.navigate('BankSelect', { name: 'AddOns_3' });
   };
 
   const goPaymentDaySelect = () => {
-    setIsPaymentDayPressed(true);
+    onPressPaymentDay();
     navigation.navigate('PaymentDaySelect', { name: 'AddOns_3' });
   };
 
@@ -184,28 +175,23 @@ export default function AddOns_3({ route }: AddOnsProps) {
   };
 
   const checkValid = () => {
-    if (data?.name !== watchName('name') && isNameValid) {
+    if (watchName('name').length === 0) {
+      return false;
+    } else if (data?.name !== watchName('name') && isNameValid) {
       return true;
-    } else if (data?.paymentDay !== route.params?.paymentDay && route.params?.paymentDay) {
+    } else if (data?.paymentDay !== paymentDay) {
       return true;
-    } else if (data?.dues !== watchMoney('money') && isMoneyValid) {
+    } else if (!watchMoney('money') || (data?.dues !== watchMoney('money') && isMoneyValid)) {
       return true;
-    } else if (data?.accountNumber !== watchBankAccount('bankAccount') && isbankAccountValid) {
+    } else if (
+      !watchBankAccount('bankAccount') ||
+      (data?.accountNumber !== watchBankAccount('bankAccount') && isbankAccountValid)
+    ) {
       return true;
-    } else if (data?.accountBank !== route.params?.bank && route.params?.bank) {
+    } else if (data?.accountBank !== accountBank) {
       return true;
     } else {
       return false;
-    }
-  };
-
-  const getPaymentDay = () => {
-    if (route.params?.paymentDay !== undefined) {
-      return route.params.paymentDay;
-    } else if (data?.paymentDay !== 0) {
-      return getDateData(data?.paymentDay);
-    } else {
-      return '';
     }
   };
 
@@ -251,7 +237,8 @@ export default function AddOns_3({ route }: AddOnsProps) {
             <LineSelect
               title="회비 납부일"
               isPressed={isPaymentDayPressed}
-              selected={getPaymentDay()}
+              selected={getDateData(paymentDay)}
+              reset={addAddOns({ paymentDay: 0 })}
               onPress={() => goPaymentDaySelect()}
             />
           ) : (
@@ -279,8 +266,9 @@ export default function AddOns_3({ route }: AddOnsProps) {
           {selectedTeam.leader ? (
             <LineSelect
               title="은행"
-              isPressed={isBankPressed}
-              selected={route.params?.bank || data?.accountBank}
+              isPressed={isAccountBankPressed}
+              selected={accountBank}
+              reset={addAddOns({ accountBank: '' })}
               onPress={() => goBankSelect()}
             />
           ) : (
