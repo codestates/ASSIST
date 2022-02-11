@@ -19,10 +19,10 @@ const BarSpaceContent = styled.View`
 `;
 
 const CardSpaceCard = styled.View`
-  align-self: center;
   width: ${Dimensions.get('window').width}px;
   height: 16px;
   background-color: ${colors.whiteSmoke};
+  align-self: center;
 `;
 
 const ContentContainer = styled.View`

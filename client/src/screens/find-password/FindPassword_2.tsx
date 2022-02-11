@@ -16,6 +16,7 @@ import { ASSIST_SERVER_URL } from '@env';
 import { useDispatch } from 'react-redux';
 import { getAccessToken, getUserInfo, UserInfoType } from '../../store/actions/userAction';
 import { useToast } from 'react-native-toast-notifications';
+import useReset from '../../hooks/useReset';
 
 const Seperator = styled.View`
   height: 15px;
@@ -55,6 +56,9 @@ export default function FindPassword_2({ route }: FindPasswordProps) {
   });
   const dispatch = useDispatch();
   const toast = useToast();
+  const resetUser = useReset({ screenName: 'User' });
+  const resetIntro = useReset({ screenName: 'Intro' });
+  const resetTips = useReset({ screenName: 'QuickTips' });
 
   const getButtonText = () => {
     if (route.params?.screenName === 'GetStarted_Login') {
@@ -84,6 +88,13 @@ export default function FindPassword_2({ route }: FindPasswordProps) {
         dispatch(getUserInfo(data));
         dispatch(getAccessToken(accessToken));
         toast.show('비밀번호가 변경되었습니다.');
+        if (data.role === 'complete' || data.role === 'tips2') {
+          resetUser();
+        } else if (data.role === 'tips') {
+          resetTips();
+        } else {
+          resetIntro();
+        }
       } else {
         console.error('잘못된 접근입니다.');
       }

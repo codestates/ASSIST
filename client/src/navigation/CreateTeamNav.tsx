@@ -9,6 +9,7 @@ import BankSelect from '../screens/drawer-select/BankSelect';
 import CreateTeam_6 from '../screens/create-team/CreateTeam_6';
 import CreateTeam_5 from '../screens/create-team/CreateTeam_5';
 import PaymentDaySelect from '../screens/drawer-select/PaymentDaySelect';
+import CreateTeam_7 from '../screens/create-team/CreateTeam_7';
 
 const CreateTeam = createStackNavigator();
 
@@ -46,7 +47,7 @@ export default function CreateTeamNav() {
       <CreateTeam.Screen
         name="CreateTeam_5"
         options={{
-          header: () => <DotsHeader isIntro current={0} total={0} />,
+          header: () => <DotsHeader current={0} total={0} />,
         }}
         component={CreateTeam_5}
       />
@@ -56,6 +57,13 @@ export default function CreateTeamNav() {
           headerShown: false,
         }}
         component={CreateTeam_6}
+      />
+      <CreateTeam.Screen
+        name="CreateTeam_7"
+        options={{
+          headerShown: false,
+        }}
+        component={CreateTeam_7}
       />
       <CreateTeam.Screen
         name="BankSelect"

@@ -23,12 +23,12 @@ export default function MatchVote_Main({ route }: MatchVoteProps) {
       // 경기 확정
       navigation.replace('MatchVote_3', { data });
     } else if (data?.condition === '인원 모집 중') {
-      if (data?.vote) {
-        // 투표 완료
-        navigation.replace('MatchVote_2', { data });
-      } else {
+      if (data.vote === 'nonRes') {
         // 인원 모집 중
         navigation.replace('MatchVote_1', { data });
+      } else {
+        // 투표 완료
+        navigation.replace('MatchVote_2', { data });
       }
     } else if (data?.condition === '경기 취소') {
       // 경기 취소

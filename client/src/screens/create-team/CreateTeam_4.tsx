@@ -11,11 +11,8 @@ import SubTitle from '../../components/text/SubTitle';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import SkipButton from '../../components/button/SkipButton';
-import axios, { AxiosResponse } from 'axios';
-import { ASSIST_SERVER_URL } from '@env';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/reducers';
-import { getSelectedTeam } from '../../store/actions/userAction';
+import { useDispatch } from 'react-redux';
+import { addCreateTeam } from '../../store/actions/propsAction';
 
 const schema = yup.object({
   dues: yup.string().required(),
@@ -30,26 +27,25 @@ export default function CreateTeam_4() {
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
-  const state = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
 
-  const createTeam = (dues?: { dues: string }) => {
-    axios
-      .post(
-        `${ASSIST_SERVER_URL}/team`,
-        { ...state.propsReducer.createTeam, ...dues },
-        { headers: { authorization: `Bearer ${state.userReducer.token}` } },
-      )
-      .then(({ data: { id, inviteCode } }: AxiosResponse<{ id: number; inviteCode: string }>) => {
-        dispatch(getSelectedTeam({ id, name: state.propsReducer.createTeam.name, leader: true }));
-        navigation.navigate('CreateTeam_5', { inviteCode });
-      })
-      .catch((error) => console.log(error));
+  const goToNext = () => {
+    dispatch(
+      addCreateTeam({
+        dues: String(getValues('dues')),
+      }),
+    );
+    navigation.navigate('CreateTeam_5');
   };
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const skipToEnd = () => {
+    dispatch(addCreateTeam({ dues: '' }));
+    navigation.navigate('CreateTeam_5');
+  };
+
   return (
     <>
       <NextPageView>
@@ -73,11 +69,8 @@ export default function CreateTeam_4() {
           clearErrorMessage={clearErrorMessage}
         />
       </NextPageView>
-      <SkipButton onPress={() => createTeam()} />
-      <NextButton
-        disabled={!isValid || Boolean(errorMessage)}
-        onPress={() => createTeam({ dues: String(getValues('dues')) })}
-      />
+      <SkipButton onPress={skipToEnd} />
+      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={goToNext} />
     </>
   );
 }

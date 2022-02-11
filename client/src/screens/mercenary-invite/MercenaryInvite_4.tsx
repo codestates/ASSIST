@@ -21,11 +21,6 @@ const TitleSpaceContents = styled.View`
   height: 16px;
 `;
 
-const Container = styled.View`
-  width: 100%;
-  height: 100%;
-`;
-
 const MatchInfoContainer = styled.View`
   width: 100%;
   background-color: ${colors.whiteSmoke};

@@ -1,129 +1,158 @@
+import { ASSIST_SERVER_URL } from '@env';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import MainTitle from '../../components/text/MainTitle';
+import axios, { AxiosResponse } from 'axios';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components/native';
+import NextButton from '../../components/button/NextButton';
 import NextPageView from '../../components/view/NextPageView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import SkipButton from '../../components/button/SkipButton';
-import styled from 'styled-components/native';
+import { getSelectedTeam } from '../../store/actions/userAction';
+import { RootState } from '../../store/reducers';
 import { colors } from '../../theme/colors';
-import { Bold, Light, Regular } from '../../theme/fonts';
-import { MaterialIcons } from '@expo/vector-icons';
-import KakaoButton from '../../components/button/KakaoButton';
-import * as Clipboard from 'expo-clipboard';
-import { useToast } from 'react-native-toast-notifications';
-import { StackScreenProps } from '@react-navigation/stack';
-import useTeamCode from '../../hooks/useTeamCode';
-import LoadingView from '../../components/view/LoadingView';
-import useInviteKakao from '../../hooks/useKakaoInvite';
-import useInviteSms from '../../hooks/useSmsInvite';
-import { CommonModal, CommonModalTitle } from '../../components/modal/CommonModal';
-import CommonModalButton from '../../components/button/CommonModalButton';
+import { Bold, Regular } from '../../theme/fonts';
 
-const CodeContainer = styled.TouchableOpacity`
-  width: 100%;
-  height: 90px;
-  padding: 10px 12px 10px 8px;
-  background-color: ${colors.whiteSmoke};
-  margin-top: 70px;
-  justify-content: space-between;
+const Circle = styled.View`
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: ${colors.blue};
+  position: relative;
 `;
 
-const CodeTitle = styled(Regular)`
-  color: ${colors.darkGray};
+const ExclamationMark = styled.View`
+  position: absolute;
+  top: 20px;
+  left: 20px;
 `;
 
-const FlexBox = styled.View`
+const Wrapper = styled.View`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Text = styled(Regular)`
+  font-size: 19px;
+  margin: 40px 0px 60px 0px;
+`;
+
+const Item = styled.TouchableOpacity`
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  margin-bottom: 40px;
 `;
 
-const ButtonContainer = styled.View`
-  margin-top: 50px;
-  height: 130px;
-  justify-content: space-between;
+const Value = styled.View`
+  flex-direction: row;
 `;
 
-const Line = styled.View`
-  margin-top: 13px;
-  margin-bottom: 35px;
+const Arrow = styled(Bold)`
+  line-height: 19px;
+  margin-left: 20px;
+  color: ${colors.lightGray};
+  font-size: 18px;
 `;
 
-const ButtonSpace = styled.View`
-  height: 12px;
-`;
-
-type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_5'>;
-
-export default function CreateTeam_5({ route }: CreateTeamProps) {
-  const { data, isLoading } = useTeamCode({ inviteCode: route.params?.inviteCode || '' });
+export default function CreateTeam_5() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [modalVisible, setModalVisible] = useState(false);
-  const toast = useToast();
-  const inviteKakao = useInviteKakao({
-    teamName: data?.name,
-    inviteCode: data?.inviteCode,
-    leader: data?.leaderName,
-  });
-  const inviteSms = useInviteSms({
-    teamName: data?.name,
-    inviteCode: data?.inviteCode,
-    leader: data?.leaderName,
-  });
+  const { name, paymentDay, accountBank, accountNumber, dues } = useSelector(
+    (state: RootState) => state.propsReducer.createTeam,
+  );
+  const { token } = useSelector((state: RootState) => state.userReducer);
+  const dispatch = useDispatch();
 
-  const inviteCode = String(route.params?.inviteCode);
-
-  const copyToClipboard = () => {
-    Clipboard.setString(inviteCode);
-    toast.show('클립보드에 복사되었습니다.');
+  const getPaymentDay = () => {
+    if (!paymentDay) {
+      return <Bold lightGray>미입력</Bold>;
+    } else if (paymentDay === 32) {
+      return <Bold blue>매월 말일</Bold>;
+    } else {
+      return <Bold blue>매월 {String(paymentDay)}일</Bold>;
+    }
   };
 
-  const hideErrorModal = () => {
-    setModalVisible(false);
+  const getAccount = () => {
+    if (!accountBank && !accountNumber) {
+      return <Bold lightGray>미입력</Bold>;
+    } else {
+      return (
+        <Bold blue>
+          {accountBank} {accountNumber}
+        </Bold>
+      );
+    }
   };
 
-  const showModal = () => {
-    setModalVisible(true);
+  const getDues = () => {
+    if (!dues) {
+      return <Bold lightGray>미입력</Bold>;
+    } else {
+      return <Bold blue>{dues}</Bold>;
+    }
   };
 
-  return isLoading ? (
-    <LoadingView />
-  ) : (
+  const createTeam = () => {
+    axios
+      .post(
+        `${ASSIST_SERVER_URL}/team`,
+        { name, paymentDay, accountBank, accountNumber, dues },
+        { headers: { authorization: `Bearer ${token}` } },
+      )
+      .then(({ data: { id, inviteCode } }: AxiosResponse<{ id: number; inviteCode: string }>) => {
+        dispatch(getSelectedTeam({ id, name, leader: true }));
+        navigation.navigate('CreateTeam_6', { inviteCode });
+      })
+      .catch((error) => console.log(error));
+  };
+
+  return (
     <>
-      <CommonModal visible={modalVisible} setVisible={hideErrorModal}>
-        <CommonModalTitle>
-          <Bold size={17}>초대 메시지가 복사되었습니다.</Bold>
-          <Line>
-            <Regular gray size={13}>
-              메시지 앱에서 초대 메시지를 보내주세요.
-            </Regular>
-          </Line>
-        </CommonModalTitle>
-        <CommonModalButton color="blue" text="메시지 앱으로 이동  >" onPress={() => inviteSms()} />
-        <ButtonSpace />
-        <CommonModalButton text="돌아가기  >" onPress={hideErrorModal} />
-      </CommonModal>
-      <NextPageView>
-        <MainTitle>
-          <Light size={22}>팀원을</Light>
-          <Bold size={22}>초대 할 차례에요 📩</Bold>
-        </MainTitle>
-        <CodeContainer onPress={copyToClipboard}>
-          <CodeTitle>팀 초대 코드</CodeTitle>
-          <FlexBox>
-            <Bold size={22}>{inviteCode}</Bold>
-            <MaterialIcons name="content-copy" size={24} color={colors.gray} />
-          </FlexBox>
-        </CodeContainer>
-        <ButtonContainer>
-          <KakaoButton text="카카오톡으로 초대하기  >" isKakao onPress={() => inviteKakao()} />
-          <KakaoButton
-            text="문자메시지로 초대하기  >"
-            isKakao={false}
-            onPress={() => showModal()}
-          />
-        </ButtonContainer>
+      <NextPageView isFinish>
+        <Wrapper>
+          <Circle>
+            <ExclamationMark>
+              <MaterialCommunityIcons name="exclamation-thick" size={80} color={colors.white} />
+            </ExclamationMark>
+          </Circle>
+          <Text>
+            입력 하신 정보를 <Bold size={19}>확인 해 주세요!</Bold>
+          </Text>
+          <Item onPress={() => navigation.navigate('CreateTeam_1')}>
+            <Regular gray>팀 이름</Regular>
+            <Value>
+              <Bold blue>{name}</Bold>
+              <Arrow>&gt;</Arrow>
+            </Value>
+          </Item>
+          <Item onPress={() => navigation.navigate('CreateTeam_2')}>
+            <Regular gray>회비 납부일</Regular>
+            <Value>
+              {getPaymentDay()}
+              <Arrow>&gt;</Arrow>
+            </Value>
+          </Item>
+          <Item onPress={() => navigation.navigate('CreateTeam_3')}>
+            <Regular gray>계좌번호</Regular>
+            <Value>
+              {getAccount()}
+              <Arrow>&gt;</Arrow>
+            </Value>
+          </Item>
+          <Item onPress={() => navigation.navigate('CreateTeam_4')}>
+            <Regular gray>월 회비 금액</Regular>
+            <Value>
+              {getDues()}
+              <Arrow>&gt;</Arrow>
+            </Value>
+          </Item>
+        </Wrapper>
       </NextPageView>
-      <SkipButton text="다음에 초대할게요" onPress={() => navigation.navigate('CreateTeam_6')} />
+      <NextButton onPress={createTeam} />
     </>
   );
 }
