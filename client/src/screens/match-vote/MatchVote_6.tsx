@@ -19,6 +19,7 @@ import { RootState } from '../../store/reducers';
 import ColoredScrollView from '../../components/view/ColoredScrollView';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import LoadingView from '../../components/view/LoadingView';
+import { Dimensions } from 'react-native';
 
 // const PercentBarSpace = styled.View`
 //   width: 1%;
@@ -31,9 +32,10 @@ const BarSpaceContent = styled.View`
 `;
 
 const CardSpaceCard = styled.View`
-  width: 100%;
+  width: ${Dimensions.get('window').width}px;
   height: 16px;
   background-color: ${colors.whiteSmoke};
+  align-self: center;
 `;
 
 const Space = styled.View`
@@ -75,7 +77,7 @@ const ContentContainer = styled.View`
 
 const VotePercentContents = styled.View`
   height: 180px;
-  padding-horizontal: 20px;
+  padding: 0px 20px;
   margin-bottom: 32px;
 `;
 

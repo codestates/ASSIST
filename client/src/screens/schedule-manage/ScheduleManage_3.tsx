@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
@@ -17,7 +17,7 @@ import toNumber from '../../functions/toNumber';
 
 const CounterContainer = styled.View`
   margin-top: 64px;
-  width: 100%;
+  width: ${Dimensions.get('window').width - 40}px;
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -46,9 +46,6 @@ export default function ScheduleManage_3() {
       }),
     );
     navigation.navigate('ScheduleManage_4');
-    console.log(
-      new Date(year, month, day + 1 - toNumber(getValues('deadline'))).toISOString().slice(0, 10),
-    );
   };
 
   return (
