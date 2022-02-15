@@ -2,8 +2,9 @@
 import { ASSIST_SERVER_URL } from '@env';
 import axios, { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TeamInfo } from '../../@types/global/types';
+import { addAddOns } from '../store/actions/propsAction';
 import { RootState } from '../store/reducers';
 
 export default function useTeamInfo() {
@@ -11,6 +12,7 @@ export default function useTeamInfo() {
   const { id } = useSelector((state: RootState) => state.userReducer.selectedTeam);
   const [data, setData] = useState<TeamInfo>(undefined);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +24,7 @@ export default function useTeamInfo() {
             headers: { authorization: `Bearer ${token}` },
           },
         );
+        dispatch(addAddOns({ paymentDay: data?.paymentDay, accountBank: data?.accountBank }));
         setData(data);
       } catch (error) {
         console.log(error);

@@ -1,4 +1,4 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
@@ -18,6 +18,9 @@ import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
 import { colors } from '../../theme/colors';
 import { Linking } from 'react-native';
+import { addGetStarted } from '../../store/actions/propsAction';
+import useLineSelect from '../../hooks/useLineSelect';
+import useProps from '../../hooks/useProps';
 
 const schema = yup.object({
   name: yup.string().required(),
@@ -54,6 +57,11 @@ type GetStartedProps = StackScreenProps<RootStackParamList, 'GetStarted_5'>;
 export default function GetStarted_5({ route }: GetStartedProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {
+    getStarted: { gender },
+  } = useProps();
+  const { isPressed, onPress } = useLineSelect();
+
+  const {
     control,
     getValues,
     formState: { isValid },
@@ -62,22 +70,12 @@ export default function GetStarted_5({ route }: GetStartedProps) {
     resolver: yupResolver(schema),
   });
 
-  const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isPressed]);
 
   const clearErrorMessage = () => setErrorMessage('');
 
   const goToNext = () => {
-    setIsPressed(true);
+    onPress();
     navigation.navigate('GenderSelect', { screenName: 'GetStarted_5' });
   };
 
@@ -108,6 +106,13 @@ export default function GetStarted_5({ route }: GetStartedProps) {
     await Linking.openURL('https://foremost90.notion.site/2c1179c0dc8f4aec89f4deb2c6ceb992');
   };
 
+  const checkValid = () => {
+    if (isValid && gender && !errorMessage) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <>
       <NextPageView>
@@ -131,7 +136,8 @@ export default function GetStarted_5({ route }: GetStartedProps) {
           title="성별"
           isPressed={isPressed}
           onPress={() => goToNext()}
-          selected={route.params?.gender}
+          selected={gender}
+          reset={addGetStarted({ gender: '' })}
         />
       </NextPageView>
       <Agreement>
@@ -160,11 +166,7 @@ export default function GetStarted_5({ route }: GetStartedProps) {
           을 확인하였으며, 동의합니다.
         </InfoText>
       </Agreement>
-      <NextButton
-        text="가입 완료"
-        disabled={!isValid || route.params?.gender === undefined || Boolean(errorMessage)}
-        onPress={() => requestSignUp()}
-      />
+      <NextButton text="가입 완료" disabled={!checkValid()} onPress={() => requestSignUp()} />
     </>
   );
 }

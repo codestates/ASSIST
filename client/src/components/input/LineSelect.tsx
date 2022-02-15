@@ -2,7 +2,8 @@ import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 import React from 'react';
 import { Regular } from '../../theme/fonts';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
 
 const Container = styled.View`
   width: 100%;
@@ -31,10 +32,21 @@ const Selected = styled(Regular)`
   font-family: 'SpoqaHanSansNeo-Regular';
 `;
 
+const Wrapper = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ResetButton = styled.TouchableOpacity`
+  margin-right: 8px;
+  margin-bottom: 2px;
+`;
+
 type LineSelectProps = {
   title: string;
   selected?: string;
   onPress?: () => void;
+  reset?: { type: string; payload: object };
   isPressed?: boolean;
   isFixed?: boolean;
   placeholder?: string;
@@ -47,7 +59,14 @@ export default function LineSelect({
   isPressed,
   isFixed,
   placeholder,
+  reset,
 }: LineSelectProps) {
+  const dispatch = useDispatch();
+  const onReset = () => {
+    if (reset) {
+      dispatch(reset);
+    }
+  };
   const getInputColor = (title?: string) => {
     if (isPressed) {
       return colors.blue;
@@ -85,7 +104,16 @@ export default function LineSelect({
       {<Title color={getInputColor(title)}>{title}</Title>}
       <SelectInput disabled={isFixed} onPress={onPress} color={getInputColor()}>
         <Selected color={getSelectedColor()}>{getSelected()}</Selected>
-        {isFixed || <MaterialIcons name="keyboard-arrow-down" size={23} color={getInputColor()} />}
+        <Wrapper>
+          {!!selected && !isFixed && reset && (
+            <ResetButton onPress={onReset}>
+              <Ionicons name="close-circle" size={22} color={colors.lightGray} />
+            </ResetButton>
+          )}
+          {isFixed || (
+            <MaterialIcons name="keyboard-arrow-down" size={23} color={getInputColor()} />
+          )}
+        </Wrapper>
       </SelectInput>
     </Container>
   );

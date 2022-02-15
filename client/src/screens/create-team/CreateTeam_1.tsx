@@ -12,6 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { addCreateTeam } from '../../store/actions/propsAction';
+import useProps from '../../hooks/useProps';
 
 const schema = yup.object({
   teamName: yup
@@ -22,6 +23,9 @@ const schema = yup.object({
 
 export default function CreateTeam_1() {
   const {
+    createTeam: { name },
+  } = useProps();
+  const {
     control,
     watch,
     getValues,
@@ -29,6 +33,7 @@ export default function CreateTeam_1() {
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
+    defaultValues: { teamName: name },
   });
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState('');

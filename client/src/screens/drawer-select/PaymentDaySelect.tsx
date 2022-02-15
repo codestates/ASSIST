@@ -1,13 +1,15 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import React, { createRef, useState } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components/native';
 import CommonModalButton from '../../components/button/CommonModalButton';
 import BottomDrawer from '../../components/drawer/BottomDrawer';
 import ListPicker from '../../components/input/ListPicker';
 import ListItem from '../../components/view/ListItem';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
+import { addAddOns, addCreateTeam } from '../../store/actions/propsAction';
 import { Bold } from '../../theme/fonts';
 
 const ItemContainer = styled.View`
@@ -34,15 +36,16 @@ const Wrapper = styled.View`
 type PaymentDaySelectProps = StackScreenProps<RootStackParamList, 'PaymentDaySelect'>;
 
 export default function PaymentDaySelect({ route }: PaymentDaySelectProps) {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const days: { value: string }[] = [...Array(31).keys()]
     .slice(1)
     .map((day) => {
       return { value: `${day}일` };
     })
     .concat({ value: '말일' });
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const daysRef = createRef<FlatList>();
   const [dayIndex, setDayIndex] = useState<number>(-1);
+  const dispatch = useDispatch();
 
   const pressDay = (index: number) => {
     daysRef.current?.scrollToIndex({ animated: true, index: index - 2 });
@@ -56,12 +59,24 @@ export default function PaymentDaySelect({ route }: PaymentDaySelectProps) {
     return true;
   };
 
+  const getDate = (value?: string) => {
+    if (!value) {
+      return 0;
+    } else if (value === '말일') {
+      return 32;
+    }
+    return Number(value?.slice(0, value.length - 1));
+  };
+
   const getNavigation = () => {
-    navigation.navigate({
-      name: route.params.name,
-      params: { paymentDay: days[dayIndex - 2]['value'] },
-      merge: true,
-    });
+    const paymentDay = getDate(days[dayIndex - 2]['value']);
+    const screenName = route.params.name;
+    if (screenName === 'CreateTeam_2') {
+      dispatch(addCreateTeam({ paymentDay }));
+    } else if (screenName === 'AddOns_3') {
+      dispatch(addAddOns({ paymentDay }));
+    }
+    navigation.navigate(screenName);
   };
 
   const renderDays: ListRenderItem<{ value: string }> = ({ item: { value }, index }) => (
@@ -94,7 +109,7 @@ export default function PaymentDaySelect({ route }: PaymentDaySelectProps) {
         </ItemContainer>
         <ButtonContainer>
           <CommonModalButton
-            onPress={() => getNavigation()}
+            onPress={getNavigation}
             disabled={!checkValid()}
             color="blue"
             text="선택하기  >"

@@ -41,17 +41,17 @@ export type RootStackParamList = {
   GetStarted_4: undefined;
   GetStarted_5: undefined | { gender: string };
   GetStarted_6: undefined | { accessToken: string };
-  GenderSelect: undefined | { screenName: keyof RootStackParamList };
+  GenderSelect: { screenName: keyof RootStackParamList };
   GetStarted_Login: undefined | { email: string; name: string; phone: string };
   ScheduleManage: undefined;
   ScheduleManage_1: undefined | { date?: string; startTime?: string; endTime?: string };
-  ScheduleManage_2: undefined | { modal: boolean; stadiumAddr: string };
+  ScheduleManage_2: undefined | { modal: boolean };
   ScheduleManage_3: undefined;
   ScheduleManage_4: undefined;
   ScheduleManage_5: undefined | { matchId: string | number };
   CalendarSelect: undefined | { date: string };
   TimeSelect: undefined | { time: 'start' | 'end'; startTime?: string; endTime?: string };
-  StadiumSelect: undefined | { modal: boolean; stadiumAddr: string };
+  StadiumSelect: undefined | { modal: boolean };
   ChangePassword: undefined | { screenName?: keyof RootStackParamList; phone?: string };
   FindPassword:
     | undefined

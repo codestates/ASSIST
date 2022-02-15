@@ -10,9 +10,9 @@ import MainTitle from '../../components/text/MainTitle';
 import SubTitle from '../../components/text/SubTitle';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import SkipButton from '../../components/button/SkipButton';
 import { useDispatch } from 'react-redux';
 import { addCreateTeam } from '../../store/actions/propsAction';
+import useProps from '../../hooks/useProps';
 
 const schema = yup.object({
   dues: yup.string().required(),
@@ -20,13 +20,20 @@ const schema = yup.object({
 
 export default function CreateTeam_4() {
   const {
+    createTeam: { dues },
+  } = useProps();
+
+  const {
     control,
     formState: { isValid },
     getValues,
+    watch,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
+    defaultValues: { dues },
   });
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [errorMessage, setErrorMessage] = useState('');
   const clearErrorMessage = () => setErrorMessage('');
@@ -41,9 +48,11 @@ export default function CreateTeam_4() {
     navigation.navigate('CreateTeam_5');
   };
 
-  const skipToEnd = () => {
-    dispatch(addCreateTeam({ dues: '' }));
-    navigation.navigate('CreateTeam_5');
+  const checkValid = () => {
+    if ((!watch('dues') && !errorMessage) || isValid) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -69,8 +78,7 @@ export default function CreateTeam_4() {
           clearErrorMessage={clearErrorMessage}
         />
       </NextPageView>
-      <SkipButton onPress={skipToEnd} />
-      <NextButton disabled={!isValid || Boolean(errorMessage)} onPress={goToNext} />
+      <NextButton disabled={!checkValid()} onPress={goToNext} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import NextButton from '../../components/button/NextButton';
 import SkipButton from '../../components/button/SkipButton';
@@ -15,6 +15,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { addCreateTeam } from '../../store/actions/propsAction';
+import useProps from '../../hooks/useProps';
+import useLineSelect from '../../hooks/useLineSelect';
 
 const schema = yup.object({
   accountNumber: yup
@@ -28,46 +30,52 @@ type CreateTeamProps = StackScreenProps<RootStackParamList, 'CreateTeam_3'>;
 export default function CreateTeam_3({ route }: CreateTeamProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {
+    createTeam: { accountBank, accountNumber },
+  } = useProps();
+  const {
     control,
     formState: { isValid },
     getValues,
+    watch,
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
+    defaultValues: { accountNumber },
   });
   const dispatch = useDispatch();
-  const [isPressed, setIsPressed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (isPressed) {
-        setIsPressed(false);
-      }
-    });
-    return unsubscribe;
-  }, [navigation, isPressed]);
+  const { isPressed, onPress } = useLineSelect();
 
   const clearErrorMessage = () => setErrorMessage('');
 
   const goToSelect = () => {
-    setIsPressed(true);
+    onPress();
     navigation.navigate('BankSelect', { name: 'CreateTeam_3' });
   };
 
-  const goToNext = () => {
+  const addProps = () =>
     dispatch(
       addCreateTeam({
-        accountBank: route.params?.bank,
+        accountBank,
         accountNumber: String(getValues('accountNumber')),
       }),
     );
+
+  const goToNext = () => {
+    addProps();
     navigation.navigate('CreateTeam_4');
   };
 
   const skipToEnd = () => {
-    dispatch(addCreateTeam({ accountBank: '', accountNumber: '', dues: '' }));
+    addProps();
     navigation.navigate('CreateTeam_5');
+  };
+
+  const checkValid = () => {
+    if ((!errorMessage && !watch('accountNumber') && !accountBank) || (isValid && accountBank)) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -86,8 +94,9 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
         <LineSelect
           title="은행"
           isPressed={isPressed}
-          selected={route.params?.bank}
+          selected={accountBank}
           onPress={() => goToSelect()}
+          reset={addCreateTeam({ accountBank: '' })}
         />
         <LineInput
           control={control}
@@ -104,11 +113,8 @@ export default function CreateTeam_3({ route }: CreateTeamProps) {
           ]}
         />
       </NextPageView>
-      <SkipButton onPress={skipToEnd} />
-      <NextButton
-        disabled={!isValid || route.params?.bank === undefined || Boolean(errorMessage)}
-        onPress={goToNext}
-      />
+      {checkValid() && <SkipButton onPress={skipToEnd} />}
+      <NextButton disabled={!checkValid()} onPress={goToNext} />
     </>
   );
 }
