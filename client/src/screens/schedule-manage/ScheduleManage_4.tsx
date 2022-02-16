@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
-import NextPageView from '../../components/view/NextPageView';
 import NextButton from '../../components/button/NextButton';
-import MainTitle from '../../components/text/MainTitle';
-import { Bold, Light, Regular } from '../../theme/fonts';
-import { colors } from '../../theme/colors';
 import { RootState } from '../../store/reducers';
 import axios, { AxiosResponse } from 'axios';
 import { ASSIST_SERVER_URL } from '@env';
@@ -17,50 +12,18 @@ import checkStartTime from '../../functions/checkStartTime';
 import CommonModalTitle from '../../components/text/CommonModalTitle';
 import { CommonModal } from '../../components/modal/CommonModal';
 import CommonModalButton from '../../components/button/CommonModalButton';
-import useReset from '../../hooks/useReset';
-
-const TitleSpaceContents = styled.View`
-  width: 100%;
-  height: 16px;
-`;
-
-const TextSpaceText = styled.View`
-  width: 100%;
-  height: 8px;
-`;
-
-const Container = styled.View`
-  width: 100%;
-  height: 40%;
-`;
-
-const MatchInfoContainer = styled.View`
-  width: 100%;
-  background-color: ${colors.whiteSmoke};
-  border: 1px solid ${colors.lightGray};
-  padding: 32px;
-  border-radius: 15px;
-`;
-
-const MatchInfoTitle = styled.View`
-  width: 100%;
-  margin-bottom: 26px;
-`;
-
-const MatchInfoContents = styled.View`
-  width: 100%;
-  justify-content: space-between;
-`;
+import SummaryView from '../../components/view/SummaryView';
+import SummaryItem from '../../components/view/SummaryItem';
+import useProps from '../../hooks/useProps';
 
 export default function ScheduleManage_4() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const {
     scheduleManage: { date, startTime, endTime, address, address2, deadline },
-  } = useSelector((state: RootState) => state.propsReducer);
+  } = useProps();
   const { token, selectedTeam } = useSelector((state: RootState) => state.userReducer);
   const [isLoading, setIsLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const reset = useReset({ screenName: 'ScheduleManage_1', params: { startTime, endTime, date } });
 
   const checkDayPassing = () => {
     return checkOverMidnight(startTime, endTime);
@@ -77,7 +40,7 @@ export default function ScheduleManage_4() {
           endTime,
           address,
           address2,
-          deadline,
+          deadline: deadline[0],
           teamId: selectedTeam.id,
           daypassing: checkDayPassing(),
         },
@@ -108,7 +71,7 @@ export default function ScheduleManage_4() {
 
   const hideErrorModal = () => {
     setModalVisible(false);
-    reset();
+    onPressTime();
   };
 
   const checkValid = () => {
@@ -117,6 +80,14 @@ export default function ScheduleManage_4() {
     }
     return true;
   };
+
+  const dateValue = `${date} (${getDayString(date)})`;
+  const timeValue = `시작 ${startTime} → ${checkDayPassing() ? '익일' : ''} ${endTime} 종료`;
+  const deadlineValue = `경기 시작 ${String(deadline[1])}일 전`;
+
+  const onPressTime = () => navigation.navigate('ScheduleManage_1');
+  const onPressAddress = () => navigation.navigate('ScheduleManage_2');
+  const onPressDeadline = () => navigation.navigate('ScheduleManage_3');
 
   return (
     <>
@@ -127,34 +98,13 @@ export default function ScheduleManage_4() {
         />
         <CommonModalButton text="돌아가기  >" onPress={hideErrorModal} />
       </CommonModal>
-      <NextPageView>
-        <MainTitle>
-          <Bold size={22}>
-            경기 정보<Light size={22}>를</Light>
-          </Bold>
-          <Light size={22}>최종 확인 해 주세요 ✅</Light>
-        </MainTitle>
-        <TitleSpaceContents />
-        <Container>
-          <MatchInfoContainer>
-            <MatchInfoTitle>
-              <Bold size={20}>경기 정보</Bold>
-            </MatchInfoTitle>
-            <MatchInfoContents>
-              <Regular size={17}>{`${date} (${getDayString(date)})`}</Regular>
-              <TextSpaceText />
-              <Bold size={17}>
-                시작 {startTime} → {checkDayPassing() && <Bold size={13}>익일 </Bold>}
-                {endTime} 종료
-              </Bold>
-              <TextSpaceText />
-              <Regular gray>{address}</Regular>
-              <TextSpaceText />
-              <Regular gray>{address2}</Regular>
-            </MatchInfoContents>
-          </MatchInfoContainer>
-        </Container>
-      </NextPageView>
+      <SummaryView>
+        <SummaryItem title="경기일" value={dateValue} onPress={onPressTime} />
+        <SummaryItem title="경기시간" value={timeValue} onPress={onPressTime} />
+        <SummaryItem title="주소" value={address} onPress={onPressAddress} />
+        <SummaryItem title="상세주소" value={address2} onPress={onPressAddress} />
+        <SummaryItem title="참석마감" value={deadlineValue} onPress={onPressDeadline} />
+      </SummaryView>
       <NextButton disabled={!checkValid()} text="팀 전체에 공지하기" onPress={onPressNext} />
     </>
   );

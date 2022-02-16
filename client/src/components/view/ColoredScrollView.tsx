@@ -95,11 +95,14 @@ export default function ColoredScrollView({
     } else {
       if (isCard && isLeader && !isFinished) {
         return (
-          <SkipButton
-            color={colors.whiteSmoke}
-            text="경기 취소 하기  >"
-            onPress={() => navigation.navigate('CancelSelect')}
-          />
+          <>
+            <SkipButton
+              color={colors.whiteSmoke}
+              text="경기 취소 하기  >"
+              onPress={() => navigation.navigate('CancelSelect')}
+            />
+            <BottomSpace />
+          </>
         );
       }
     }
@@ -122,13 +125,10 @@ export default function ColoredScrollView({
             <CardContainer width={width}>{children[1]}</CardContainer>
             <Space />
           </CardView>
+          <BottomSpace />
         </>
       )}
-      <BottomSpace />
-      <>
-        {getButton()}
-        <BottomSpace />
-      </>
+      {getButton()}
     </Container>
   );
 }

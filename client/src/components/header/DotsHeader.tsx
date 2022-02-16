@@ -49,9 +49,17 @@ type DotsHeaderProps = {
   isIntro?: boolean;
   reset?: keyof RootStackParamList;
   goHome?: boolean;
+  navigate?: keyof RootStackParamList;
 };
 
-export default function DotsHeader({ reset, goHome, current, total, isIntro }: DotsHeaderProps) {
+export default function DotsHeader({
+  navigate,
+  reset,
+  goHome,
+  current,
+  total,
+  isIntro,
+}: DotsHeaderProps) {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const navigateToHome = useGoHome();
 
@@ -60,6 +68,8 @@ export default function DotsHeader({ reset, goHome, current, total, isIntro }: D
       navigation.reset({ routes: [{ name: reset }] });
     } else if (goHome) {
       navigateToHome();
+    } else if (navigate) {
+      navigation.navigate(navigate);
     } else {
       navigation.goBack();
     }

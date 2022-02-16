@@ -4,6 +4,7 @@ import React from 'react';
 import { Regular } from '../../theme/fonts';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
+import { ScrollView } from 'react-native';
 
 const Container = styled.View`
   width: 100%;
@@ -39,6 +40,7 @@ const Wrapper = styled.View`
 
 const ResetButton = styled.TouchableOpacity`
   margin-right: 8px;
+  margin-left: 3px;
   margin-bottom: 2px;
 `;
 
@@ -103,7 +105,9 @@ export default function LineSelect({
     <Container>
       {<Title color={getInputColor(title)}>{title}</Title>}
       <SelectInput disabled={isFixed} onPress={onPress} color={getInputColor()}>
-        <Selected color={getSelectedColor()}>{getSelected()}</Selected>
+        <ScrollView horizontal>
+          <Selected color={getSelectedColor()}>{getSelected()}</Selected>
+        </ScrollView>
         <Wrapper>
           {!!selected && !isFixed && reset && (
             <ResetButton onPress={onReset}>

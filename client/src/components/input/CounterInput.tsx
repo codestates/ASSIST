@@ -16,7 +16,6 @@ const Container = styled.View`
 const Border = styled.View`
   width: 90%;
   padding: 0% 5%;
-  border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: ${colors.blue};
   flex-direction: row;

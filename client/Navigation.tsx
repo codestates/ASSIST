@@ -48,6 +48,7 @@ export default function Navigation() {
               path: 'ScheduleManage',
               screens: {
                 ScheduleManage_2: 'ScheduleManage_2',
+                ScheduleManage_4: 'ScheduleManage_4',
                 StadiumSelect: 'StadiumSelect',
               },
             },
