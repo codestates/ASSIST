@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -24,12 +23,13 @@ export default function ScheduleManage_2() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const {
-    scheduleManage: { address },
+    scheduleManage: { address, address2 },
   } = useProps();
   const { isPressed, onPress } = useLineSelect();
   const { control, getValues } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema),
+    defaultValues: { address2 },
   });
 
   const [errorMessage, setErrorMessage] = useState('');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
@@ -8,12 +8,12 @@ import NextButton from '../../components/button/NextButton';
 import MainTitle from '../../components/text/MainTitle';
 import { Bold, Light, Regular } from '../../theme/fonts';
 import SubTitle from '../../components/text/SubTitle';
-import { RootState } from '../../store/reducers';
 import { addScheduleManage } from '../../store/actions/propsAction';
 import CounterInput from '../../components/input/CounterInput';
 import { useForm } from 'react-hook-form';
 import { Dimensions } from 'react-native';
 import toNumber from '../../functions/toNumber';
+import useProps from '../../hooks/useProps';
 
 const CounterContainer = styled.View`
   margin-top: 64px;
@@ -30,19 +30,24 @@ const CounterField = styled.View`
 export default function ScheduleManage_3() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
-  const { date } = useSelector((state: RootState) => state.propsReducer.scheduleManage);
-  const { control, getValues } = useForm({ mode: 'onChange' });
+  const {
+    scheduleManage: { date, deadline },
+  } = useProps();
+  const { control, getValues } = useForm({
+    mode: 'onChange',
+    defaultValues: { deadline: `${deadline[1] ? deadline[1] : '2'} 일전` },
+  });
   const matchDate = new Date(date);
   const year = matchDate.getFullYear();
   const month = matchDate.getMonth();
   const day = matchDate.getDate();
 
   const onPress = () => {
+    const dateBefore = toNumber(getValues('deadline'));
+    const deadline = new Date(year, month, day + 1 - dateBefore).toISOString().slice(0, 10);
     dispatch(
       addScheduleManage({
-        deadline: new Date(year, month, day + 1 - toNumber(getValues('deadline')))
-          .toISOString()
-          .slice(0, 10),
+        deadline: [deadline, dateBefore],
       }),
     );
     navigation.navigate('ScheduleManage_4');

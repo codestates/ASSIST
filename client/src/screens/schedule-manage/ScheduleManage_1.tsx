@@ -25,9 +25,6 @@ export default function ScheduleManage_1() {
   const { isPressed: isCalendarPressed, onPress: onCalendarPress } = useLineSelect();
   const { isPressed: isStartTimePressed, onPress: onStartTimePress } = useLineSelect();
   const { isPressed: isEndTimePressed, onPress: onEndTimePress } = useLineSelect();
-
-  const [errStartTime, setErrStartTime] = useState(startTime);
-  const [errDate, setErrDate] = useState(date);
   const [modalVisible, setModalVisible] = useState(false);
 
   const getNextDay = (startTime: string, endTime: string) => {
@@ -63,33 +60,25 @@ export default function ScheduleManage_1() {
     }
   };
 
-  const showErrorModal = (date: string, startTime: string) => {
-    setErrDate(date);
-    setErrStartTime(startTime);
-    setModalVisible(true);
-  };
+  const showErrorModal = () => setModalVisible(true);
 
-  const hideErrorModal = () => {
-    setModalVisible(false);
-  };
+  const hideErrorModal = () => setModalVisible(false);
 
   const checkValid = () => {
-    if (!date || !startTime || !endTime || (errDate === date && errStartTime === startTime)) {
+    if (!date || !startTime || !endTime) {
       return false;
     }
     return true;
   };
 
-  const goToNext = () => {
-    navigation.navigate('ScheduleManage_2');
-  };
+  const goToNext = () => navigation.navigate('ScheduleManage_2');
 
   const onPressNext = () => {
     if (date && startTime && endTime) {
       if (checkStartTime(date, startTime)) {
         goToNext();
       } else {
-        showErrorModal(date, startTime);
+        showErrorModal();
       }
     }
   };
