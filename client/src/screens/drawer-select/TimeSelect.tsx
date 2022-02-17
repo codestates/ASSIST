@@ -13,6 +13,7 @@ import checkOverMidnight from '../../functions/checkOverMidnight';
 import useProps from '../../hooks/useProps';
 import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { addScheduleManage } from '../../store/actions/propsAction';
+import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
 
 const TimeContainer = styled.View`
@@ -37,8 +38,10 @@ const Wrapper = styled.View`
   padding: 0px 30px;
 `;
 
-const NoWrap = styled.View`
-  white-space: nowrap;
+const BoldText = styled(Bold)`
+  color: ${colors.blue};
+  font-size: 20px;
+  flex-shrink: 0;
 `;
 
 type TimeSelectProps = StackScreenProps<RootStackParamList, 'TimeSelect'>;
@@ -197,13 +200,7 @@ export default function TimeSelect({ route }: TimeSelectProps) {
           <Bold size={22}>{route.params?.time === 'start' ? '시작' : '종료'} 시간</Bold>
         </TitleContainer>
         <TimeContainer>
-          {getNextDay() && (
-            <NoWrap>
-              <Bold size={20} blue>
-                익일
-              </Bold>
-            </NoWrap>
-          )}
+          {getNextDay() && <BoldText>익일</BoldText>}
           <ListPicker
             isInverted={Boolean(endTime)}
             scrollCenter={scrollHours}

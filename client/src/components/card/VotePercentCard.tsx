@@ -4,42 +4,38 @@ import { Regular } from '../../theme/fonts';
 
 const VotePercentContainer = styled.View`
   width: 100%;
-  height: 30px;
+  height: 46px;
   flex-direction: row;
   align-items: center;
-  margin-bottom: 16px;
 `;
 
 const VotePercentBlock = styled.View`
-  background-color: ${(props: { blockColor: string }) => props.blockColor}
+  background-color: ${(props: { blockColor: string }) => props.blockColor};
   width: 16px;
   height: 16px;
-  margin-right: 7px;
+  margin-right: 9px;
   border-radius: 4px;
 `;
 
-const VotePercentTitle = styled(Regular)`
-  font-size: 17px;
-  width: 64px;
-  margin-right: 35px;
+const BlockTitle = styled.View`
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
 `;
 
-const VotePercentPerson = styled(Regular)`
-  font-size: 17px;
-  width: 64px;
-  margin-right: 35px;
+const Person = styled(Regular)`
+  flex: 0.7;
 `;
 
-const VotePercent = styled(Regular)`
-  font-size: 17px;
-  width: 64px;
+const Percent = styled(Regular)`
+  flex: 0.3;
 `;
 
 type VotePercentCardProps = {
   blockColor: string;
   title: string;
   person: number;
-  percent: string;
+  percent: number;
 };
 
 export default function VotePercentCard(props: VotePercentCardProps) {
@@ -47,10 +43,12 @@ export default function VotePercentCard(props: VotePercentCardProps) {
 
   return (
     <VotePercentContainer>
-      <VotePercentBlock blockColor={blockColor} />
-      <VotePercentTitle>{title}</VotePercentTitle>
-      <VotePercentPerson>{person}명</VotePercentPerson>
-      <VotePercent>{percent}%</VotePercent>
+      <BlockTitle>
+        <VotePercentBlock blockColor={blockColor} />
+        <Regular size={17}>{title}</Regular>
+      </BlockTitle>
+      <Person size={17}>{person}명</Person>
+      <Percent size={17}>{percent}%</Percent>
     </VotePercentContainer>
   );
 }

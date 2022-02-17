@@ -43,6 +43,7 @@ const TextInput = styled.TextInput`
   margin-top: 10px;
   color: ${colors.darkGray};
   font-family: 'SpoqaHanSansNeo-Regular';
+  padding-right: 40px;
   ${Platform.OS === 'web' && 'outline-width: 0px;'}
 `;
 

@@ -14,6 +14,7 @@ import LineInput from '../../components/input/LineInput';
 import { addScheduleManage } from '../../store/actions/propsAction';
 import useProps from '../../hooks/useProps';
 import useLineSelect from '../../hooks/useLineSelect';
+import useReset from '../../hooks/useReset';
 
 const schema = yup.object({
   address2: yup.string(),
@@ -21,6 +22,7 @@ const schema = yup.object({
 
 export default function ScheduleManage_2() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const reset = useReset({ screenName: 'StadiumSelect' });
   const dispatch = useDispatch();
   const {
     scheduleManage: { address, address2 },
@@ -38,7 +40,11 @@ export default function ScheduleManage_2() {
 
   const handleStadium = () => {
     onPress();
-    navigation.navigate('StadiumSelect', { modal: true });
+    if (address) {
+      navigation.navigate('StadiumSelect');
+    } else {
+      reset();
+    }
   };
 
   const goToNext = () => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ScrollView } from 'react-native';
 import styled from 'styled-components/native';
 import { colors } from '../../theme/colors';
 import { Bold, Regular } from '../../theme/fonts';
@@ -6,18 +7,9 @@ import { Bold, Regular } from '../../theme/fonts';
 const Item = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   width: 95%;
   margin-bottom: 40px;
-`;
-
-const Value = styled.View`
-  flex-direction: row;
-`;
-
-const Text = styled(Bold)`
-  white-space: nowrap;
 `;
 
 const Arrow = styled(Bold)`
@@ -27,6 +19,12 @@ const Arrow = styled(Bold)`
   font-size: 18px;
 `;
 
+const Title = styled(Regular)`
+  color: ${colors.gray};
+  margin-right: 10px;
+  flex-shrink: 0;
+`;
+        
 type SummaryItemProps = {
   onPress: () => void;
   title: string;
@@ -36,19 +34,22 @@ type SummaryItemProps = {
 export default function SummaryItem({ onPress, value, title }: SummaryItemProps) {
   const getValue = () => {
     if (!value) {
-      return <Text lightGray>미입력</Text>;
+      return <Bold lightGray>미입력</Bold>;
     } else {
-      return <Text blue>{value}</Text>;
+      return <Bold blue>{value}</Bold>;
     }
   };
 
   return (
     <Item onPress={onPress}>
-      <Regular gray>{title}</Regular>
-      <Value>
+      <Title>{title}</Title>
+      <ScrollView
+        style={{ flexDirection: 'row-reverse' }}
+        contentContainerStyle={{ justifyContent: 'flex-end' }}
+        horizontal>
         {getValue()}
-        <Arrow>&gt;</Arrow>
-      </Value>
+      </ScrollView>
+      <Arrow>&gt;</Arrow>
     </Item>
   );
 }

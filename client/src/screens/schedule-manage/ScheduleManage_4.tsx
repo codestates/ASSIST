@@ -82,8 +82,7 @@ export default function ScheduleManage_4() {
   };
 
   const dateValue = `${date} (${getDayString(date)})`;
-  const timeValue = `시작 ${startTime} → ${checkDayPassing() ? '익일' : ''}
-  ${endTime} 종료`;
+  const timeValue = `시작 ${startTime} → ${checkDayPassing() ? '익일' : ''} ${endTime} 종료`;
   const deadlineValue = `경기 시작 ${String(deadline[1])}일 전`;
 
   const onPressTime = () => navigation.navigate('ScheduleManage_1');
