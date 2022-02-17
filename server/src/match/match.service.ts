@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -147,16 +148,16 @@ export class MatchService {
       ) {
         if (
           data.date < getDate(-1) ||
-          (data.date === getDate() && data.daypassing === false && data.endTime < getTime()) ||
+          (data.date === getDate() && data.daypassing === false && data.endTime <= getTime()) ||
           (data.date === getDate(-1) &&
-            ((data.daypassing === true && data.endTime < getTime()) || data.daypassing === false))
+            ((data.daypassing === true && data.endTime <= getTime()) || data.daypassing === false))
         ) {
           data.condition = '경기 완료';
           return true;
         }
 
         if (data.condition !== '경기중') {
-          if (data.date === getDate() && data.startTime < getTime()) {
+          if (data.date === getDate() && data.startTime <= getTime()) {
             data.condition = '경기중';
             return true;
           }
@@ -222,7 +223,7 @@ export class MatchService {
     const offset = page * limit - limit;
 
     const queryString = `update assist.match as m set m.condition = '경기 완료' where 
-    (m.teamId = ${teamId} and m.condition in ('경기 확정', '인원 모집 중') and (date < '${getDate(
+    (m.teamId = ${teamId} and m.condition in ('경기 확정', '인원 모집 중','경기중') and (date < '${getDate(
       -1,
     )}' or (endTime >= '${getTime()}' and ((date= '${getDate(
       -1,
@@ -314,8 +315,16 @@ export class MatchService {
       throw new NotFoundException(`이미 ${beforeCondi}으로 투표하셨습니다.`);
     }
     if (match.condition === '경기 취소' || match.condition === '경기 완료') {
-      throw new NotFoundException('해당 경기에 투표할 수 없습니다.');
+      throw new ForbiddenException('해당 경기에 투표할 수 없습니다.');
     }
+    if (
+      match.condition === '경기중' ||
+      match.date < getDate(-1) ||
+      (match.date === getDate() && match.startTime <= getTime())
+    ) {
+      throw new ForbiddenException('경기가 시작된 경우 투표할 수 없습니다.');
+    }
+
     await this.userMatchRepository
       .createQueryBuilder('user_match')
       .update(User_match)
