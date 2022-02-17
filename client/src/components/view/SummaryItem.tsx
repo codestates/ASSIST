@@ -24,7 +24,7 @@ const Title = styled(Regular)`
   margin-right: 10px;
   flex-shrink: 0;
 `;
-
+        
 type SummaryItemProps = {
   onPress: () => void;
   title: string;
