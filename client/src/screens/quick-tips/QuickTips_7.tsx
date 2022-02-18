@@ -1,4 +1,3 @@
-import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -9,8 +8,8 @@ import CardScrollView from '../../components/view/CardScrollView';
 import ShadeView from '../../components/view/ShadeView';
 import useEditProfile from '../../hooks/useEditProfile';
 import useFadeAnim from '../../hooks/useFadeAnim';
+import useNestedReset from '../../hooks/useNestedReset';
 import useReset from '../../hooks/useReset';
-import { RootStackParamList } from '../../navigation/RootStackParamList';
 import { changeRole } from '../../store/actions/userAction';
 import { Regular } from '../../theme/fonts';
 
@@ -20,16 +19,9 @@ export default function QuickTips_7() {
   const dispatch = useDispatch();
   const backgroundFadeAnim = useRef(new Animated.Value(1)).current;
   const { fadeAnim, fadeIn, fadeOut } = useFadeAnim({ duration: 200 });
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  const reset = () => {
-    navigation.dispatch({
-      ...CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'User', state: { routes: [{ name: 'CreateOrJoin' }] } }],
-      }),
-    });
-  };
+  const resetCreateOrJoin = useNestedReset({
+    routes: [{ name: 'User', state: { routes: [{ name: 'CreateOrJoin' }] } }],
+  });
 
   useEffect(() => {
     fadeIn();
@@ -51,7 +43,7 @@ export default function QuickTips_7() {
       backgroundFadeOut();
     }, 200);
     setTimeout(() => {
-      reset();
+      resetCreateOrJoin();
     }, 1200);
   };
 

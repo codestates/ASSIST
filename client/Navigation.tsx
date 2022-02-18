@@ -74,6 +74,7 @@ export default function Navigation() {
       if (error.response?.status === 404) {
         await Linking.openURL('/NotFound');
       }
+      return Promise.reject(error.response);
     },
   );
 
