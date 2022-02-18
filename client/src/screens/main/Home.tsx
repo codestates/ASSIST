@@ -16,6 +16,7 @@ import { FirstTeam, NextMatch, TeamInfo } from '../../../@types/global/types';
 import { getSelectedTeam } from '../../store/actions/userAction';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { Platform } from 'react-native';
+import useNestedReset from '../../hooks/useNestedReset';
 
 type TeamProps = StackScreenProps<RootStackParamList, 'Team'>;
 
@@ -25,6 +26,9 @@ export default function Home({ route }: TeamProps) {
   const { token, selectedTeam, id, role } = useSelector((state: RootState) => state.userReducer);
   const routeTeamId = Number(route.params?.teamId);
   const [nextMatch, setNextMatch] = useState<NextMatch>(null);
+  const resetLogin = useNestedReset({
+    routes: [{ name: 'Guest', state: { routes: [{ name: 'GetStarted' }] } }],
+  });
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
@@ -77,6 +81,10 @@ export default function Home({ route }: TeamProps) {
         }
       }
     } catch (error) {
+      const err = error as AxiosResponse;
+      if (err.status === 401) {
+        resetLogin();
+      }
       console.log(error);
     }
   };
@@ -102,6 +110,10 @@ export default function Home({ route }: TeamProps) {
         }
       }
     } catch (error) {
+      const err = error as AxiosResponse;
+      if (err.status === 401) {
+        resetLogin();
+      }
       console.log(error);
     }
   };
