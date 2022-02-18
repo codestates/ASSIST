@@ -72,13 +72,13 @@ export default function TimeSelect({ route }: TimeSelectProps) {
         ),
       );
     }
-    if (endTime) {
+    if (route.params?.time === 'start' && endTime) {
       return [...range.slice(1, range.length), range[0]].reverse();
     }
     return range;
   };
 
-  const hours: ListType[] = getHours(startTime || endTime);
+  const hours: ListType[] = getHours(route.params?.time === 'start' ? endTime : startTime);
   const minutes: ListType[] = [...Array(60).keys()]
     .filter((minute) => minute % 5 === 0)
     .map((minute) => (`${minute}`.length === 1 ? { value: `0${minute}` } : { value: `${minute}` }));
@@ -136,55 +136,63 @@ export default function TimeSelect({ route }: TimeSelectProps) {
     />
   );
 
-  const scrollHoursCenter = () => {
-    hoursRef.current?.scrollToIndex({ animated: true, index: hours.length / 2 });
-  };
+  const findIndex = (time: ListType[], target: string) =>
+    time.findIndex((el) => el.value === target);
 
-  const scrollMinutesCenter = () => {
-    minutesRef.current?.scrollToIndex({ animated: true, index: minutes.length / 2 });
-  };
-
-  const getMinuteIndex = (time?: string) => {
-    const splitted = time && time.split(':')[1];
-    if (splitted) {
-      return minutes.findIndex((el) => el.value === splitted);
+  const getMinuteIndex = () => {
+    const startIndex = findIndex(minutes, startTime.split(':')[1]);
+    const endIndex = findIndex(minutes, endTime.split(':')[1]);
+    if (route.params?.time === 'start') {
+      if (startTime) {
+        setMinuteIndex(startIndex + 2);
+        return startIndex;
+      } else if (endTime) {
+        return endIndex;
+      }
+    } else if (route.params?.time === 'end') {
+      if (endTime) {
+        setMinuteIndex(endIndex + 2);
+        return endIndex;
+      } else if (startTime) {
+        return startIndex;
+      }
     }
     return minutes.length / 2;
   };
 
-  const scrollMinutesIndex = () => {
+  const getHourIndex = () => {
+    const startIndex = findIndex(hours, startTime.split(':')[0]);
+    const endIndex = findIndex(hours, endTime.split(':')[0]);
+    if (route.params?.time === 'start') {
+      if (startTime) {
+        setHourIndex(startIndex + 2);
+        return startIndex;
+      } else if (endTime) {
+        return endIndex;
+      }
+    } else if (route.params?.time === 'end') {
+      if (endTime) {
+        setHourIndex(endIndex + 2);
+        return endIndex;
+      } else if (startTime) {
+        return startIndex;
+      }
+    }
+    return hours.length / 2;
+  };
+
+  const scrollMinutes = () => {
     minutesRef.current?.scrollToIndex({
       animated: true,
-      index: getMinuteIndex(startTime || endTime),
+      index: getMinuteIndex(),
     });
   };
 
   const scrollHours = () => {
-    if (route.params?.time === 'start') {
-      if (!endTime) {
-        scrollHoursCenter();
-      }
-    } else if (route.params?.time === 'end') {
-      if (!startTime) {
-        scrollHoursCenter();
-      }
-    }
-  };
-
-  const scrollMinutes = () => {
-    if (route.params?.time === 'start') {
-      if (endTime) {
-        scrollMinutesIndex();
-      } else {
-        scrollMinutesCenter();
-      }
-    } else if (route.params?.time === 'end') {
-      if (startTime) {
-        scrollMinutesIndex();
-      } else {
-        scrollMinutesCenter();
-      }
-    }
+    hoursRef.current?.scrollToIndex({
+      animated: true,
+      index: getHourIndex(),
+    });
   };
 
   const getNextDay = () => {
@@ -202,7 +210,7 @@ export default function TimeSelect({ route }: TimeSelectProps) {
         <TimeContainer>
           {getNextDay() && <BoldText>익일</BoldText>}
           <ListPicker
-            isInverted={Boolean(endTime)}
+            isInverted={route.params?.time === 'start' && endTime.length > 0}
             scrollCenter={scrollHours}
             ref={hoursRef}
             data={hours}
