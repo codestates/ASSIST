@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { addScheduleManage } from '../../store/actions/propsAction';
 import { colors } from '../../theme/colors';
 import { OnCompleteParams } from '@actbase/react-daum-postcode/lib/types';
+import DotsHeader from '../../components/header/DotsHeader';
 
 const Container = styled.View`
   width: 100%;
@@ -54,6 +55,7 @@ export default function StadiumSelect() {
 
   return (
     <Container>
+      <DotsHeader navigate="ScheduleManage_2" current={0} total={0} />
       {Platform.OS === 'ios' ? (
         <Post jsOptions={jsOptions} onSelected={(data) => onSelected(data)} onError={onError} />
       ) : (
