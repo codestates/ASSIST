@@ -17,28 +17,28 @@ export default function ScheduleManageNav() {
       <ScheduleManage.Screen
         name="ScheduleManage_1"
         options={{
-          header: () => <DotsHeader current={1} total={4} />,
+          header: () => <DotsHeader goHome current={1} total={4} />,
         }}
         component={ScheduleManage_1}
       />
       <ScheduleManage.Screen
         name="ScheduleManage_2"
         options={{
-          header: () => <DotsHeader current={2} total={4} />,
+          header: () => <DotsHeader navigate="ScheduleManage_1" current={2} total={4} />,
         }}
         component={ScheduleManage_2}
       />
       <ScheduleManage.Screen
         name="ScheduleManage_3"
         options={{
-          header: () => <DotsHeader current={3} total={4} />,
+          header: () => <DotsHeader navigate="ScheduleManage_2" current={3} total={4} />,
         }}
         component={ScheduleManage_3}
       />
       <ScheduleManage.Screen
         name="ScheduleManage_4"
         options={{
-          header: () => <DotsHeader current={4} total={4} />,
+          header: () => <DotsHeader navigate="ScheduleManage_3" current={4} total={4} />,
         }}
         component={ScheduleManage_4}
       />

@@ -19,35 +19,35 @@ export default function CreateTeamNav() {
       <CreateTeam.Screen
         name="CreateTeam_1"
         options={{
-          header: () => <DotsHeader current={1} total={4} />,
+          header: () => <DotsHeader reset="CreateOrJoin" current={1} total={4} />,
         }}
         component={CreateTeam_1}
       />
       <CreateTeam.Screen
         name="CreateTeam_2"
         options={{
-          header: () => <DotsHeader current={2} total={4} />,
+          header: () => <DotsHeader navigate="CreateTeam_1" current={2} total={4} />,
         }}
         component={CreateTeam_2}
       />
       <CreateTeam.Screen
         name="CreateTeam_3"
         options={{
-          header: () => <DotsHeader current={3} total={4} />,
+          header: () => <DotsHeader navigate="CreateTeam_2" current={3} total={4} />,
         }}
         component={CreateTeam_3}
       />
       <CreateTeam.Screen
         name="CreateTeam_4"
         options={{
-          header: () => <DotsHeader current={4} total={4} />,
+          header: () => <DotsHeader navigate="CreateTeam_3" current={4} total={4} />,
         }}
         component={CreateTeam_4}
       />
       <CreateTeam.Screen
         name="CreateTeam_5"
         options={{
-          header: () => <DotsHeader current={0} total={0} />,
+          header: () => <DotsHeader navigate="CreateTeam_4" current={0} total={0} />,
         }}
         component={CreateTeam_5}
       />
