@@ -36,6 +36,12 @@
 </br>
 
 ## Flow Chart 📉
+>### Client
+<p align="center">
+<img src="https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-CLIENT-FLOW-CHART.png?raw=true" />
+</p>
+
+>### Server
 <p align="center">
 <img src="https://github.com/Gwan-Woo-Jeong/media-sources/blob/master/ASSIST/images/ASSIST-SERVER-FLOW-CHART.jpg?raw=true" />
 </p>
